@@ -1,4 +1,4 @@
-#Performance Monitoring 前端性能监控系统
+# Performance Monitoring 前端性能监控系统
 
 &emsp;&emsp;前端性能监控系统（后文简称PM）是一个能监控多页应用、单页应用（Single Page Web Application，SPA）、微前端（Micro-Frontends）类型应用的页面性能的平台。支持常用的SPA框架：[Vuejs](https://github.com/vuejs/vue)、[Angularjs](https://github.com/angular/angular.js)、[Angular2+](https://github.com/angular/angular)、[Emberjs](https://github.com/emberjs/ember.js)、[React](https://github.com/facebook/react)、[Backbone](https://github.com/jashkenas/backbone)等。对于常用的微前端框架[single-spa](https://github.com/single-spa/single-spa)、[qiankun](https://github.com/umijs/qiankun)、[icestark](https://micro-frontends.ice.work/)完全支持。
 &emsp;&emsp;PM主要由探针和控制台两部分组成：探针fork自[boomerang](https://github.com/akamai/boomerang)，并进行了功能增强；控制台(pconsole)采用koa2+gulp+mysql+elasticsearch搭建，gulp-nodemon刷新node服务。采集的数据包括性能数据、网络瀑布流数据、平台数据、浏览器信息，并且提供了非常高效的数据搜索功能。PM致力于为开发人员提供非常全面的性能信息，帮助找到性能瓶颈，提升前端性能。  
