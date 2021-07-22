@@ -61,7 +61,7 @@ gulp.task('watch', gulp.series(() => {
     return gulp.watch('./src/assets/sass/*.scss', ['sass']);
 }));
 
-gulp.task('default', gulp.series(() =>['nodemon', 'sass','watch']));
+gulp.task('default', gulp.series('nodemon', 'sass','watch'));
 
 /*---------------------------------------------------------- build ---------------------------------------------------*/
 // 清除文件
