@@ -14,15 +14,15 @@
 
 ## 探针原理
 &emsp;&emsp;因为浏览器没有提供专门针对SPA的性能API，所以探针在针对单页应用或者微前端应用时，采用如下方式监控SPA前端性能。首先，探针会监听路由变化，一旦路由变化则触发监控机制，同时将路由变化触发时间点作为开始时间。然后探针通过劫持window的API：XMLHttpRequest和fetch，实现对后续api和静态资源的网络请求监听。请求结束后，探针通过劫持window的MutationObserver监听兴趣节点（兴趣节点包括img、iframe、image、link（stylesheet）和其他包含src和href的节点）变化并设定一定的延时，在延时内如果没有没有兴趣节点变化则监控结束，并记录结束时间。如果由兴趣节点更新，则顺延一个更长的延时，继续监听，直到没有兴趣节点变化为止，主要原理图如下：
-![](https://git.jd.com/JDCloud-FE/performance-monitor/raw/master/material/image/probe-workflow.png)
+![](https://git.jd.com/JDCloud-FE/performance-monitor/raw/feat-probe/material/image/probe-workflow.png)
 
 ## 控制台架构
 &emsp;&emsp;控制台的架构如下：
-![](https://git.jd.com/JDCloud-FE/performance-monitor/raw/master/material/image/console.png)
+![](https://git.jd.com/JDCloud-FE/performance-monitor/raw/feat-probe/material/image/console.png)
 
 ## 安装说明
 ### 一、安装node环境
-* node.js 14+
+* node.js 12+
 * 本项目需要node.js支持async await的语法因此node需要7.6版本以上。
 
 ### 二、安装jdk环境

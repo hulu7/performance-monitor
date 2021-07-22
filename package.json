@@ -1,7 +1,21 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "commit": "git-cz",
+    "build": "lerna run --stream --sort build"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-lerna-changelog"
+    }
+  },
   "devDependencies": {
+    "commitizen": "^4.2.4",
+    "cz-lerna-changelog": "^2.0.3",
     "lerna": "^4.0.0"
   }
 }

@@ -82,6 +82,7 @@
     "strip-json-comments": "^1.0.2"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "test": "grunt test",
     "postinstall": "npm run bower-install && npm run webdriver-manager-update",
     "build": "grunt clean build",
@@ -90,6 +91,9 @@
     "e2e-test": "grunt test:e2e --webdriver-versions=\"--versions.chrome $(google-chrome --product-version)\"",
     "bower-install": "./node_modules/.bin/bower install",
     "webdriver-manager-update": "./node_modules/.bin/webdriver-manager update --versions.chrome=$(google-chrome --product-version)"
+  },
+  "resolutions": {
+    "graceful-fs": "4.2.3"
   },
   "repository": {
     "type": "git",
