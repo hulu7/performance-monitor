@@ -51,9 +51,9 @@
 * 探针埋点请查看boomerang的README文档
 * 控制台前端调试方式请查看pconsole的README文档
 
-## 打包方式
+## 发布方式
 ```js
-安装依赖：yarn install
+安装依赖：npm run reinstall
 
 打包：npm run build
 ```
