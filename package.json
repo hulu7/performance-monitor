@@ -6,7 +6,8 @@
   ],
   "scripts": {
     "commit": "git-cz",
-    "build": "lerna run --stream --sort build"
+    "build": "lerna run --stream --sort build",
+    "clean": "echo 'y' | lerna clean && rimraf node_modules"
   },
   "config": {
     "commitizen": {

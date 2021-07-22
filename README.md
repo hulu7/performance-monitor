@@ -45,11 +45,18 @@
 * Kibana官网下载地址：https://www.elastic.co/download/kibana/
 
 ### 六、数据库同步为go-mysql-elasticsearch
-* Github地址：https://github.com/go-mysql-org/go-mysql-elasticsearch/
+* Github地址：https://github.com/go-mysql-org/go-mysql-elasticsearch/  
 
 ### 七、安装完成后配置
 * 探针埋点请查看boomerang的README文档
 * 控制台前端调试方式请查看pconsole的README文档
+
+## 打包方式
+```js
+安装依赖：yarn install
+
+打包：npm run build
+```
 
 ## 项目结构
 
