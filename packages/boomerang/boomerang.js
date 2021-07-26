@@ -2776,6 +2776,18 @@ BOOMR_check_doc_domain();
 			BOOMR.utils.mark("init:plugins:start");
 			/* END_DEBUG */
 
+			/* Record the hard reload timing */
+			BOOMR.hardNavigationTiming = {};
+
+			/* Record the routes information : route name and active rule */
+			BOOMR.routers = config.Routers;
+
+			/* Record app access info */
+			BOOMR.appin = undefined;
+
+			/* Record resource timing for main frame */
+			BOOMR.mainRestiming  = undefined;
+
 			for (k in this.plugins) {
 				if (this.plugins.hasOwnProperty(k)) {
 					// config[plugin].enabled has been set to false
@@ -3970,6 +3982,33 @@ BOOMR_check_doc_domain();
 			BOOMR.sendBeacon();
 		},
 
+		/** 
+		 * Config beacon data with:
+		 * 	  app: app name,
+		 *    appin: the hard navigation from main or sub app
+		 *    main_restiming: resource timing for main frame loading
+		*/
+		supportMicroFrontend(vars, varsSent) {
+			if (vars['u']) {
+				var matchedRouter = BOOMR.routers.find(router => {
+					return !!vars['u'].match(router.rule);
+				});
+				varsSent['app'] = matchedRouter ? matchedRouter.name : 'main';
+			}
+			if (varsSent['app'] && vars['http.initiator'] && !BOOMR.appin) {
+				BOOMR.appin = varsSent['app'] === 'main' && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
+			}
+
+			if (BOOMR.appin === 'from_main' && vars['restiming'] && !BOOMR.mainRestiming) {
+				BOOMR.mainRestiming = vars['restiming'];
+			}
+
+			varsSent['appin'] = BOOMR.appin;
+			varsSent['main_restiming'] = BOOMR.mainRestiming;
+
+			Object.assign(varsSent, BOOMR.hardNavigationTiming);
+		},
+
 		/**
 		 * Sends all beacon data.
 		 *
@@ -4102,7 +4141,6 @@ BOOMR_check_doc_domain();
 
 			// If we reach here, all plugins have completed
 			impl.fireEvent("before_beacon", impl.vars);
-
 			// clone the vars object for two reasons: first, so all listeners of
 			// 'beacon' get an exact clone (in case listeners are doing
 			// BOOMR.removeVar), and second, to help build our priority list of vars.
@@ -4110,7 +4148,9 @@ BOOMR_check_doc_domain();
 				if (impl.vars.hasOwnProperty(k)) {
 					varsSent[k] = impl.vars[k];
 				}
-			}
+			};
+
+			BOOMR.supportMicroFrontend(impl.vars, varsSent);
 
 			BOOMR.removeVar(["qt", "pgu"]);
 
