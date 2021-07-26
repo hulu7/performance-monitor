@@ -69,6 +69,31 @@ The asynchronous method is recommended.
 </script>
 ```
 
+```html
+<script src="/monitor/js/boomerang-1.0.0.min.js"></script>
+<script src="/monitor/js/history.min.js"></script>
+<script >
+	BOOMR.init({
+		beacon_url: "http://yoursite/beacon",
+		History: {
+			enabled: true,
+			auto: true,
+			monitorReplaceState: true,
+		},
+		Routers: [
+			{
+			name: 'app1',
+			rule: '/app1/'
+			},
+			{
+			name: 'app2',
+			rule: '/app2/'
+			}
+		],
+	});
+</script>
+```
+
 **Note:** You must include at least one plugin (it doesn't have to be `RT`) or
 else the beacon will never fire.
 
