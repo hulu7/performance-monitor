@@ -17,19 +17,8 @@ class user {
     // 查询应用list
     async getSystemList(ctx){
         try {
-            let userId    = ctx.request.body.userId
-
-            if(!userId){
-                ctx.body = util.result({
-                    code: 1001,
-                    desc: 'userId参数有误!'
-                });
-                return
-            }
-
             let sqlstr = sql
                 .table('web_system')
-                .where({userId:userId})
                 .select()
             let result = await mysql(sqlstr);
 
