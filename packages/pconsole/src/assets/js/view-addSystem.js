@@ -10,12 +10,13 @@ new Vue({
             slowCssTime:'',
             slowImgTime:'',
             appId:'',
-            userId:'',
+            subSystems:[{
+                name: '',
+                rule: ''
+            }]
         }
     },
     beforeMount() {
-        let userMsg = util.getStorage('local','userMsg')?JSON.parse(util.getStorage('local','userMsg')):{}
-        this.userId = userMsg.id
         this.appId = util.getQueryString('appId')
         if(this.appId){
             this.getDetail()
@@ -28,8 +29,8 @@ new Vue({
         getDetail(){
             let _this=this;
             util.ajax({
-                url:config.baseApi+'api/system/getItemSystem',
-                data:{
+                url: `${config.baseApi}api/system/getItemSystem`,
+                data: {
                     appId:this.appId
                 },
                 success(data){
@@ -48,28 +49,33 @@ new Vue({
             if(!this.systemName){ popup.alert({title: '请正确填写应用名称!'});  return false; }
             if(!this.systemDomain){ popup.alert({title: '请正确填写应用域名!'}); return false; }
             util.ajax({
-                url:config.baseApi + 'api/system/addSystem',
+                url: `${config.baseApi}api/system/addSystem`,
                 data:{
-                    systemName:this.systemName,
-                    systemDomain:this.systemDomain,
-                    slowPageTime:this.slowPageTime,
-                    slowJsTime:this.slowJsTime,
-                    slowCssTime:this.slowCssTime,
-                    slowImgTime:this.slowImgTime,
-                    userId:this.userId
+                    systemName: this.systemName,
+                    systemDomain: this.systemDomain,
+                    slowPageTime: this.slowPageTime,
+                    slowJsTime: this.slowJsTime,
+                    slowCssTime: this.slowCssTime,
+                    slowImgTime: this.slowImgTime,
+                    subSystems: JSON.stringify(this.subSystems)
                 },
-                success(data){
+                success(data) {
                     _this.scriptstr = data.data.script
-                    let token = data.data.token
-                    popup.miss({title:"操作成功！"});
-                    // setTimeout(()=>{
-                    //     location.href="/addSystem?appId=" + token
-                    // },500)
+                    popup.miss({title:"系统添加成功！"});
                 }
             })
         },
-        register(){
-            
+        addNewSubsystem(){
+            this.subSystems.push({
+                name: '',
+                rule: ''
+            });
+        },
+        deleteSubsystem(index){
+            if (this.subSystems.length < 2) {
+                return;
+            }
+            this.subSystems.splice(index, 1);
         }
     }
 })

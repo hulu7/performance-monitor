@@ -178,6 +178,7 @@ gulp.task('replace:config', gulp.series(() => {
         .pipe(replace('use(KoaLogger())', ""))
         .pipe(gulp.dest(buildUrl));
 }));
+
 gulp.task('replace:webgetdatas', gulp.series(() => {
     return gulp.src([buildUrl + '/assets/js/web_get_datas.js'])
         .pipe(replace('http://127.0.0.1:18088', originurl))

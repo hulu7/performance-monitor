@@ -76,14 +76,14 @@ class user {
     // 新增应用
     async addSystem(ctx){
         try {
-            let systemName      = ctx.request.body.systemName
-            let systemDomain    = ctx.request.body.systemDomain
-            let slowPageTime    = ctx.request.body.slowPageTime
-            let slowJsTime      = ctx.request.body.slowJsTime
-            let slowCssTime     = ctx.request.body.slowCssTime
-            let slowImgTime     = ctx.request.body.slowImgTime
-            let userId          = ctx.request.body.userId
-            let createTime      = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
+            let systemName      = ctx.request.body.systemName;
+            let systemDomain    = ctx.request.body.systemDomain;
+            let slowPageTime    = ctx.request.body.slowPageTime;
+            let slowJsTime      = ctx.request.body.slowJsTime;
+            let slowCssTime     = ctx.request.body.slowCssTime;
+            let slowImgTime     = ctx.request.body.slowImgTime;
+            let subSystems      = ctx.request.body.subSystems;
+            let createTime      = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
             
             if(!systemName || !systemDomain){
                 ctx.body = util.result({
@@ -96,7 +96,7 @@ class user {
             // 判断应用是否存在
             let sqlstr1 = sql
                 .table('web_system')
-                .where({systemName:systemName})
+                .where({systemName})
                 .select()
             let systemNameMsg = await mysql(sqlstr1);
             if(systemNameMsg.length){
@@ -110,7 +110,7 @@ class user {
             // 判断域名是否存在
             let sqlstr2 = sql
                 .table('web_system')
-                .where({systemDomain:systemDomain})
+                .where({systemDomain})
                 .select()
             let systemDomainMsg = await mysql(sqlstr2);
             if(systemDomainMsg.length){
@@ -123,21 +123,21 @@ class user {
 
             let timestamp = new Date().getTime();
             let token = util.signwx({
-                systemName:systemName,
-                systemDomain:systemDomain,
-                timestamp:timestamp,
+                systemName,
+                systemDomain,
+                timestamp,
                 random:util.randomString()
             }).paySign;
-            let script = `<script id="web_performance_script" data-appId="${token}" src="${SYSTEM.ORIGIN}/js/web_get_datas.js"><\/script>`;
+            let script = `<script src="${SYSTEM.ORIGIN}/monitor/boomerang-1.0.0.min.js"><\/script><script src=${SYSTEM.ORIGIN}/monitor/history.min.js"><\/script><script >BOOMR.init({beacon_url: "${SYSTEM.ORIGIN}/report",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
 
             // 插入数据
             let data={
-                systemName:systemName,
-                systemDomain:systemDomain,
-                script:script,
-                appId:token,
-                userId:userId,
-                createTime:createTime
+                systemName,
+                systemDomain,
+                subSystems,
+                script,
+                appId: token,
+                createTime
             }
             if(slowPageTime) data.slowPageTime = slowPageTime;
             if(slowJsTime) data.slowJsTime = slowJsTime;

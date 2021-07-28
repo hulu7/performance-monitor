@@ -3,51 +3,74 @@
 <link rel="stylesheet" href="/css/addSystem.css">
 <div class="addSystem" id="addSystem">
     <div class="title">
-        <h1>添加应用</h1>
+        <h1>新增应用</h1>
     </div>
     <div class="main">
-        <h1 class="h1">信息录入</h1>
+        <div>
+            <h1 class="h1">基本信息</h1>
+        </div>
         <div class="block">
             <div class="item">
-                <span class="left">应用名称：</span>
-                <input type="text" v-model.trim="systemName" placeholder="我的博客">
+                <div class="left">主应用名称：</div>
+                <el-input class="input" v-model.trim="systemName" placeholder="请填写应用名称"></el-input>
             </div>
             <div class="item">
-                <span class="left">应用域名：</span>
-                <input type="text" v-model.trim="systemDomain" placeholder="http://seosiwei.com/">
+                <div class="left">应用域名：</div>
+                <el-input class="input" v-model.trim="systemDomain" placeholder="应用域名，例如 http://example.com/"></el-input>
             </div>
             <div class="item">
-                <span class="left">页面慢加载阀值：</span>
-                <input type="text" v-model.trim="slowPageTime" placeholder="默认8s">
+                <div class="left">页面慢加载阀值：</div>
+                <el-input class="input" v-model.trim="slowPageTime" placeholder="默认8s"></el-input>
             </div>
             <div class="item">
-                <span class="left">JS慢加载阀值：</span>
-                <input type="text" v-model.trim="slowJsTime" placeholder="默认2s">
+                <div class="left">JS慢加载阀值：</div>
+                <el-input class="input" v-model.trim="slowJsTime" placeholder="默认2s"></el-input>
             </div>
             <div class="item">
-                <span class="left">CSS慢加载阀值：</span>
-                <input type="text" v-model.trim="slowCssTime" placeholder="默认1s">
+                <div class="left">CSS慢加载阀值：</div>
+                <el-input class="input" v-model.trim="slowCssTime" placeholder="默认1s"></el-input>
             </div>
             <div class="item">
-                <span class="left">IMG慢加载阀值：</span>
-                <input type="text" v-model.trim="slowImgTime" placeholder="默认2s">
+                <div class="left">IMG慢加载阀值：</div>
+                <el-input class="input" v-model.trim="slowImgTime" placeholder="默认2s"></el-input>
             </div>
-            <button class="button left-botton" @click="addSystem">保存</button>
+            <div class="item">
+                <div class="left">子应用：</div>
+                <div class="input">
+                    <div class="pair" v-for="(sys, $index) in subSystems" v-key="$index">
+                        <el-input v-model.trim="sys.name" placeholder="子应用名称"></el-input>
+                        <div class="equal">=</div>
+                        <el-input v-model.trim="sys.rule" placeholder="子应用路径匹配规则，例如 /example/"></el-input>
+                        <el-button class="delete" type="text" @click="deleteSubsystem($index)">删除</el-button>
+                    </div>
+                    <el-button type="text" style="margin-left: 10px;" @click="addNewSubsystem">+ 新增子应用</el-button>
+                </div>
+            </div>
+            <div class="item">
+                <div class="save-botton">
+                    <el-button class="button" type="primary" @click="addSystem">保存</el-button>
+                </div>
+            </div>
         </div>
-        <h1 class="h1">部署说明</h1>
+        <div>
+            <h1 class="h1">部署说明</h1>
+        </div>
         <div class="block">
             <p>输入应用名称后，复制生成的代码，将其粘贴在<code>&lt;head&gt;</code>中。</p>
             <p class="notice">注意：需要将代码粘贴在<code>&lt;meta&gt;</code>后面，所有<code>&lt;script&gt;</code>前面。</p>
         </div>
-        <h1 class="h1">获取代码</h1>
+        <div>
+            <h1 class="h1">埋点代码</h1>
+        </div>
         <div class="block">
             <!-- <button class="button">获取代码</button> -->
             <div class="script-text">{{scriptstr}}</div>
         </div>
         <div class="goback">
-            <button onclick="location.href='/'" class="button">返回应用列表</button>
+            <el-button type="primary" @click="location.href='/'">返回应用列表</el-button>
         </div>
     </div>
 </div>
 <%- include("./footer.html") %>
 <script src="/js/view-addSystem.js"></script>
+<style>

@@ -23,23 +23,23 @@ router.get('/reportSystem',controllers.dataReport.getSystemPerformDatas);
 router.post('/reportErrorMsg', controllers.dataReport.getErrorMsg)
 
 // 注册用户信息
-router.post('/api/user/userRegister',checkfn, controllers.login.userRegister)
+router.post('/api/user/userRegister', controllers.login.userRegister)
 // 用户登录
-router.post('/api/user/userLogin',checkfn, controllers.login.userLogin)
+router.post('/api/user/userLogin', controllers.login.userLogin)
 // 退出登录
-router.post('/api/user/loginOut',checkfn, controllers.login.loginOut)
+router.post('/api/user/loginOut', controllers.login.loginOut)
 
 //----------------------------SYSTEMS--------------------------------------
 // 新增应用
-router.post('/api/system/addSystem',loginCheckfn, controllers.system.addSystem)
+router.post('/api/system/addSystem', controllers.system.addSystem)
 // 修改应用
-router.post('/api/system/updateSystem',loginCheckfn, controllers.system.updateSystem)
+router.post('/api/system/updateSystem', controllers.system.updateSystem)
 // 请求某个应用详情
-router.post('/api/system/getItemSystem',loginCheckfn, controllers.system.getItemSystem)
+router.post('/api/system/getItemSystem', controllers.system.getItemSystem)
 //获得系统列表
-router.post('/api/system/getSystemList',loginCheckfn, controllers.system.getSystemList)
+router.post('/api/system/getSystemList', controllers.system.getSystemList)
 // 设置系统是否需要统计数据
-router.post('/api/system/isStatisData',loginCheckfn, controllers.system.isStatisData)
+router.post('/api/system/isStatisData', controllers.system.isStatisData)
 
 //----------------------------PAGES--------------------------------------
 // 获得page列表
