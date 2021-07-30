@@ -21,25 +21,26 @@ new Vue({
     methods:{
         getinit(){
             this.isLoadend=false;
-            let times = util.getSearchTime()
-            this.beginTime = times.beginTime 
-            this.endTime = times.endTime 
+            let times = util.getSearchTime();
+            this.beginTime = times.beginTime;
+            this.endTime = times.endTime;
+            
+            let api = '';
 
-            let api = ''
-
-            if(this.slow&&this.slow=='slow'){
+            if(this.slow && this.slow=='slow') {
                 api = 'api/slowpages/getSlowpagesList'
             }else{
                 api = 'api/pages/getPageList'
             }
 
             util.ajax({
-                url:config.baseApi+api,
+                url: `${config.baseApi}${api}`,
                 data:{
-                    pageNo:this.pageNo,
-                    pageSize:this.pageSize,
-                    beginTime:this.beginTime ,
-                    endTime:this.endTime ,
+                    systemId: util.queryParameters('systemId'),
+                    pageNo: this.pageNo,
+                    pageSize: this.pageSize,
+                    beginTime: this.beginTime ,
+                    endTime: this.endTime ,
                 },
                 success:data => {
                     this.isLoadend=true;

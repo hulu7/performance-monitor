@@ -79,48 +79,20 @@ class common {
     }
 
     // 验证登录是否有systemId
-    async checkHaveSystemId(ctx,next){
+    async checkHaveSystemId(ctx, next){
+        console.log(ctx);
         const cookies   = ctx.cookie;
         let systemId    = cookies&&cookies.systemId||''
-        let verSource   = util.verSource(ctx)
-        let checkSigin  = util.checkSiginHttp(ctx);
-        let username    = ctx.cookies.get('userName');
-        let secretKey   = ctx.cookies.get('token');
-
-        if(!username || !secretKey){
-            ctx.body = util.result({
-                code: 1004,
-                desc: "该用户未登录！"
-            });
-        }
-        
-        if(!secretKey){
-            ctx.body = util.result({
-                code: 1004,
-                desc: "用户登录异常，请重新登录！"
-            });
-            return;
-        }
 
         if(!(systemId+'')){
             ctx.body = util.result({
-                code: 1004,
+                code: 1003,
                 desc: "systemId不能为空！"
             });
             return;
         }
-      
-        /*⬆️⬆️⬆️⬆通过了登录验证️⬆️⬆️⬆️⬆️⬆️⬆️*/
-        if (verSource && checkSigin) {
-            return next();
-        } else {
-            ctx.body = util.result({
-                code: 1001,
-                desc: "验证有误！"
-            });
-            console.log('域名来源验证有误')
-            return;
-        }
+
+        return next();
     }
 
     // 上传图片接口

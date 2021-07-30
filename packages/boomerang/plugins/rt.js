@@ -640,23 +640,9 @@
 							}
 
 							res = res[0];
+							const { duration } = res;
 
-							startTime = trimTiming(res.startTime, 0);
-							data = [
-								startTime,
-								trimTiming(res.responseEnd, startTime),
-								trimTiming(res.responseStart, startTime),
-								trimTiming(res.requestStart, startTime),
-								trimTiming(res.connectEnd, startTime),
-								trimTiming(res.secureConnectionStart, startTime),
-								trimTiming(res.connectStart, startTime),
-								trimTiming(res.domainLookupEnd, startTime),
-								trimTiming(res.domainLookupStart, startTime),
-								trimTiming(res.redirectEnd, startTime),
-								trimTiming(res.redirectStart, startTime)
-							].join(",").replace(/,+$/, "");
-
-							BOOMR.addVar(url, data, true);
+							BOOMR.addVar(url, duration, true);
 						}
 					}
 				}

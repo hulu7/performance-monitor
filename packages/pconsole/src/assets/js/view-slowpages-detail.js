@@ -87,7 +87,7 @@ new Vue({
         echartShowPages(){
             let datas       = this.listdata;
             if(!datas.length) return;
-            let legendData  = ['页面加载时间','白屏时间','资源加载耗时','DOM构建时间','解析dom耗时','request请求耗时','页面准备时间']
+            let legendData  = ['页面加载时间','白屏时间', 'DOM构建时间','解析dom耗时','request请求耗时','页面准备时间']
             let xAxisData   = []
             let seriesData  = []
             legendData.forEach((item,index)=>{
@@ -105,18 +105,15 @@ new Vue({
                             data.data.push(proItem.whiteTime)
                             break; 
                         case 2: 
-                            data.data.push(proItem.resourceTime)
-                            break;   
-                        case 3: 
                             data.data.push(proItem.domTime)
                             break;   
-                        case 4: 
+                        case 3: 
                             data.data.push(proItem.analysisDomTime)
                             break;   
-                        case 5: 
+                        case 4: 
                             data.data.push(proItem.requestTime)
                             break;
-                        case 6: 
+                        case 5: 
                             data.data.push(proItem.readyTime)
                             break;                                        
                     }

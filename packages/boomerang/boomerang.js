@@ -4336,8 +4336,6 @@ BOOMR_check_doc_domain();
 				return false;
 			}
 
-			console.log('+++++++++++beacon data+++++++++++', data);
-
 			// If we reach here, we've figured out all of the beacon data we'll send.
 			impl.fireEvent("beacon", data);
 

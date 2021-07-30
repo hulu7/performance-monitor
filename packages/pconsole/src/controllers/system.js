@@ -117,7 +117,7 @@ class user {
                 timestamp,
                 random:util.randomString()
             }).paySign;
-            let script = `<script src="${SYSTEM.ORIGIN}/monitor/boomerang-1.0.0.min.js"><\/script><script src=${SYSTEM.ORIGIN}/monitor/history.min.js"><\/script><script >BOOMR.init({beacon_url: "${SYSTEM.ORIGIN}/report",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
+            let script = `<script src="${SYSTEM.ORIGIN}/monitor/boomerang-1.0.0.min.js"><\/script><script src=${SYSTEM.ORIGIN}/monitor/history.min.js"><\/script><script >BOOMR.init({beacon_url: "${SYSTEM.ORIGIN}/report",AppId:"${token}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
 
             // 插入数据
             let data={

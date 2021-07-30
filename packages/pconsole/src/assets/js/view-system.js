@@ -20,11 +20,11 @@ new Vue({
         },
         getDetail(item){
             util.setStorage('local','systemMsg', JSON.stringify(item))
-            location.href="/pages"
+            location.href=`/pages?systemId=${item.id}`
         },
         goToSeeting(item){
             util.setStorage('local','systemMsg', JSON.stringify(item))
-            location.href="/setting"
+            location.href=`/setting?systemId=${item.id}`
         }
     }
 })

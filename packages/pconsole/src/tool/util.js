@@ -31,7 +31,6 @@ class util {
         let errCode = [
             {code:1002,desc:'服务异常'},
             {code:1003,desc:'必填参数缺失！'},
-            {code:1004,desc:'用户未登录！'},
         ];
         let desc = '未知错误！';
         errCode.forEach((item)=>{

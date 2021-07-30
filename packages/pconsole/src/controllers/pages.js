@@ -17,16 +17,16 @@ class pages {
     // 获得pages页面列表
     async getPageList(ctx){
         try {
-            let systemId    = ctx.cookie.systemId;
-            let pageNo      = ctx.request.body.pageNo || 1
-            let pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE
-            let beginTime   = ctx.request.body.beginTime || ''
-            let endTime     = ctx.request.body.endTime || ''
-            let isAllAvg    = ctx.request.body.isAllAvg || true
-            let url         = ctx.request.body.url 
+            let systemId    = ctx.request.body.systemId;
+            let pageNo      = ctx.request.body.pageNo || 1;
+            let pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
+            let beginTime   = ctx.request.body.beginTime || '';
+            let endTime     = ctx.request.body.endTime || '';
+            let isAllAvg    = ctx.request.body.isAllAvg || true;
+            let url         = ctx.request.body.url;
 
             // 公共参数
-            let data={systemId:systemId}
+            let data={systemId}
 
             if(isAllAvg=='false'){
                 if(!url){
@@ -53,7 +53,6 @@ class pages {
                                 avg(dnsTime) as dnsTime,
                                 avg(tcpTime) as tcpTime,
                                 avg(domTime) as domTime,
-                                avg(resourceTime) as resourceTime,
                                 avg(whiteTime) as whiteTime,
                                 avg(redirectTime) as redirectTime,
                                 avg(unloadTime) as unloadTime,
@@ -64,7 +63,7 @@ class pages {
                                 `).table('web_pages')
                             .group('url')
                             .order('count desc')
-                            .page(pageNo,pageSize)
+                            .page(pageNo, pageSize)
                             .where(data)
                             .select()
 

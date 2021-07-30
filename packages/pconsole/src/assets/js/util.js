@@ -611,6 +611,12 @@ class utilfn {
 		return json
 	}
 
+    // 查询url参数
+    queryParameters(name) { 
+        let reg = `(^|&)${name}=([^&]*)(&|$)`
+        let r = window.location.search.substr(1).match(reg); 
+        if (r != null) return unescape(r[2]); return null; 
+    }
 }
 
 //初始化util对象
