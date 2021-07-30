@@ -2779,6 +2779,9 @@ BOOMR_check_doc_domain();
 			/* Record the hard reload timing */
 			BOOMR.hardNavigationTiming = {};
 
+			/* Record the app id */
+			BOOMR.appId = config.AppId;
+
 			/* Record the routes information : route name and active rule */
 			BOOMR.routers = config.Routers;
 
@@ -4003,10 +4006,106 @@ BOOMR_check_doc_domain();
 				BOOMR.mainRestiming = vars['restiming'];
 			}
 
+			varsSent['appId'] = BOOMR.appId;
 			varsSent['appin'] = BOOMR.appin;
 			varsSent['main_restiming'] = BOOMR.mainRestiming;
 
 			Object.assign(varsSent, BOOMR.hardNavigationTiming);
+		},
+
+		/**
+		 * Extract OS information
+		 * 
+		 * @memberof BOOMR
+		 */
+		getOsInfo: function() {
+			const osData = [
+				{ name: 'Windows 2000',           group: 'windows_server',      identifier: 'Windows NT 5.0',                     version: '5.0' },
+				{ name: 'Windows XP',             group: 'windows',             identifier: 'Windows NT 5.1',                     version: '5.1' },
+				{ name: 'Windows 2003',           group: 'windows_server',      identifier: 'Windows NT 5.2',                     version: '5.2' },
+				{ name: 'Windows Vista',          group: 'windows',             identifier: 'Windows NT 6.0',                     version: '6.0' },
+				{ name: 'Windows 7',              group: 'windows',             identifier: 'Windows NT 6.1',                     version: '7.0' },
+				{ name: 'Windows 8',              group: 'windows',             identifier: 'Windows NT 6.2',                     version: '8.0' },
+				{ name: 'Windows 8.1',            group: 'windows',             identifier: 'Windows NT 6.3',                     version: '8.1' },
+				{ name: 'Windows 10',             group: 'windows',             identifier: 'Windows NT 10.0',                    version: '10.0' },
+				{ name: 'Windows 2008',           group: 'windows_server',      identifier: 'Windows NT 6.0; WOW64',              version: '6.0' },
+				{ name: 'Windows 2008',           group: 'windows_server',      identifier: 'Windows NT 6.1; WOW64',              version: '6.1' },
+				{ name: 'Windows 2012',           group: 'windows_server',      identifier: 'Windows NT 6.3; Win64',              version: '6.3' },
+				{ name: 'Chrome OS',              group: 'windows',             identifier: 'CrOS'},
+				{ name: 'Mac OS Big Sur',         group: 'mac',                 identifier: 'Mac OS X (11([_|\.])0([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Catalina',      group: 'mac',                 identifier: 'Mac OS X (10([_|\.])15([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Mojave',        group: 'mac',                 identifier: 'Mac OS X (10([_|\.])14([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X High Sierra',   group: 'mac',                 identifier: 'Mac OS X (10([_|\.])13([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Sierra',        group: 'mac',                 identifier: 'Mac OS X (10([_|\.])12([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Capitan',       group: 'mac',                 identifier: 'Mac OS X (10([_|\.])11([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X El Capitan',    group: 'mac',                 identifier: 'Mac OS X (10([_|\.])11([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Yosemite',      group: 'mac',                 identifier: 'Mac OS X (10([_|\.])10([0-9_\.]*))', versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Mavericks',     group: 'mac',                 identifier: 'Mac OS X (10([_|\.])9([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Mountain Lion', group: 'mac',                 identifier: 'Mac OS X (10([_|\.])8([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Lion',          group: 'mac',                 identifier: 'Mac OS X (10([_|\.])7([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Snow Leopard',  group: 'mac',                 identifier: 'Mac OS X (10([_|\.])6([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Leopard',       group: 'mac',                 identifier: 'Mac OS X (10([_|\.])5([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Tiger',         group: 'mac',                 identifier: 'Mac OS X (10([_|\.])4([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Panther',       group: 'mac',                 identifier: 'Mac OS X (10([_|\.])3([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Jaguar',        group: 'mac',                 identifier: 'Mac OS X (10([_|\.])2([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Puma',          group: 'mac',                 identifier: 'Mac OS X (10([_|\.])1([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS X Cheetah',       group: 'mac',                 identifier: 'Mac OS X (10([_|\.])0([0-9_\.]*))',  versionSeparator: '[_|\.]' },
+				{ name: 'Mac OS',                 group: 'mac',                 identifier: 'Mac OS' },
+				{ name: 'Ubuntu',                 group: 'linux_server',        identifier: 'ubuntu',                             versionIdentifier: 'Ubuntu/([0-9\.]*)' },
+				{ name: 'CentOs',                 group: 'linux_server',        identifier: 'centos',                             versionIdentifier: 'CentOs/([0-9\.]*)' },
+				{ name: 'Debian',                 group: 'linux_server',        identifier: 'debian' },
+				{ name: 'Gentoo',                 group: 'linux_server',        identifier: 'gentoo' },
+				{ name: 'Android',                group: 'android',             identifier: 'android' },
+				{ name: 'Linux',                  group: 'linux',               identifier: 'linux' }
+			];
+			let userAgent = navigator.userAgent.toLowerCase();
+			let os = 'unknown';
+			// Check browser type
+			for (i in osData) {
+				if (osData.hasOwnProperty(i)){
+					let osRegExp = new RegExp(osData[i].identifier.toLowerCase());
+					let osRegExpResult = osRegExp.exec(userAgent);
+					if (osRegExpResult != null) {
+						os = osData[i].name;
+						break;
+					}
+				}
+			}
+			return os;
+		},
+
+		/**
+		 * Extract Browser information
+		 * 
+		 * @memberof BOOMR
+		 */
+		getBrowserInfo: function() {
+			let agent = navigator.userAgent.toLowerCase() ;
+			let regStr_ie = /msie [\d.]+;/gi ;
+			let regStr_ff = /firefox\/[\d.]+/gi
+			let regStr_chrome = /chrome\/[\d.]+/gi ;
+			let regStr_saf = /safari\/[\d.]+/gi ;
+			//IE
+			if (agent.indexOf("msie") > 0) {
+				brower = agent.match(regStr_ie);
+			}
+	
+			//firefox
+			if (agent.indexOf("firefox") > 0) {
+				brower = agent.match(regStr_ff);
+			}
+
+			//Safari
+			if (agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0) {
+				brower = agent.match(regStr_saf);
+			}
+
+			//Chrome
+			if (agent.indexOf("chrome") > 0) {
+				brower = agent.match(regStr_chrome);
+			}
+			
+			return brower.length ? brower[0] : 'unknown';
 		},
 
 		/**
@@ -4113,8 +4212,8 @@ BOOMR_check_doc_domain();
 				}
 			}
 
-			impl.vars["ua.plt"] = navigator.platform;
-			impl.vars["ua.vnd"] = navigator.vendor;
+			impl.vars["ua.plt"] = BOOMR.getOsInfo();
+			impl.vars["ua.vnd"] = BOOMR.getBrowserInfo();
 
 			if (this.pageId) {
 				impl.vars.pid = this.pageId;
@@ -4227,10 +4326,17 @@ BOOMR_check_doc_domain();
 				return false;
 			}
 
+			// Check if data is ready
+			if (!data.appin) {
+				return false;
+			}
+
 			// Check that we have data to send
 			if (BOOMR.utils.isObjectEmpty(data)) {
 				return false;
 			}
+
+			console.log('+++++++++++beacon data+++++++++++', data);
 
 			// If we reach here, we've figured out all of the beacon data we'll send.
 			impl.fireEvent("beacon", data);

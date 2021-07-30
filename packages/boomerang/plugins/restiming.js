@@ -1287,6 +1287,25 @@
 	}
 
 	/**
+	 * Gathers origin performance entries.
+	 * 
+	 * @param {*} from Only get timings from
+	 * @param {*} to Only get timings up to
+	 *
+	 * @returns {object} An object containing the Origin performance entries 
+	 * @memberof BOOMR.plugins.ResourceTiming
+	 */
+	 function getOriginResourceTiming(from, to) {
+		var ret = getFilteredResourceTiming(from, to, impl.trackedResourceTypes);
+		var entries = ret.entries, serverTiming = ret.serverTiming;
+
+		return {
+			restiming: entries,
+			servertiming: serverTiming.lookup
+		};
+	}
+
+	/**
 	 * Gathers performance entries and compresses the result.
 	 *
 	 * @param {number} from Only get timings from
@@ -2010,6 +2029,7 @@
 		//
 		// Public Exports
 		//
+		getOriginResourceTiming: getOriginResourceTiming,
 		getCompressedResourceTiming: getCompressedResourceTiming,
 		getFilteredResourceTiming: getFilteredResourceTiming,
 		calculateResourceTimingUnion: calculateResourceTimingUnion,

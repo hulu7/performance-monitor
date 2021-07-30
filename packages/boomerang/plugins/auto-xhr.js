@@ -807,7 +807,7 @@
 			    BOOMR.plugins.ResourceTiming.is_enabled() &&
 			    resource.timing &&
 			    resource.timing.requestStart) {
-				var r = BOOMR.plugins.ResourceTiming.getCompressedResourceTiming(
+				var r = BOOMR.plugins.ResourceTiming.getOriginResourceTiming(
 						resource.timing.requestStart,
 						resource.timing.loadEventEnd
 					);
