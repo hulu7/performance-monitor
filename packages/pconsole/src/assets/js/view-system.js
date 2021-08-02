@@ -22,7 +22,7 @@ new Vue({
             util.setStorage('local','systemMsg', JSON.stringify(item))
             location.href=`/pages?systemId=${item.id}`
         },
-        goToSeeting(item){
+        goToSetting(item){
             util.setStorage('local','systemMsg', JSON.stringify(item))
             location.href=`/setting?systemId=${item.id}`
         }

@@ -26,7 +26,7 @@ new Vue({
             util.ajax({
                 url:config.baseApi+'api/system/getItemSystem',
                 data:{
-                    appId:this.appId
+                    appId: this.appId
                 },
                 success:data=>{
                     this.systemInfo = data.data||{}
