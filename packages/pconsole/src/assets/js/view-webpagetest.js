@@ -66,6 +66,9 @@ new Vue({
         })
     },
     methods:{
+        goHome() {
+            window.location.href = '/';
+        },
         biginTest(){
             this.isLoading=true;
             util.ajax({

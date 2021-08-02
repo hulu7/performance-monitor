@@ -128,7 +128,7 @@ CREATE TABLE `web_pages` (
 -- DROP TABLE IF EXISTS `web_system`;
 CREATE TABLE `web_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `systemDomain` varchar(50) NOT NULL COMMENT '系统 域名',
+  `systemDomain` varchar(50) NOT NULL COMMENT '系统域名',
   `systemName` varchar(20) NOT NULL COMMENT '系统名称',
   `subSystems` LongText DEFAULT NULL COMMENT '子系统',
   `script` LongText DEFAULT NULL COMMENT '获取页面统计脚本',

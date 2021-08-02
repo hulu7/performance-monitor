@@ -2,16 +2,17 @@ new Vue({
     el: '#setting',
     data: function(){
         return{
-            table:1,
-            setting:{
-                systemName:'',
-                systemDomain:'',
-                slowPageTime:'',
-                slowJsTime:'',
-                slowCssTime:'',
-                slowImgTime:'',
+            table: 1,
+            setting: {
+                systemName: '',
+                systemDomain: '',
+                slowPageTime: '',
+                slowJsTime: '',
+                slowCssTime: '',
+                slowImgTime: ''
             },
-            systemInfo:{}
+            systemInfo: {},
+            systemId: ''
         }
     },
     filters:{
@@ -22,11 +23,15 @@ new Vue({
         this.settingIsUse()
     },
     methods:{
-        getDetail(){
+        goHome() {
+            window.location.href = '/';
+        },
+        getDetail() {
+            this.systemId = util.queryParameters('systemId');
             util.ajax({
-                url:config.baseApi+'api/system/getItemSystem',
+                url: `${config.baseApi}api/system/getItemSystem`,
                 data:{
-                    appId: this.appId
+                    systemId: this.systemId
                 },
                 success:data=>{
                     this.systemInfo = data.data||{}

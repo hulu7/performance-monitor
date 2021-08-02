@@ -49,6 +49,9 @@ new Vue({
         
     },
     methods:{
+        goHome() {
+            window.location.href = '/';
+        },
         getDetail(){
             util.ajax({
                 url:config.baseApi+'api/system/getItemSystem',

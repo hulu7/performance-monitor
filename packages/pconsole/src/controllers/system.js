@@ -39,21 +39,19 @@ class user {
     //查询某个应用
     async getItemSystem(ctx){
         try {
-            let id    = ctx.cookie.systemId;
-
-            let sqlstr = sql
+            const { systemId } = ctx.request.body;
+            const sqlstr = sql
                 .table('web_system')
-                .where({id:id})
-                .select()
+                .where({ id: systemId })
+                .select();
 
-            let result = await mysql(sqlstr);
-
+            const result = await mysql(sqlstr);
             ctx.body = util.result({
                 data: result&&result.length?result[0]:{}
             });
 
         } catch (err) {
-            console.log(err)
+            console.error(err);
             ctx.body = util.result({
                 code: 1001,
                 desc: '系统错误!'

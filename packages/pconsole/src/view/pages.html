@@ -6,7 +6,7 @@
 <div class="container ajax" id="pages" v-cloak>
    <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text">页面列表</el-button>
+        <el-button type="text" style="color: black;">页面列表</el-button>
     </div>
     <div class="table-box common-padding mt20">
         <div v-if="listdata.length">
@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <th>URL</th>
-                        <th>调用次数</th>
+                        <th>访问次数</th>
                         <th>页面加载时间</th>
                         <th>白屏时间</th>
                         <th>DOM构建时间</th>

@@ -37,18 +37,17 @@
             </div>
         </div>
         <div>
-            <h1 class="h1">部署说明</h1>
+            <h1 class="h1">埋点代码</h1>
+        </div>
+        <div class="block">
+            <div class="script-text">{{scriptstr}}</div>
+        </div>
+        <div>
+            <h1 class="h1">埋点说明</h1>
         </div>
         <div class="block">
             <p>输入应用名称后，复制生成的代码，将其粘贴在<code>&lt;head&gt;</code>中。</p>
             <p class="notice">注意：需要将代码粘贴在<code>&lt;meta&gt;</code>后面，所有<code>&lt;script&gt;</code>前面。</p>
-        </div>
-        <div>
-            <h1 class="h1">埋点代码</h1>
-        </div>
-        <div class="block">
-            <!-- <button class="button">获取代码</button> -->
-            <div class="script-text">{{scriptstr}}</div>
         </div>
         <div class="goback">
             <el-button type="primary" @click="location.href='/'">返回应用列表</el-button>

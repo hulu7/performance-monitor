@@ -13,12 +13,12 @@
     .setting-body .block .content {
       margin: 15px 0 20px 50px; }
       .setting-body .block .content .script-text {
-        width: 800px;
-        background: #f4f4f4;
-        color: #333;
+        width: 100%;
+        background: #000;
+        color: #fff;
         font-size: 14px;
         border: none;
-        height: 60px;
+        height: 100px;
         padding: 10px; }
     .setting-body .block .code code {
       padding: 6px 10px;

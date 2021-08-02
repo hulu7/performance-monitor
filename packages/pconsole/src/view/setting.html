@@ -5,7 +5,10 @@
 <link rel="stylesheet" href="/css/setting.css">
 <div class="container" class="addSystem mb150" id="setting" v-cloak>
     <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/setting/">设置</a></h1>
+        <div class="common-title">
+            <el-button type="text" @click="goHome">首页</el-button>/
+            <el-button type="text" style="color: black;">设置</el-button>
+        </div>
     </div>
     <div class="common_table_nav">
         <li :class="{active:table==1}" @click="changeTable(1)">系统设置</li>
@@ -16,11 +19,11 @@
             <div class="content">
                 <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch" checked />
             </div>
-            <h1 class="h1">探针代码</h1>
+            <h1 class="h1">埋点代码</h1>
             <div class="content">
                 <div class="script-text"><code>{{systemInfo.script}}</code></div>
             </div>
-            <h1 class="h1">探针说明</h1>
+            <h1 class="h1">埋点说明</h1>
             <div class="content code">
                 <p>复制生成的代码，将其粘贴在<code>&lt;head&gt;</code>中。</p>
                 <p class="notice">注意：需要将代码粘贴在<code>&lt;meta&gt;</code>后面，所有<code>&lt;script&gt;</code>前面。</p>
@@ -98,3 +101,8 @@
 </div>
 <script src="https://cdn.bootcss.com/switchery/0.8.2/switchery.min.js"></script>
 <script src="/js/view-setting.js"></script>
+<style scoped>
+.el-button+.el-button {
+    margin-left: 0;
+}
+</style>

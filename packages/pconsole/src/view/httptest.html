@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="/css/httptest.css">
 <div class="container" class="addSystem mb150" id="setting" v-cloak>
     <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/httptest/">接口性能测评</a></h1>
+        <el-button type="text" @click="goHome">首页</el-button>/
+        <el-button type="text" style="color: black;">接口性能测评</el-button>
     </div>
     <div class="common_table_nav">
         <li :class="{active:table==1}" @click="changeTable(1)">HTTP接口测试</li>
@@ -63,3 +64,8 @@ key2=value2"></textarea>
     </div>
 </div>
 <script src="/js/view-httptest.js"></script>
+<style scoped>
+.el-button+.el-button {
+    margin-left: 0;
+}
+</style>
