@@ -5,8 +5,9 @@
 <link rel="stylesheet" href="/css/page-detail.css">
 <div class="container ajax mb150" id="pagesDetail" v-cloak>
    <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">页面列表</a>/<a href="/pages/detail/">页面性能历史数据</a></h1>
-        <commonsearch ></commonsearch>
+        <el-button type="text" @click="goHome">首页</el-button>/
+        <el-button type="text" @click="goToPages">页面列表</el-button>/
+        <el-button type="text">页面性能历史数据</el-button>
     </div>
     <div class="common_table_nav">
         <li :class="{active:table==1}" @click="changeTable(1)">性能概览</li>
@@ -254,3 +255,8 @@
 </div>
 <script src="/js/Page.js"></script>
 <script src="/js/view-page-detail.js"></script>
+<style scoped>
+.el-button+.el-button {
+    margin-left: 0;
+}
+</style>

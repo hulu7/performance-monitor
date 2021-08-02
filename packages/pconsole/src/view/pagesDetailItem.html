@@ -4,9 +4,12 @@
 <link rel="stylesheet" href="/css/page-detail.css">
 <div class="container ajax mb150" id="pagesDetail" v-cloak>
    <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">页面列表</a>/<a href="/pages/detail/">页面性能历史数据</a>/页面性能详情</h1>
-        <commonsearch ></commonsearch>
+        <el-button type="text" @click="goHome">首页</el-button>/
+        <el-button type="text" @click="goToPages">页面列表</el-button>/
+        <el-button type="text" @click="goToPageHistory">页面性能历史数据</el-button>/
+        <el-button type="text" style="color: black;">页面性能详情</el-button>
     </div>
+    <div class="current-page">评测页面: {{pagesItemData.url}}</div>
     <!-- 页面平均耗时说明 -->
     <div class="common-margin">
         <div class="common-block fl">
@@ -173,3 +176,8 @@
     
 </div>
 <script src="/js/view-page-detail-item.js"></script>
+<style scoped>
+.el-button+.el-button {
+    margin-left: 0;
+}
+</style>

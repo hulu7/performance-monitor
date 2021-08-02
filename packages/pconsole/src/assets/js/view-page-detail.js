@@ -47,6 +47,12 @@ new Vue({
     },
     mounted(){},
     methods:{
+        goHome() {
+            window.location.href = '/';
+        },
+        goToPages() {
+            window.location.href = `/pages?systemId=${this.systemId}`;
+        },
         init() {
             this.systemId = util.queryParameters('systemId');
             this.url = util.getQueryString('url');

@@ -6,7 +6,8 @@ new Vue({
             type: util.getQueryString('type'),
             pagesItemData: {},
             sourceslist: [],
-            systemId: ''
+            systemId: '',
+            url: ''
         }
     },
     filters: {
@@ -31,6 +32,15 @@ new Vue({
         init() {
             this.systemId = util.queryParameters('systemId');
         },
+        goHome() {
+            window.location.href = '/';
+        },
+        goToPages() {
+            window.location.href = `/pages?systemId=${this.systemId}`;
+        },
+        goToPageHistory() {
+            window.location.href = `/pages/detail?systemId=${this.systemId}&&url=${this.url}`;
+        },
         emptyHint(id) {
             const label = document.createElement("label");
             label.innerHTML = '暂无数据';
@@ -51,6 +61,7 @@ new Vue({
                 },
                 success: data => {
                     this.pagesItemData = data.data;
+                    this.url = this.pagesItemData.url;
                     if(this.pagesItemData.mainRestiming && JSON.parse(this.pagesItemData.mainRestiming).length > 0) {
                         util.drawWaterfall('main-app', JSON.parse(this.pagesItemData.mainRestiming));
                     } else {

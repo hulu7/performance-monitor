@@ -649,7 +649,7 @@ class utilfn {
 			start: 'connectStart',
 			end: 'connectEnd',
 		}, {
-			name: 'sercureConnect',
+			name: 'ssl',
 			start: 'secureConnectionStart',
 			end: 'connectEnd',
 		}, {
@@ -667,8 +667,8 @@ class utilfn {
 			dns: '#1e90ff',
 			connect: '#ffa500',
 			sercureConnect: '#b0c4de',
-			request: '#f4a460',
-			response: '#c71585	'
+			request: '#00bfff',
+			response: '#4169e1	'
 		};
 
 		// Generate waterfall data
@@ -677,7 +677,11 @@ class utilfn {
 			let duration = 0;
 			stages.forEach(stage => {
 				const { name } = category;
-				duration = (category.latestTime || category.responseEnd) - category.startTime;
+				const diff = category[stage.end] - category[stage.start];
+				duration = diff < 0 ? 0 : diff;
+				if (stage.name === 'ssl' && category[stage.start] === 0) {
+					duration = 0;
+				}
 				data.push({
 					name,
 					type: stage.name,

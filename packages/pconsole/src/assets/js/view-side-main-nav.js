@@ -31,11 +31,13 @@ new Vue({
             window.location.href = `/pages?systemId=${this.systemId}`;
         },
         goToHttpTest() {
+            window.location.href = `/httptest?systemId=${this.systemId}`;
         },
         goToWebPageTest() {
-            window.location.href = '/httptest';
+            window.location.href = `/webpagetest?systemId=${this.systemId}`;
         },
         goToSetting() {
+            window.location.href = `/setting?systemId=${this.systemId}`;
         }
     }
 })

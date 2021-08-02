@@ -8,21 +8,19 @@
         <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/setting/">设置</a></h1>
     </div>
     <div class="common_table_nav">
-        <li :class="{active:table==1}" @click="changeTable(1)">部署说明</li>
-        <li :class="{active:table==2}" @click="changeTable(2)">阀值设置</li>
-        <li :class="{active:table==3}" @click="changeTable(3)">统计设置</li>
+        <li :class="{active:table==1}" @click="changeTable(1)">系统设置</li>
     </div>
     <div class="setting-body">
         <div class="block" v-show="table==1">
-            <h1 class="h1">1.启用数据接收</h1>
+            <h1 class="h1">启用监控</h1>
             <div class="content">
                 <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch" checked />
             </div>
-            <h1 class="h1">2.获取脚本代码</h1>
+            <h1 class="h1">探针代码</h1>
             <div class="content">
                 <div class="script-text"><code>{{systemInfo.script}}</code></div>
             </div>
-            <h1 class="h1">3.部署脚本说明</h1>
+            <h1 class="h1">探针说明</h1>
             <div class="content code">
                 <p>复制生成的代码，将其粘贴在<code>&lt;head&gt;</code>中。</p>
                 <p class="notice">注意：需要将代码粘贴在<code>&lt;meta&gt;</code>后面，所有<code>&lt;script&gt;</code>前面。</p>

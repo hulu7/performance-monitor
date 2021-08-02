@@ -5,8 +5,8 @@
 <link rel="stylesheet" href="/css/ajax.css">
 <div class="container ajax" id="pages" v-cloak>
    <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">页面列表</a></h1>
-        <commonsearch :done="getinit"></commonsearch>
+        <el-button type="text" @click="goHome">首页</el-button>/
+        <el-button type="text">页面列表</el-button>
     </div>
     <div class="table-box common-padding mt20">
         <div v-if="listdata.length">
@@ -54,3 +54,8 @@
 </div>
 <script src="/js/Page.js"></script>
 <script src="/js/view-pages.js"></script>
+<style scoped>
+.el-button+.el-button {
+    margin-left: 0;
+}
+</style>

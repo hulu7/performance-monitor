@@ -20,6 +20,9 @@ new Vue({
         this.getinit();
     },
     methods:{
+        goHome() {
+            window.location.href = '/';
+        },
         getinit(){
             this.systemId = util.queryParameters('systemId');
             this.isLoadend=false;
