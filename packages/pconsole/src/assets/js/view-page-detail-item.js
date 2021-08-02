@@ -2,78 +2,67 @@ new Vue({
     el: '#pagesDetail',
     data(){
         return{
-            id:util.getQueryString('id'),
-            type:util.getQueryString('type'),
-            pagesItemData:{},
-            environment:{},
-            sourceslist:[],
+            id: util.getQueryString('id'),
+            type: util.getQueryString('type'),
+            pagesItemData: {},
+            sourceslist: [],
+            systemId: ''
         }
     },
-    filters:{
-        toFixed:window.Filter.toFixed,
-        toSize:window.Filter.toSize,
-        date:window.Filter.date,
-        limitTo:window.Filter.limitTo,
+    filters: {
+        toFloat1: (input) => {
+            return input ? parseFloat(input).toFixed(1) : 0.0;
+        },
+        toInit: (input) => {
+            return input ? Math.floor(input) : 0;
+        },
+        toFixed: window.Filter.toFixed,
+        toSize: window.Filter.toSize,
+        date: window.Filter.date,
+        limitTo: window.Filter.limitTo
     },
     beforeMount(){
+        this.init();
         this.getPageItemForId();
     },
     mounted(){
     },
-    methods:{
+    methods: {
+        init() {
+            this.systemId = util.queryParameters('systemId');
+        },
+        emptyHint(id) {
+            const label = document.createElement("label");
+            label.innerHTML = '暂无数据';
+            const e = document.getElementById(id);
+            if (!e) {
+                return;
+            }
+            e.appendChild(label);
+        },
         // 获得页面请求性能详情
         getPageItemForId(){
-            let api = ''
-            if(this.type&&this.type==='slow'){
-                api='api/slowpages/getslowPageItemForId'
-            }else{
-                api='api/pages/getPageItemForId'
-            }
+            const api = `api/${this.type && this.type === 'slow' ? 'slowpages/getslowPageItemForId' : 'pages/getPageItemForId'}`;
+            const { id } = this;
             util.ajax({
-                url:config.baseApi+api,
-                data:{
-                    id:this.id
+                url: `${config.baseApi}${api}`,
+                data: {
+                    id
                 },
-                success:data=>{
-                    this.pagesItemData = data.data
-                    this.getUserEnvironment(data.data.markPage)
-                    this.getSourcesForMarkPage(data.data.markPage)
+                success: data => {
+                    this.pagesItemData = data.data;
+                    if(this.pagesItemData.mainRestiming && JSON.parse(this.pagesItemData.mainRestiming).length > 0) {
+                        util.drawWaterfall('main-app', JSON.parse(this.pagesItemData.mainRestiming));
+                    } else {
+                        this.emptyHint('main-app');
+                    }
+                    if (this.pagesItemData.restiming && JSON.parse(this.pagesItemData.restiming).length > 0) {
+                        util.drawWaterfall('sub-app', JSON.parse(this.pagesItemData.restiming));
+                    } else {
+                        this.emptyHint('sub-app');
+                    }
                 }
             })
         },
-        // 访问者信息
-        getUserEnvironment(markPage){
-            util.ajax({
-                url:config.baseApi+'api/environment/getUserEnvironment',
-                data:{
-                    markPage:markPage
-                },
-                success:data=>{
-                    this.environment = data.data
-                }
-            })
-        },
-        // 请求资源信息
-        getSourcesForMarkPage(markPage){
-            util.ajax({
-                url:config.baseApi+'api/sources/getSourcesForMarkPage',
-                data:{
-                    markPage:markPage
-                },
-                success:data=>{
-                    let list = data.data.resourceDatas?JSON.parse(data.data.resourceDatas):[]
-                    let total = 0
-                    list.forEach(item=>{
-                        total+=item.duration*1
-                    })
-                    list.forEach((item,index)=>{
-                        list[index].proportion = (item.duration*1)/total * 100
-                    })
-                    this.sourceslist = list
-                }
-            })
-        }
-       
-       
     }
 })

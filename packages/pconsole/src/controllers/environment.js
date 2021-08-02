@@ -12,7 +12,6 @@ import {
 class pages {
     //初始化对象
     constructor() {
-
     };
     // 根据url查询浏览器分类情况
     async getDataForEnvironment(ctx){
@@ -31,39 +30,50 @@ class pages {
             }
 
 
-            let field = ''
-            let group = ''
-            switch(parseInt(type)){
-                case 1:
-                    field = 'browser,borwserVersion,count(1) as count'
-                    group = 'browser,borwserVersion'
-                    break;
-                case 2:
-                    field = 'system,systemVersion,count(1) as count'
-                    group = 'system,systemVersion'
-                    break;
-                case 3:
-                    field = 'city,count(1) as count'
-                    group = 'city'
-                    break;        
-            }
+            let field = `${type},count(1) as count`;
+            let group = type;
 
             // 公共参数
-            let data={url:url}
-            if(beginTime&&endTime) data.createTime = {egt:beginTime,elt:endTime}
-
+            let data = { url };
+            if(beginTime && endTime) {
+                data.createTime = {
+                    egt: beginTime,
+                    elt: endTime
+                };
+            }
             // 请求列表数据
-            let sqlstr = sql.field(field).table('web_environment')
+            let sqlstr = sql.field(field)
+                .table('web_pages')
                 .where(data)
                 .group(group)
                 .limit(0,6)
-                .select()
+                .select();
 
             let result = await mysql(sqlstr);
+            const boomerangSnippetMethodMap = {
+                i: 'iframe',
+                if: 'preload',
+                p: 'preload',
+                s: 'src'
+            };
+            const httpInitiatorMap = {
+                spa: '应用内跳转',
+                spa_hard: '通过url进入'
+            };
+            if (type === 'boomerangSnippetMethod') {
+                result.forEach((item, index) => {
+                    result[index].boomerangSnippetMethod = boomerangSnippetMethodMap[item.boomerangSnippetMethod]
+                });
+            }
+            if (type === 'httpInitiator') {
+                result.forEach((item, index) => {
+                    result[index].httpInitiator = httpInitiatorMap[item.httpInitiator];
+                });
+            }
             ctx.body = util.result({
                 data: result
             });
-
+            console.log(result);
         } catch (err) {
             console.log(err)
             ctx.body = util.result({

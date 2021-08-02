@@ -76,8 +76,6 @@ router.post('/api/sources/getSourcesForMarkPage', controllers.sources.getSources
 
 //----------------------------SYSTEM表--------------------------------------
 router.post('/api/environment/getDataForEnvironment', controllers.environment.getDataForEnvironment)
-// 根据markPage获取用户系统信息
-router.post('/api/environment/getUserEnvironment', controllers.environment.getUserEnvironment)
 
 //----------------------------httptest--------------------------------------
 router.post('/api/httptest/getHttpResponseData', controllers.httptest.getHttpResponseData)

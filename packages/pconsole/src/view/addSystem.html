@@ -19,22 +19,6 @@
                 <el-input class="input" v-model.trim="systemDomain" placeholder="应用域名，例如 http://example.com/"></el-input>
             </div>
             <div class="item">
-                <div class="left">页面慢加载阀值：</div>
-                <el-input class="input" v-model.trim="slowPageTime" placeholder="默认8s"></el-input>
-            </div>
-            <div class="item">
-                <div class="left">JS慢加载阀值：</div>
-                <el-input class="input" v-model.trim="slowJsTime" placeholder="默认2s"></el-input>
-            </div>
-            <div class="item">
-                <div class="left">CSS慢加载阀值：</div>
-                <el-input class="input" v-model.trim="slowCssTime" placeholder="默认1s"></el-input>
-            </div>
-            <div class="item">
-                <div class="left">IMG慢加载阀值：</div>
-                <el-input class="input" v-model.trim="slowImgTime" placeholder="默认2s"></el-input>
-            </div>
-            <div class="item">
                 <div class="left">子应用：</div>
                 <div class="input">
                     <div class="pair" v-for="(sys, $index) in subSystems" v-key="$index">

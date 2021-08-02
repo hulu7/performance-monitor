@@ -9,7 +9,8 @@ new Vue({
             slow:util.getQueryString('type'),
             beginTime:'',
             endTime:'',
-            isLoadend:false
+            isLoadend:false,
+            systemId: ''
         }
     },
     filters:{
@@ -20,6 +21,7 @@ new Vue({
     },
     methods:{
         getinit(){
+            this.systemId = util.queryParameters('systemId');
             this.isLoadend=false;
             let times = util.getSearchTime();
             this.beginTime = times.beginTime;
@@ -27,7 +29,7 @@ new Vue({
             
             let api = '';
 
-            if(this.slow && this.slow=='slow') {
+            if(this.slow && this.slow == 'slow') {
                 api = 'api/slowpages/getSlowpagesList'
             }else{
                 api = 'api/pages/getPageList'
@@ -60,12 +62,10 @@ new Vue({
             })
         },
         gotodetail(item){
-            if(this.slow&&this.slow=='slow'){
-                util.setStorage('session','slowpagesItemData',JSON.stringify(item))
-                location.href="/slowpages/detail?type=zane"
-            }else{
-                util.setStorage('session','pagesItemData',JSON.stringify(item))
-                location.href="/pages/detail?type=zane"
+            if(this.slow && this.slow=='slow'){
+                location.href=`/slowpages/detail?systemId=${this.systemId}`;
+            } else {
+                location.href=`/pages/detail?systemId=${this.systemId}&&url=${item.url}`;
             }
         }
     }

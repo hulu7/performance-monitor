@@ -449,7 +449,7 @@ class utilfn {
 			var r = decodeURIComponent(window.location.search).substr(1).match(reg);
 		}
 		if (r != null) {
-			return r[2];
+			return `${r[2]}${window.location.hash || ''}`;
 		}
 		return null;
 	}
@@ -614,9 +614,162 @@ class utilfn {
     // 查询url参数
     queryParameters(name) { 
         let reg = `(^|&)${name}=([^&]*)(&|$)`
-        let r = window.location.search.substr(1).match(reg); 
+        let r = window.location.search.substr(1).match(reg);
         if (r != null) return unescape(r[2]); return null; 
     }
+
+
+	// 画瀑布流数据
+	drawWaterfall(elementId, categories) {
+		const times = categories.length;
+		if (!times) {
+			return;
+		}
+		categories.reverse();
+		const target = document.getElementById(elementId);
+		target.setAttribute('style', `height: ${times * 40 + 100}px; width: 100%;`);
+		let data = [];
+		const chartDom = document.getElementById(elementId);
+		const myChart = echarts.init(chartDom);
+		const startTime = +new Date();
+		const stages = [{
+			name: 'redirect',
+			start: 'redirectStart',
+			end: 'redirectEnd',
+		}, {
+			name: 'fetch',
+			start: 'fetchStart',
+			end: 'domainLookupStart',
+		}, {
+			name: 'dns',
+			start: 'domainLookupStart',
+			end: 'domainLookupEnd',
+		}, {
+			name: 'connect',
+			start: 'connectStart',
+			end: 'connectEnd',
+		}, {
+			name: 'sercureConnect',
+			start: 'secureConnectionStart',
+			end: 'connectEnd',
+		}, {
+			name: 'request',
+			start: 'requestStart',
+			end: 'responseStart',
+		}, {
+			name: 'response',
+			start: 'responseStart',
+			end: 'responseEnd',
+		}];
+		const typesColorMap = {
+			redirect: '#008000',
+			fetch: '#0000cd',
+			dns: '#1e90ff',
+			connect: '#ffa500',
+			sercureConnect: '#b0c4de',
+			request: '#f4a460',
+			response: '#c71585	'
+		};
+
+		// Generate waterfall data
+		categories.forEach((category, index) => {
+			let baseTime = startTime + category.startTime;
+			let duration = 0;
+			stages.forEach(stage => {
+				const { name } = category;
+				duration = (category.latestTime || category.responseEnd) - category.startTime;
+				data.push({
+					name,
+					type: stage.name,
+					duration,
+					value: [
+						index,
+						baseTime,
+						baseTime += duration,
+						duration
+					],
+					itemStyle: {
+						normal: {
+							color: typesColorMap[stage.name]
+						}
+					}
+				});
+			});
+		});
+
+		const renderItem = (params, api) => {
+			const categoryIndex = api.value(0);
+			const start = api.coord([api.value(1), categoryIndex]);
+			const end = api.coord([api.value(2), categoryIndex]);
+			const height = api.size([0, 1])[1] * 0.8;
+
+			const rectShape = echarts.graphic.clipRectByRect({
+				x: start[0],
+				y: start[1] - height / 2,
+				width: end[0] - start[0],
+				height: height
+			}, {
+				x: params.coordSys.x,
+				y: params.coordSys.y,
+				width: params.coordSys.width,
+				height: params.coordSys.height
+			});
+
+			return rectShape && {
+				type: 'rect',
+				transition: ['shape'],
+				shape: rectShape,
+				style: api.style()
+			};
+		}
+
+		const option = {
+			tooltip: {
+				formatter: function (params) {
+					return `${params.marker} [ ${params.data.type} : ${params.data.duration.toFixed(1)} ms ] -- ${params.data.name}`;
+				}
+			},
+			dataZoom: [{
+				type: 'slider',
+				filterMode: 'weakFilter',
+				showDataShadow: false,
+				top: 30,
+				labelFormatter: ''
+			}, {
+				type: 'inside',
+				filterMode: 'weakFilter'
+			}],
+			grid: {
+				height: 25 * times
+			},
+			xAxis: {
+				min: startTime,
+				scale: true,
+				axisLabel: {
+					formatter: function (val) {
+						return Math.max(0, val - startTime) + ' ms';
+					}
+				}
+			},
+			yAxis: {
+				data: categories.map((category) => category.name)
+			},
+			series: [{
+				type: 'custom',
+				renderItem: renderItem,
+				itemStyle: {
+					opacity: 0.8
+				},
+				encode: {
+					x: [1, 2],
+					y: 0
+				},
+				data: data
+			}]
+		};
+
+		option && myChart.setOption(option);
+	}
 }
 
 //初始化util对象

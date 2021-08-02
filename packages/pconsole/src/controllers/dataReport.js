@@ -96,16 +96,17 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             etype: effectiveType,
             dl: downlink,
             rtt: roundTripTime
-        } = mob;
+        } = mob ? mob : {};
+
         const {
             e: continuityEpoch,
             lb: continuityLastBeacon,
             tti
-        } = c;
+        } = c ? c : {};
         const {
             m: timeToInteractiveMethod,
             vr: visuallyReadyTime
-        } = tti;
+        } = tti ? tti : {};
         const {
             start: triggerMethod,
             si: sessionId,
@@ -117,11 +118,11 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             end: boomerangEndTime,
             tt: sumLoadTimes,
             obo: noLoadPagesNumber
-        } = rt;
+        } = rt ? rt : {};
         const {
             plt: system,
             vnd: browser
-        } = ua;
+        } = ua ? ua : {};
         const {
             doms: uniqueDomainsNumber,
             ln: domsNumber,
@@ -132,12 +133,12 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             iframe: iframeNumber,
             link,
             res: resourcesFetchNumber
-        } = dom;
-        const [linkNumber, css] = link;
-        const { css: cssNumber } = css;
-        const [scriptNumber, ext] = script;
-        const { ext: externalScriptNumber } = ext;
-        const { st: pageVisibility } = vis;
+        } = dom ? dom : {};
+        const [linkNumber, css] = link ? link : [];
+        const { css: cssNumber } = css ? css : {};
+        const [scriptNumber, ext] = script ? script : [];
+        const { ext: externalScriptNumber } = ext ? ext : {};
+        const { st: pageVisibility } = vis ? vis : {};
         const {
             total: totalJSHeapSize,
             limit: jsHeapSizeLimit,
@@ -146,22 +147,22 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             ssln: usedSessionStorageKeys,
             lssz: usedLocalStorageSize,
             sssz: usedSessionStorageSize
-        } = mem;
+        } = mem ? mem : {};
         const {
             xy: screenSize,
             bpp: screenColorDepth,
             orn: screenOrientation
-        } = scr;
+        } = scr ? scr : {};
         const {
             cnc: cpuConcurrency
-        } = cpu;
+        } = cpu ? cpu : {};
         const {
-            initiator: httpInitiator
-        } = http;
+            initiator
+        } = http ? http : {};
         const {
             fp: firstPaint,
             fcp: firstContentfulPaint
-        } = pt;
+        } = pt ? pt : {};
 
         let dat = {
             systemId: systemItem.id,
@@ -217,7 +218,7 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             scriptNumber: scriptNumber || '0',
             externalScriptNumber: externalScriptNumber || '0',
             htmlSize: htmlSize || '0',
-            httpInitiator: httpInitiator || null,
+            httpInitiator: initiator || null,
             downlink: downlink || null,
             effectiveType: effectiveType || null,
             roundTripTime: roundTripTime || null,

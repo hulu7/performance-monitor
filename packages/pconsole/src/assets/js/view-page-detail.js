@@ -1,57 +1,74 @@
 new Vue({
     el: '#pagesDetail',
-    data(){
-        return{
-            table:1,
-            listdata:[],
-            listAjax:[],
-            listslowpages:[],
-            listresources:[],
-            pageNo:1,
-            pageSize:config.pageSize,
-            totalNum:0,
-            isLoadEnd:false,
-            url:util.getQueryString('url'),
-            pagesItemData:{},
-            isShowCharts:false,
+    data() {
+        return {
+            table: 1,
+            listdata: [],
+            listAjax: [],
+            listslowpages: [],
+            listresources: [],
+            pageNo: 1,
+            pageSize: config.pageSize,
+            totalNum: 0,
+            isLoadEnd: false,
+            url: '',
+            pagesItemData: {},
+            isShowCharts: false,
+            systemId: '',
         }
     },
     filters:{
-        toFixed:window.Filter.toFixed,
-        toSize:window.Filter.toSize,
-        date:window.Filter.date,
-        limitTo:window.Filter.limitTo,
+        toFloat1: (input) => {
+            return input ? parseFloat(input).toFixed(1) : 0.0;
+        },
+        toInit: (input) => {
+            return input ? Math.floor(input) : 0;
+        },
+        toFixed: window.Filter.toFixed,
+        toSize: window.Filter.toSize,
+        date: window.Filter.date,
+        limitTo: window.Filter.limitTo,
     },
     beforeMount(){
+        this.init();
         if(this.url){
             this.getAverageValues()
-        }else{
-            this.pagesItemData=util.getStorage('session','pagesItemData')?JSON.parse(util.getStorage('session','pagesItemData')):{}
-            this.url = this.pagesItemData.url
         }
         this.changeTable(1);
-        this.getDataForEnvironment(1);
-        this.getDataForEnvironment(2);
-        this.getDataForEnvironment(3);
+        const statics = [
+            'browser', //浏览器
+            'system', //操作系统
+            'effectiveType', //带宽类型
+            'screenOrientation', //屏幕方向
+            'screenSize', //屏幕尺寸
+            'httpInitiator', //页面切换类型
+        ];
+        statics.map((type) => this.getDataForEnvironment(type));
     },
-    mounted(){
-        
-    },
+    mounted(){},
     methods:{
+        init() {
+            this.systemId = util.queryParameters('systemId');
+            this.url = util.getQueryString('url');
+        },
+        gotoDetail(id) {
+            location.href = `/pages/detail/item?systemId=${this.systemId}&&id=${id}`;
+        },
         // 获得平均性能
-        getAverageValues(){
+        getAverageValues() {
             util.ajax({
-                url:config.baseApi+'api/pages/getPageList',
-                data:{
-                    url:this.url,
-                    isAllAvg:false,
+                url: `${config.baseApi}api/pages/getPageList`,
+                data: {
+                    systemId: this.systemId,
+                    url: this.url,
+                    isAllAvg: false,
                 },
-                success:data=>{
-                    this.pagesItemData=data.data   
+                success: data => {
+                    this.pagesItemData = data.data;
                 }
             })
         },
-        changeTable(number){
+        changeTable(number) {
             this.isLoadEnd  =false
             this.pageNo     = 1
             this.table      = number
@@ -73,7 +90,7 @@ new Vue({
                     }
                     break;
                 case 3:
-                    if(!this.listslowpages.length){
+                    if(!this.listslowpages.length) {
                         api         = 'api/slowpages/getSlowPageItem',
                         pageName    = '#copot-page-slowpages'
                         this.getinit(api,pageName);
@@ -89,18 +106,18 @@ new Vue({
             }
         },
         // 获得page详情
-        getinit(api,pageName){
+        getinit(api, pageName) {
             util.ajax({
-                url:config.baseApi+api,
-                data:{
-                    pageNo:this.pageNo,
-                    pageSize:this.pageSize,
-                    url:this.url,
-                    callUrl:this.url,
-                    beginTime:'',
-                    endTime:'',
+                url: `${config.baseApi}${api}`,
+                data: {
+                    pageNo: this.pageNo,
+                    pageSize: this.pageSize,
+                    url: this.url,
+                    callUrl: this.url,
+                    beginTime: '',
+                    endTime: '',
                 },
-                success:data => {
+                success: data => {
                     this.isLoadEnd=true;
                     switch(this.table){
                         case 1:
@@ -133,31 +150,20 @@ new Vue({
         // 获得浏览器分类情况
         getDataForEnvironment(type){
             util.ajax({
-                url:config.baseApi+'api/environment/getDataForEnvironment',
+                url: `${config.baseApi}api/environment/getDataForEnvironment`,
                 data:{
-                    url:this.url,
-                    beginTime:'',
-                    endTime:'',
-                    type:type
+                    url: this.url,
+                    beginTime: '',
+                    endTime: '',
+                    type
                 },
-                success:data => {
-                    this.isLoadEnd=true;
-                    switch(type){
-                        case 1:
-                            this.getData(data.data,'echartBorwsers-borwser','browser','borwserVersion')
-                            break;
-                        case 2:
-                            this.getData(data.data,'echartBorwsers-system','system','systemVersion')
-                            break;
-                        case 3:
-                            this.getData(data.data,'echartBorwsers-address','city')
-                            break;        
-                    }
-                    
+                success: data => {
+                    this.isLoadEnd = true;
+                    this.getData(data.data, `ec-${type}`, type)
                 }
             })
         },
-        getData(datas,id,tyle,typeVersion){
+        getData(datas, id, tyle){
             let seriesData=[];
             let legendData=[]
             let totalcount=0
@@ -166,17 +172,7 @@ new Vue({
                 totalcount+=item.count
             })
             datas.forEach(item=>{
-                let versionArr  = []
-                let version     = ''
-                if(item[typeVersion]){
-                    versionArr  = item[typeVersion].split('.')
-                    if(versionArr.length>=2){
-                        version = versionArr[0]+'.'+versionArr[1]
-                    }else{
-                        version = versionArr[0]
-                    }
-                }
-                let name = typeVersion?item[tyle]+' '+version:item[tyle]
+                let name = item[tyle]
                 legendData.push({
                     name:name,
                     icon: 'circle',
@@ -187,7 +183,7 @@ new Vue({
                     percentage:((item.count/totalcount)*100).toFixed()+'%'
                 })
             })
-            this.echartBorwsers(id,legendData,seriesData)
+            this.echartBorwsers(id, legendData, seriesData)
         },
         // echart表
         echartBorwsers(id,legendData,seriesData){
@@ -203,7 +199,23 @@ new Vue({
                     top: 0,
                     containLabel: true
                 },
-                color:['#f44336','#00bcd4','#3cd87f','#ffeb3b','#9c27b0','#e91e63','#ff9800','#ff5722'],
+                color:[
+                    '#f44336',
+                    '#00bcd4',
+                    '#3cd87f',
+                    '#ffeb3b',
+                    '#9c27b0',
+                    '#e91e63',
+                    '#ff9800',
+                    '#ff5722',
+                    '#33ff00',
+                    '#33ffff',
+                    '#ff33ff',
+                    '#3300ff',
+                    '#ff6666',
+                    '#0066cc',
+                    '#3333ff'
+                ],
                 legend: {
                     orient: 'vertical',
                     right: 0,
@@ -244,10 +256,26 @@ new Vue({
         echartShowPages(){
             let datas       = this.listdata;
             if(!datas.length) return;
-            let legendData  = ['页面加载时间', '白屏时间', 'DOM构建时间', '解析dom耗时', 'request请求耗时', '页面准备时间']
+            let legendData  = [
+                '页面加载时长',
+                '白屏时长',
+                'DOM构建时长',
+                '解析DOM耗时',
+                'request请求时长',
+                '页面准备时长',
+                'DNS解析',
+                'TCP连接时长',
+                '重定向时长',
+                'unload时长',
+                '视觉就绪时长',
+                '首次内容绘制时长',
+                '首像素时长',
+                '可感知加载时长',
+                '总加载时长'
+            ]
             let xAxisData   = []
             let seriesData  = []
-            legendData.forEach((item,index)=>{
+            legendData.forEach((item, index)=>{
                 let data = {
                     name:item,
                     type: 'line',
@@ -256,23 +284,50 @@ new Vue({
                 datas.forEach(proItem=>{
                     switch(index){
                         case 0:
-                            data.data.push(proItem.loadTime)
+                            data.data.push(proItem.loadTime);
                             break;
                         case 1: 
-                            data.data.push(proItem.whiteTime)
+                            data.data.push(proItem.whiteTime);
                             break; 
                         case 2: 
-                            data.data.push(proItem.domTime)
+                            data.data.push(proItem.domTime);
                             break;   
                         case 3: 
-                            data.data.push(proItem.analysisDomTime)
+                            data.data.push(proItem.analysisDomTime);
                             break;   
                         case 4: 
-                            data.data.push(proItem.requestTime)
+                            data.data.push(proItem.requestTime);
                             break;
                         case 5: 
-                            data.data.push(proItem.readyTime)
-                            break;                                        
+                            data.data.push(proItem.readyTime);
+                            break;
+                        case 6:
+                            data.data.push(proItem.dnsTime);
+                            break;
+                        case 7:
+                            data.data.push(proItem.tcpTime);
+                            break;
+                        case 8:
+                            data.data.push(proItem.redirectTime);
+                            break;
+                        case 9:
+                            data.data.push(proItem.unloadTime);
+                            break;
+                        case 10:
+                            data.data.push(proItem.visuallyReadyTime);
+                            break;
+                        case 11:
+                            data.data.push(proItem.firstContentfulPaint);
+                            break;
+                        case 12:
+                            data.data.push(proItem.firstPaint);
+                            break;
+                        case 13:
+                            data.data.push(proItem.perceivedLoadTime);
+                            break;
+                        case 14:
+                            data.data.push(proItem.sumLoadTimes);
+                            break;
                     }
                 })
                 seriesData.push(data)
@@ -292,7 +347,23 @@ new Vue({
                         }
                     }
                 },
-                color:['#f44336','#00bcd4','#3cd87f','#ffeb3b','#e91e63','#9c27b0','#ff9800','#ff5722'],
+                color:[
+                    '#f44336',
+                    '#00bcd4',
+                    '#3cd87f',
+                    '#ffeb3b',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#ff9800',
+                    '#ff5722',
+                    '#33ff00',
+                    '#33ffff',
+                    '#ff33ff',
+                    '#3300ff',
+                    '#ff6666',
+                    '#0066cc',
+                    '#3333ff'
+                ],
                 legend: {
                     data:legendData
                 },

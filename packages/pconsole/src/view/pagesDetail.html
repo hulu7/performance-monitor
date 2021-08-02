@@ -5,81 +5,171 @@
 <link rel="stylesheet" href="/css/page-detail.css">
 <div class="container ajax mb150" id="pagesDetail" v-cloak>
    <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">列表</a>/<a href="/pages/detail/">页面性能</a></h1>
+        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">页面列表</a>/<a href="/pages/detail/">页面性能历史数据</a></h1>
         <commonsearch ></commonsearch>
     </div>
     <div class="common_table_nav">
-        <li :class="{active:table==1}" @click="changeTable(1)">性能详情</li>
-        <li :class="{active:table==2}" @click="changeTable(2)">页面慢加载追踪</li>
+        <li :class="{active:table==1}" @click="changeTable(1)">性能概览</li>
     </div>
     <!-- 页面平均耗时说明 -->
     <div class="block-time" v-show="table==1">
         <div class="item-full div1">
-            <h1 class="h1">页面平均耗时</h1>
+            <h1 class="h1">页面性能历史平均水平</h1>
             <li>
-                <h1>平均加载耗时(s)</h1>
-                <h2 class="red">{{pagesItemData.loadTime|toFixed(true)}}</h2>
+                <h1>平均加载时长</h1>
+                <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
             </li>
             <li>
-                <h1>平均白屏耗时(ms)</h1>
-                <h2 class="red">{{pagesItemData.whiteTime|toFixed}}</h2>
+                <h1>平均白屏时长</h1>
+                <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均DOM构建耗时(s)</h1>
-                <h2>{{pagesItemData.domTime|toFixed(true)}}</h2>
+                <h1>平均DOM构建时长</h1>
+                <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
             </li>
             <li>
-                <h1>平均解析DOM耗时(s)</h1>
-                <h2>{{pagesItemData.analysisDomTime|toFixed(true)}}</h2>
+                <h1>平均解析DOM时长</h1>
+                <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
             </li>
             <li>
                 <h1>调用次数</h1>
-                <h2>{{pagesItemData.count||0}}</h2>
+                <h2>{{pagesItemData.count | toInit}}</h2>
             </li>
             <li>
-                <h1>平均DNS解析耗时(ms)</h1>
-                <h2>{{pagesItemData.dnsTime|toFixed}}</h2>
+                <h1>平均DNS解析时长</h1>
+                <h2>{{pagesItemData.dnsTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均TCP连接耗时(ms)</h1>
-                <h2>{{pagesItemData.tcpTime|toFixed}}</h2>
+                <h1>平均TCP连接时长</h1>
+                <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均页面重定向耗时(ms)</h1>
-                <h2>{{pagesItemData.redirectTime|toFixed}}</h2>
+                <h1>平均页面重定向时长</h1>
+                <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均unload耗时(ms)</h1>
-                <h2>{{pagesItemData.unloadTime|toFixed}}</h2>
+                <h1>平均unload时长</h1>
+                <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均request请求耗时(ms)</h1>
-                <h2>{{pagesItemData.requestTime|toFixed}}</h2>
+                <h1>平均request请求时长</h1>
+                <h2>{{pagesItemData.requestTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均页面准备耗时(ms)</h1>
-                <h2>{{pagesItemData.readyTime|toFixed}}</h2>
+                <h1>平均页面准备时长</h1>
+                <h2>{{pagesItemData.readyTime | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均视觉就绪时长</h1>
+                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均首次内容绘制时长</h1>
+                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均首像素时长</h1>
+                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均可感知加载时长</h1>
+                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均总加载时长</h1>
+                <h2>{{pagesItemData.sumLoadTimes | toFixed}}</h2>
+            </li>
+        </div>
+        <div class="item-full div1">
+            <h1 class="h1">页面资源信息平均值</h1>
+            <li>
+                <h1>附加计时器时长</h1>
+                <h2>{{pagesItemData.additionalTimers | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>重定向次数</h1>
+                <h2>{{pagesItemData.redirectCount | toInit}}</h2>
+            </li>
+            <li>
+                <h1>CPU并发数量</h1>
+                <h2>{{pagesItemData.cpuConcurrency | toInit}}</h2>
+            </li>
+            <li>
+                <h1>主页中唯一域的数量</h1>
+                <h2>{{pagesItemData.uniqueDomainsNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>iframe个数</h1>
+                <h2>{{pagesItemData.iframeNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>IMG节点个数</h1>
+                <h2>{{pagesItemData.imgNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>LINK节点个数</h1>
+                <h2>{{pagesItemData.linkNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>CSS节点个数</h1>
+                <h2>{{pagesItemData.cssNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>主框架的DOM节点数</h1>
+                <h2>{{pagesItemData.domsNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>主框架的资源请求数</h1>
+                <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>主框架的script节点数</h1>
+                <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>主框架的外部script节点数</h1>
+                <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
+            </li>
+            <li>
+                <h1>主框架的HTML字节数</h1>
+                <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
+            </li>
+            <li>
+                <h1>有效带宽</h1>
+                <h2>{{pagesItemData.downlink | toFloat1}} Mb/s</h2>
             </li>
         </div>
     </div>
     <div class="block-time" v-show="table==1">
         <div class="item div2">
-            <h1 class="h1">浏览器分类统计</h1>
-            <div id="echartBorwsers-borwser" class="echartBorwsers"></div>
+            <h1 class="h1">浏览器统计</h1>
+            <div id="ec-browser" class="echartBorwsers"></div>
         </div>
         <div class="item div3">
-            <h1 class="h1">系统分类统计</h1>
-            <div id="echartBorwsers-system" class="echartBorwsers"></div>
+            <h1 class="h1">操作系统统计</h1>
+            <div id="ec-system" class="echartBorwsers"></div>
         </div>
         <div class="item div3">
-            <h1 class="h1">地理位置分类统计</h1>
-            <div id="echartBorwsers-address" class="echartBorwsers"></div>
+            <h1 class="h1">网络类型统计</h1>
+            <div id="ec-effectiveType" class="echartBorwsers"></div>
+        </div>
+        <div class="item div3">
+            <h1 class="h1">屏幕尺寸统计</h1>
+            <div id="ec-screenSize" class="echartBorwsers"></div>
+        </div>
+        <div class="item div3">
+            <h1 class="h1">屏幕方向统计</h1>
+            <div id="ec-screenOrientation" class="echartBorwsers"></div>
+        </div>
+        <div class="item div3">
+            <h1 class="h1">页面切换类型统计</h1>
+            <div id="ec-httpInitiator" class="echartBorwsers"></div>
         </div>
     </div>
 
     <!-- page详情性能列表 -->
     <div class="common-head-title" v-show="table==1">
-        <h1>页面性能详情 <button class="button" @click="showCharts">charts表</button></h1> 
+        <h1>页面性能历史数据 <button class="button" @click="showCharts">表格/曲线图</button></h1> 
         <!-- <div class="table-box main-block" v-show="table==1"> -->
             <div v-show="listdata.length&&!isShowCharts">
                 <table class="table">
@@ -95,13 +185,13 @@
                             <th>页面重定向时间</th>
                             <th>unload时间</th>
                             <th>request请求耗时</th>
-                            <th>页面准备时间</th> 
+                            <th>页面准备时间</th>
                             <th>页面请求时间</th>
                             <th>操作</th>  
                         </tr>
                     </thead>
-                    <tr v-for="(item,index) in listdata" :key="index">
-                        <td ><a :href="'/pages/detail/item?id='+item.id" :title="item.url">{{item.url}}</a></td>
+                    <tr v-for="(item, index) in listdata" :key="index">
+                        <td ><a @click="gotoDetail(item.id)" :title="item.url" style="cursor: pointer;">{{item.url}}</a></td>
                         <td class="tc red">{{item.loadTime|toFixed(true)}}</td>
                         <td class="tc red">{{item.whiteTime|toFixed}}</td>
                         <td class="tc red">{{item.domTime|toFixed(true)}}</td>
@@ -113,7 +203,7 @@
                         <td class="tc">{{item.requestTime|toFixed}}</td>
                         <td class="tc">{{item.readyTime|toFixed}}</td>
                         <td class="tc">{{item.dateTime}}</td>
-                        <td class="tc"><a :href="'/pages/detail/item?id='+item.id">详情</a></td>
+                        <td class="tc"><a @click="gotoDetail(item.id)" style="cursor: pointer;">详情</a></td>
                     </tr>
                 </table>
                 <!--  分页 -->

@@ -26,46 +26,72 @@ class pages {
             let url         = ctx.request.body.url;
 
             // 公共参数
-            let data={systemId}
+            let data = {
+                systemId
+            };
 
-            if(isAllAvg=='false'){
-                if(!url){
+            if(isAllAvg === 'false') {
+                if(!url) {
                     ctx.body = util.result({
                         code: 1001,
                         desc: 'url参数有误!'
                     });
                     return
                 }
-                data.url = url
+                data.url = decodeURIComponent(url);
             }
 
             if(beginTime&&endTime) data.createTime = {egt:beginTime,elt:endTime}
             let totalNum = 0
             if(isAllAvg != 'false'){
-                let sqlTotal = sql.field('count(1) as count').table('web_pages').where(data).group('url').select() 
+                let sqlTotal = sql.field('count(1) as count').table('web_pages').where(data).group('url').select(); 
                 let total = await mysql(sqlTotal);
                 if(total.length) totalNum = total.length
             } 
 
             // 请求列表数据
             let sqlstr = sql.field(`url,
-                                avg(loadTime) as loadTime,
-                                avg(dnsTime) as dnsTime,
-                                avg(tcpTime) as tcpTime,
-                                avg(domTime) as domTime,
-                                avg(whiteTime) as whiteTime,
-                                avg(redirectTime) as redirectTime,
-                                avg(unloadTime) as unloadTime,
-                                avg(requestTime) as requestTime,
-                                avg(analysisDomTime) as analysisDomTime,
-                                avg(readyTime) as readyTime,
-                                count(url) as count
-                                `).table('web_pages')
+                                    avg(loadTime) as loadTime,
+                                    avg(dnsTime) as dnsTime,
+                                    avg(tcpTime) as tcpTime,
+                                    avg(domTime) as domTime,
+                                    avg(whiteTime) as whiteTime,
+                                    avg(redirectTime) as redirectTime,
+                                    avg(unloadTime) as unloadTime,
+                                    avg(requestTime) as requestTime,
+                                    avg(analysisDomTime) as analysisDomTime,
+                                    avg(readyTime) as readyTime,
+                                    avg(bodySize) as bodySize,
+                                    avg(encodedBodySize) as encodedBodySize,
+                                    avg(redirectCount) as redirectCount,
+                                    avg(transferSize) as transferSize,
+                                    avg(cpuConcurrency) as cpuConcurrency,
+                                    avg(visuallyReadyTime) as visuallyReadyTime,
+                                    avg(uniqueDomainsNumber) as uniqueDomainsNumber,
+                                    avg(iframeNumber) as iframeNumber,
+                                    avg(imgNumber) as imgNumber,
+                                    avg(linkNumber) as linkNumber,
+                                    avg(cssNumber) as cssNumber,
+                                    avg(domsNumber) as domsNumber,
+                                    avg(resourcesFetchNumber) as resourcesFetchNumber,
+                                    avg(scriptNumber) as scriptNumber,
+                                    avg(externalScriptNumber) as externalScriptNumber,
+                                    avg(htmlSize) as htmlSize,
+                                    avg(roundTripTime) as roundTripTime,
+                                    avg(firstContentfulPaint) as firstContentfulPaint,
+                                    avg(firstPaint) as firstPaint,
+                                    avg(sumLoadTimes) as sumLoadTimes,
+                                    avg(perceivedLoadTime) as perceivedLoadTime,
+                                    avg(additionalTimers) as additionalTimers,
+                                    avg(downlink) as downlink,
+                                    count(url) as count
+                                    `)
+                            .table('web_pages')
                             .group('url')
                             .order('count desc')
                             .page(pageNo, pageSize)
                             .where(data)
-                            .select()
+                            .select();
 
             let result = await mysql(sqlstr);
 
@@ -91,7 +117,7 @@ class pages {
         }
     }
     // 页面性能详情
-    async getPageItemDetail(ctx){
+    async getPageItemDetail(ctx) {
         try {
             let pageNo      = ctx.request.body.pageNo || 1
             let pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE
@@ -134,8 +160,8 @@ class pages {
 
             ctx.body = util.result({
                 data: {
-                    totalNum:totalNum,
-                    datalist:result
+                    totalNum: totalNum,
+                    datalist: result
                 }
             });
         } catch (err) {

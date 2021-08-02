@@ -329,7 +329,8 @@ a:hover {
   .side .side-main li {
     height: 50px;
     line-height: 50px;
-    font-size: 12px; }
+    font-size: 12px;
+    cursor: pointer; }
     .side .side-main li img {
       display: inline-block;
       width: 15px;
