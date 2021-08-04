@@ -17,7 +17,13 @@
         <div class="block" v-show="table==1">
             <h1 class="h1">启用监控</h1>
             <div class="content">
-                <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch" checked />
+                <span class="mr10">是否启用:</span>
+                <el-switch
+                    v-model="enable"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    @change="settingIsUse">
+              </el-switch>
             </div>
             <h1 class="h1">埋点代码</h1>
             <div class="content">

@@ -12,15 +12,15 @@ new Vue({
                 slowImgTime: ''
             },
             systemInfo: {},
-            systemId: ''
+            systemId: '',
+            enable: true
         }
     },
     filters:{
         toFixed:window.Filter.toFixed
     },
     mounted(){
-        this.getDetail()
-        this.settingIsUse()
+        this.getDetail();
     },
     methods:{
         goHome() {
@@ -34,29 +34,28 @@ new Vue({
                     systemId: this.systemId
                 },
                 success:data=>{
-                    this.systemInfo = data.data||{}
-                    this.pagexingneng()
+                    this.systemInfo = data.data || {};
+                    this.enable = this.systemInfo.isUse === 0;
+                    this.pagexingneng();
                 }
-            })
+            });
         },
         // 设置项目是否接收数据
-        settingIsUse(){
-            var elem = document.querySelector('.js-switch');
-            var init = new Switchery(elem,{ color: '#2077ff'});
-            elem.onchange = function() {
-                util.ajax({
-                    url:config.baseApi+'api/system/isStatisData',
-                    data:{
-                        key:'isUse',
-                        value:elem.checked?0:1
-                    },
-                    success:data=>{
-                        popup.miss({title:'操作成功!'})
-                    }
-                }) 
-            };
+        settingIsUse() {
+            const { systemId } = this;
+            util.ajax({
+                url: `${config.baseApi}api/system/isStatisData`,
+                data: {
+                    systemId,
+                    key:'isUse',
+                    value: this.enable ? 0 : 1
+                },
+                success: data => {
+                    popup.miss({title:'操作成功!'})
+                }
+            });
         },
-        updateSystem(){
+        updateSystem() {
             if(!this.systemInfo.systemName){ popup.alert({title: '请正确填写应用名称!'});  return false; }
             if(!this.systemInfo.systemDomain){ popup.alert({title: '请正确填写应用域名!'}); return false; }
             util.ajax({

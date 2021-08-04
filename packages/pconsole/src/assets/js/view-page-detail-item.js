@@ -7,7 +7,8 @@ new Vue({
             pagesItemData: {},
             sourceslist: [],
             systemId: '',
-            url: ''
+            url: '',
+            isMainApp: false
         }
     },
     filters: {
@@ -42,12 +43,12 @@ new Vue({
             window.location.href = `/pages/detail?systemId=${this.systemId}&&url=${this.url}`;
         },
         emptyHint(id) {
-            const label = document.createElement("label");
-            label.innerHTML = '暂无数据';
             const e = document.getElementById(id);
             if (!e) {
                 return;
             }
+            const label = document.createElement("label");
+            label.innerHTML = '暂无数据';
             e.appendChild(label);
         },
         // 获得页面请求性能详情
@@ -62,12 +63,13 @@ new Vue({
                 success: data => {
                     this.pagesItemData = data.data;
                     this.url = this.pagesItemData.url;
+                    this.isMainApp = this.pagesItemData.app === 'main';
                     if(this.pagesItemData.mainRestiming && JSON.parse(this.pagesItemData.mainRestiming).length > 0) {
                         util.drawWaterfall('main-app', JSON.parse(this.pagesItemData.mainRestiming));
                     } else {
                         this.emptyHint('main-app');
                     }
-                    if (this.pagesItemData.restiming && JSON.parse(this.pagesItemData.restiming).length > 0) {
+                    if (this.pagesItemData.restiming && JSON.parse(this.pagesItemData.restiming).length > 0 && !this.isMainApp) {
                         util.drawWaterfall('sub-app', JSON.parse(this.pagesItemData.restiming));
                     } else {
                         this.emptyHint('sub-app');

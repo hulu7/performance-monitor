@@ -83,6 +83,9 @@ router.post('/api/httptest/getHttpResponseData', controllers.httptest.getHttpRes
 //----------------------------webpagetest--------------------------------------
 router.post('/api/webpagetest/getWebHttpResponseData', controllers.webpagetest.getWebHttpResponseData)
 
+//----------------------------search--------------------------------------
+router.post('/api/search', controllers.system.search)
+
 module.exports = router
 
 

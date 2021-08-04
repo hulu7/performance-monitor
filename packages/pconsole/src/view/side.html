@@ -2,19 +2,22 @@
     <div class="side-main">
         <ul id="side-main-nav">
             <li data-mark="app">
-                <div class="app-title" @click="goHome">当前应用：{{ systemName }}</div>
+                <div class="app-title" @click="goHome">当前系统：{{ systemName }}</div>
             </li>
             <li data-mark="zane">
                 <a @click="goToPagesList"><span class="iconfont">&#xe7cc;</span><span>页面性能</span></a>
             </li>
+            <li data-mark="search">
+                <a @click="goToSearch"><span class="iconfont">&#xe7cc;</span><span>历史搜索</span></a>
+            </li>
             <li data-mark="httptest">
-                <a @click="goToHttpTest"><span class="iconfont">&#xe74a;</span> <span>接口评测</span></a>
+                <a @click="goToHttpTest"><span class="iconfont">&#xe7cc;</span> <span>接口评测</span></a>
             </li>
             <li data-mark="webpagetest">
                 <a @click="goToWebPageTest"><span class="iconfont">&#xe7cc;</span> <span>页面评测</span></a>
             </li>
             <li data-mark="setting">
-                <a @click="goToSetting"><span class="iconfont">&#xe662;</span> <span>系统设置</span></a>
+                <a @click="goToSetting"><span class="iconfont">&#xe7cc;</span> <span>系统设置</span></a>
             </li>
         </ul>
     </div>
@@ -25,9 +28,10 @@
     height: 50px;
     max-width: 180px;
     overflow: hidden;
+    text-overflow:ellipsis;
     background-color: #409eff;
     text-align: center;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 14px;
 }
 </style>

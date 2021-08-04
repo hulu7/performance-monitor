@@ -12,7 +12,7 @@ const htmlmin = require('gulp-htmlmin')
 const clean = require('gulp-clean')
 const browserSync = require("browser-sync").create();
 
-let buildUrl = './dist/build'
+const buildUrl = './dist/build';
 
 const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
 

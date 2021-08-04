@@ -56,21 +56,33 @@ router.get(['/pages'], async(ctx, next) => {
 		datas:datas
 	}); 
 });
+
+//搜索页面
+router.get(['/search'], async(ctx, next) => {
+	let datas = {
+		title: '历史搜索',
+	}
+	await ctx.render('search',{
+		datas: datas
+	}); 
+});
+
 // page详情性能分析
 router.get(['/pages/detail'], async(ctx, next) => {
 	let datas = {
 		title:'page详情性能分析',
 	}
 	await ctx.render('pagesDetail',{
-		datas:datas
+		datas: datas
 	}); 
 });
+
 router.get(['/pages/detail/item'], async(ctx, next) => {
 	let datas = {
 		title:'单个页面详情性能分析',
 	}
 	await ctx.render('pagesDetailItem',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -80,7 +92,7 @@ router.get(['/ajax'], async(ctx, next) => {
 		title:'Ajax列表',
 	}
 	await ctx.render('ajax',{
-		datas:datas
+		datas: datas
 	}); 
 });
 // ajaxDetail详情
@@ -89,7 +101,7 @@ router.get(['/ajax/detail'], async(ctx, next) => {
 		title:'单个Ajax性能分析',
 	}
 	await ctx.render('ajaxDetail',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -99,7 +111,7 @@ router.get(['/slowpages/detail'], async(ctx, next) => {
 		title:'慢页面加载页面列表',
 	}
 	await ctx.render('slowPagesDetail',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -109,7 +121,7 @@ router.get(['/slowresources'], async(ctx, next) => {
 		title:'慢资源统计列表',
 	}
 	await ctx.render('slowresources',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -119,7 +131,7 @@ router.get(['/slowresources/detail'], async(ctx, next) => {
 		title:'慢资源统计列表详情',
 	}
 	await ctx.render('slowresourcesDetail',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -129,7 +141,7 @@ router.get(['/setting'], async(ctx, next) => {
 		title:'系统设置',
 	}
 	await ctx.render('setting',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -139,7 +151,7 @@ router.get(['/httptest'], async(ctx, next) => {
 		title:'HTTP测试分析',
 	}
 	await ctx.render('httptest',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -159,7 +171,7 @@ router.get(['/error'], async(ctx, next) => {
 		title:'错误分析',
 	}
 	await ctx.render('error',{
-		datas:datas
+		datas: datas
 	}); 
 });
 
@@ -169,13 +181,13 @@ router.get(['/error/detail'], async(ctx, next) => {
 		title:'错误分析列表详情',
 	}
 	await ctx.render('errorDetail',{
-		datas:datas
+		datas: datas
 	}); 
 });
 // 错误信息Item详情
 router.get(['/error/detail/item'], async(ctx, next) => {
 	let datas = {
-		title:'错误分析Item详情',
+		title: '错误分析Item详情',
 	}
 	await ctx.render('errorDetailItem',{
 		datas:datas

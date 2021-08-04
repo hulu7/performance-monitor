@@ -1,0 +1,65 @@
+<%- include("./header.html") %>
+<%- include("./side.html") %>
+<!-- 样式 -->
+<link rel="stylesheet" href="/css/search.css">
+<div class="container ajax" id="search" v-cloak>
+   <div class="common-title">
+        <el-button type="text" @click="goHome">首页</el-button>/
+        <el-button type="text" style="color: black;">历史搜索</el-button>
+    </div>
+    <div class="search-box">
+        <el-input placeholder="请输入搜索内容" v-model="keys" class="search-box-input">
+            <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
+        </el-input>
+    </div>
+    <div class="table-box common-padding mt20">
+        <div v-if="isLoading" class="loading-block"></div>
+    </div>
+    <div class="result">
+        <div class="content">
+            <li class="item" v-for="(item, index) in listdata" :key="index">
+                <el-button class="url" type="text" @click="gotoDetail(item)">{{item.url}}</el-button>
+                <h2 class="date">{{item.createTime}}</h2>
+            </li>
+        </div>
+    </div>
+    <div class="tc common_page_style" v-show="!isLoading && listdata.length">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
+    </div>
+    <div class="tc" v-if="!listdata.length">暂无数据!</div>
+</div>
+<script src="/js/Page.js"></script>
+<script src="/js/view-search.js"></script>
+<style scoped>
+.el-button+.el-button {
+    margin-left: 0;
+}
+.search-box {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+.search-box-input {
+    width: 800px;
+}
+.result {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+.content {
+    width: 800px;
+}
+.url {
+    padding: 5px;
+}
+</style>

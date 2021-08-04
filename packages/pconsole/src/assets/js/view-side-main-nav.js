@@ -40,6 +40,9 @@ new Vue({
         goToPagesList() {
             window.location.href = `/pages?systemId=${this.systemId}`;
         },
+        goToSearch() {
+            window.location.href = `/search?systemId=${this.systemId}`;
+        },
         goToHttpTest() {
             window.location.href = `/httptest?systemId=${this.systemId}`;
         },

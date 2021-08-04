@@ -621,12 +621,15 @@ class utilfn {
 
 	// 画瀑布流数据
 	drawWaterfall(elementId, categories) {
+		const target = document.getElementById(elementId);
+		if (!target) {
+			return;
+		}
 		const times = categories.length;
 		if (!times) {
 			return;
 		}
 		categories.reverse();
-		const target = document.getElementById(elementId);
 		target.setAttribute('style', `height: ${times * 40 + 100}px; width: 100%;`);
 		let data = [];
 		const chartDom = document.getElementById(elementId);

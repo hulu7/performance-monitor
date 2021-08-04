@@ -270,6 +270,14 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
     }
 }
 
+const queryIsUse = (appId) => {
+    const sqlstr = sql
+        .table('web_system')
+        .where({ appId })
+        .select();
+    return mysql(sqlstr);
+}
+
 class data {
     //初始化对象
     constructor() {};
@@ -330,7 +338,7 @@ class data {
                 markUser = cookies.markUser
             }
             // 获得用户IP等信息
-            if(!IP&&cookies&&cookies.IP){
+            if(!IP && cookies && cookies.IP){
                 userSystemInfo.ip = decodeURIComponent(cookies.IP)
                 userSystemInfo.isp = decodeURIComponent(cookies.isp)
                 userSystemInfo.country = decodeURIComponent(cookies.country)
@@ -428,12 +436,10 @@ class data {
 
     async getPagePerformance(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
-        try{
-            const instance = new data();
-            let resourceDatas = ctx.request.body || {};
-            let appId = resourceDatas.appId;
-            console.log('-----------resourceDatas-----------', resourceDatas);
-            if(!appId){
+        try {
+            const resourceDatas = ctx.request.body || {};
+            const appId = resourceDatas.appId;
+            if(!appId) {
                 ctx.body=imgsrc;
                 return;
             }; 
@@ -445,8 +451,9 @@ class data {
             let systemItem = systems[0]
             if(systemItem.isUse !== 0){
                 ctx.body=imgsrc;
-                return; 
+                return;
             };
+            console.log('---start store performance data--');
             let createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
             //----------------------------------------存储页面page性能----------------------------------------
             await storePagePerformance(createTime, resourceDatas, systemItem);
@@ -488,7 +495,7 @@ class data {
             let createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
 
             //----------------------------------------存储页面page性能----------------------------------------
-            if(systemItem.isStatisiPages === 0){
+            if(systemItem.isStatisiPages === 0) {
                 let pageTimes = resourceDatas.pageTimes || {}
                 let datas={
                     loadTime:pageTimes.loadTime,
@@ -514,11 +521,11 @@ class data {
                 // 判断是否存入慢表
                 if((pageTimes.loadTime+pageTimes.resourceTime) >= systemItem.slowPageTime*1000) table = 'web_slowpages';
 
-                let sqlstr1 = sql
+                const sqlstr1 = sql
                     .table(table)
                     .data(datas)
                     .insert()
-                let result1 = await mysql(sqlstr1);  
+                await mysql(sqlstr1);  
             }
 
             //----------------------------------------存储页面资源性能----------------------------------------

@@ -85,6 +85,7 @@
     "koa-sslify": "^2.1.2",
     "npm": "^5.6.0",
     "phantom": "^4.0.12",
-    "request-ip": "^2.0.2"
+    "request-ip": "^2.0.2",
+    "elasticsearch": "^16.7.1"
   }
 }

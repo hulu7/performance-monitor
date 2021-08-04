@@ -1,5 +1,6 @@
 import moment from 'moment'
 import sql from 'node-transform-mysql'
+import { Client } from 'elasticsearch'
 import {
     SYSTEM
 } from '../config'
@@ -156,20 +157,20 @@ class user {
     // 设置系统是否需要统计数据
     async isStatisData(ctx){
         try {
-            let id    = ctx.cookie.systemId
-            let key   = ctx.request.body.key
-            let value = ctx.request.body.value
+            const id    = ctx.request.body.systemId
+            const key   = ctx.request.body.key
+            const value = ctx.request.body.value
 
-            let data = {}
-            data[key]=value
+            let data = {};
+            data[key] = value;
 
-            let sqlstr = sql
+            const sqlstr = sql
                 .table('web_system')
                 .data(data)
-                .where({id:id})
-                .update()
+                .where({ id })
+                .update();
 
-            let result = await mysql(sqlstr);
+            const result = await mysql(sqlstr);
 
             ctx.body = util.result({
                 data: result
@@ -185,7 +186,7 @@ class user {
         }
     }
     // 修改应用
-    async updateSystem(ctx){
+    async updateSystem(ctx) {
         try {
             let id              = ctx.request.body.id
             let slowPageTime    = ctx.request.body.slowPageTime
@@ -225,10 +226,106 @@ class user {
             });
 
         } catch (err) {
-            console.log(err)
+            console.error(err)
             ctx.body = util.result({
                 code: 1001,
                 desc: '系统错误!'
+            });
+            return '';
+        }
+    }
+
+    async search(ctx) {
+        const { keys, from, size } = ctx.request.body;
+        try {
+            const client = new Client({
+                host: '10.0.2.15:8081',
+                //将日志信息显示在控制台，默认level:"console"
+                log: 'trace'
+                //将日志信息写入文件中
+                // log:{
+                //     type:'file',
+                //     level:"trace",
+                //     path:"url"
+                // }
+                //设置不同等级输出到不同的地方
+                // log:[
+                //     {
+                //         type:'console',
+                //         level:"error",
+                //     },
+                //     {
+                //         type:"file",
+                //         level:"trace",
+                //         path:"url"
+                //     }
+                // ]
+            });
+    
+            const response = await client.search({
+                    index: 'test_index',
+                    body: {
+                        query:{
+                            match:{
+                                url: keys
+                            }
+                        }
+                    },
+                    from,
+                    size,
+                    sort: ['createTime:desc'] //按createTime降序排序
+                });
+            let result = [];
+            let total = 0;
+            if (response && response.hits && response.hits.hits) {
+                total = response.hits.total.value;
+                result = response.hits.hits.map(hit => {
+                    const {
+                        analysisDomTime,
+                        createTime,
+                        dnsTime,
+                        domTime,
+                        id,
+                        loadTime,
+                        preUrl,
+                        readyTime,
+                        redirectTime,
+                        requestTime,
+                        resourceTime,
+                        systemId,
+                        tcpTime,
+                        unloadTime,
+                        url,
+                        whiteTime } = hit._source;
+                    return {
+                        analysisDomTime,
+                        createTime,
+                        dnsTime,
+                        domTime,
+                        id,
+                        loadTime,
+                        preUrl,
+                        readyTime,
+                        redirectTime,
+                        requestTime,
+                        resourceTime,
+                        systemId,
+                        tcpTime,
+                        unloadTime,
+                        url,
+                        whiteTime
+                    };
+                });
+            }
+            ctx.body = util.result({
+                total,
+                data: result
+            });
+        } catch (err) {
+            console.error(err)
+            ctx.body = util.result({
+                code: 1002,
+                desc: '搜索服务出错!'
             });
             return '';
         }
