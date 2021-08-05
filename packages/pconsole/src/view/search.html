@@ -8,7 +8,11 @@
         <el-button type="text" style="color: black;">历史搜索</el-button>
     </div>
     <div class="search-box">
-        <el-input placeholder="请输入搜索内容" v-model="keys" class="search-box-input">
+        <el-input
+            class="search-box-input"
+            placeholder="请输入搜索内容"
+            v-model="keys"
+            @keydown.enter.native.prevent="search">
             <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
         </el-input>
     </div>
@@ -17,10 +21,25 @@
     </div>
     <div class="result">
         <div class="content">
-            <li class="item" v-for="(item, index) in listdata" :key="index">
-                <el-button class="url" type="text" @click="gotoDetail(item)">{{item.url}}</el-button>
-                <h2 class="date">{{item.createTime}}</h2>
-            </li>
+            <div class="item" v-for="(item, index) in listdata" :key="index">
+                <a class="url" @click="gotoDetail(item)">{{item.url}}</a>
+                <div class="abstract">
+                    <span class="create-time">{{item.createTime|date('/',true)}} </span>
+                    <span>总加载时长 {{item.sumLoadTimes | toFixed}}</span>
+                    <span>视觉就绪时长 {{item.visuallyReadyTime | toFixed}}</span>
+                    <span>可感知加载时长 {{item.perceivedLoadTime | toFixed}}</span>
+                    <span>加载时长 {{item.loadTime | toFixed(true)}}</span>
+                    <span>白屏时长 {{item.whiteTime | toFixed}}</span>
+                    <span>DOM构建时长 {{item.domTime | toFixed(true)}}</span>
+                    <span>解析DOM时长 {{item.analysisDomTime | toFixed(true)}}</span>
+                    <span>DNS解析时长 {{item.dnsTime | toFixed}}</span>
+                    <span>TCP连接时长 {{item.tcpTime | toFixed}}</span>
+                    <span>页面重定向时长 {{item.redirectTime | toFixed}}</span>
+                    <span>页面重定向时长 {{item.redirectTime | toFixed}}</span>
+                    <span>request请求时长 {{item.requestTime | toFixed}}</span>
+                    <span>页面准备时长 {{item.readyTime | toFixed}}</span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="tc common_page_style" v-show="!isLoading && listdata.length">
@@ -34,7 +53,7 @@
             :total="total">
         </el-pagination>
     </div>
-    <div class="tc" v-if="!listdata.length">暂无数据!</div>
+    <div class="tc" v-if="!listdata.length">没搜到!</div>
 </div>
 <script src="/js/Page.js"></script>
 <script src="/js/view-search.js"></script>
@@ -59,7 +78,18 @@
 .content {
     width: 800px;
 }
+.item {
+    padding-bottom: 20px;
+}
 .url {
-    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid;
+    font-size: 18px;
+}
+.abstract {
+    padding-top: 5px;
+}
+.create-time {
+    font-weight: bold;
 }
 </style>

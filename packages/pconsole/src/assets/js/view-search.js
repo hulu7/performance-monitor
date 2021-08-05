@@ -13,7 +13,16 @@ new Vue({
         }
     },
     filters:{
-        toFixed:window.Filter.toFixed
+        toFloat1: (input) => {
+            return input ? parseFloat(input).toFixed(1) : 0.0;
+        },
+        toInit: (input) => {
+            return input ? Math.floor(input) : 0;
+        },
+        toFixed: window.Filter.toFixed,
+        toSize: window.Filter.toSize,
+        date: window.Filter.date,
+        limitTo: window.Filter.limitTo
     },
     mounted(){
         this.init();
@@ -28,8 +37,11 @@ new Vue({
             this.search();
         },
         search() {
-            this.isLoading = true;
             const { keys } = this;
+            if (!keys) {
+                return;
+            }
+            this.isLoading = true;
             util.ajax({
                 url: `${config.baseApi}api/search`,
                 data: {
@@ -52,7 +64,7 @@ new Vue({
             this.systemId = util.queryParameters('systemId');
         },
         gotoDetail(item) {
-            location.href=`/pages/detail?systemId=${this.systemId}&&url=${item.url}`;
+            window.open(`/pages/detail?systemId=${this.systemId}&&url=${item.url}`, `_blank`);
         }
     }
 })

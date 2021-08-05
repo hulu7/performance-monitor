@@ -5,19 +5,34 @@
                 <div class="app-title" @click="goHome">当前系统：{{ systemName }}</div>
             </li>
             <li data-mark="zane">
-                <a @click="goToPagesList"><span class="iconfont">&#xe7cc;</span><span>页面性能</span></a>
+                <a @click="goToPagesList">
+                    <i class="el-icon-s-promotion icon"></i>
+                    <span class="nav-title">页面性能</span>
+                </a>
             </li>
             <li data-mark="search">
-                <a @click="goToSearch"><span class="iconfont">&#xe7cc;</span><span>历史搜索</span></a>
+                <a @click="goToSearch">
+                    <i class="el-icon-search icon"></i>
+                    <span class="nav-title">历史搜索</span>
+                </a>
             </li>
             <li data-mark="httptest">
-                <a @click="goToHttpTest"><span class="iconfont">&#xe7cc;</span> <span>接口评测</span></a>
+                <a @click="goToHttpTest">
+                    <i class="el-icon-stopwatch icon"></i>
+                    <span class="nav-title">接口评测</span>
+                </a>
             </li>
             <li data-mark="webpagetest">
-                <a @click="goToWebPageTest"><span class="iconfont">&#xe7cc;</span> <span>页面评测</span></a>
+                <a @click="goToWebPageTest">
+                    <i class="el-icon-document-checked icon"></i>
+                    <span class="nav-title">页面评测</span>
+                </a>
             </li>
             <li data-mark="setting">
-                <a @click="goToSetting"><span class="iconfont">&#xe7cc;</span> <span>系统设置</span></a>
+                <a @click="goToSetting">
+                    <i class="el-icon-setting icon"></i>
+                    <span class="nav-title">系统设置</span>
+                </a>
             </li>
         </ul>
     </div>
@@ -32,6 +47,13 @@
     background-color: #409eff;
     text-align: center;
     color: #ffffff;
+    font-size: 14px;
+}
+.nav-title {
+    font-size: 14px;
+    margin-left: 4px;
+}
+.icon {
     font-size: 14px;
 }
 </style>

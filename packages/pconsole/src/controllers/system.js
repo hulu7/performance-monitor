@@ -281,39 +281,41 @@ class user {
                 total = response.hits.total.value;
                 result = response.hits.hits.map(hit => {
                     const {
+                        id,
+                        url,
+                        bodySize,
                         analysisDomTime,
                         createTime,
                         dnsTime,
                         domTime,
-                        id,
                         loadTime,
-                        preUrl,
                         readyTime,
                         redirectTime,
                         requestTime,
-                        resourceTime,
                         systemId,
                         tcpTime,
-                        unloadTime,
-                        url,
-                        whiteTime } = hit._source;
+                        whiteTime,
+                        visuallyReadyTime,
+                        perceivedLoadTime,
+                        sumLoadTimes } = hit._source;
                     return {
+                        id,
+                        url,
+                        bodySize,
                         analysisDomTime,
                         createTime,
                         dnsTime,
                         domTime,
-                        id,
                         loadTime,
-                        preUrl,
                         readyTime,
                         redirectTime,
                         requestTime,
-                        resourceTime,
                         systemId,
                         tcpTime,
-                        unloadTime,
-                        url,
-                        whiteTime
+                        whiteTime,
+                        visuallyReadyTime,
+                        perceivedLoadTime,
+                        sumLoadTimes
                     };
                 });
             }

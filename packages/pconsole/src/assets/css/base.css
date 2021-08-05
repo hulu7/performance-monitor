@@ -346,7 +346,7 @@ a:hover {
       display: block;
       width: 100%;
       height: 100%;
-      padding-left: 30px;
+      text-align: center;
       color: #333; }
       .side .side-main li a .iconfont {
         color: #999; }

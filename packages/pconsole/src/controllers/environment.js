@@ -58,7 +58,7 @@ class pages {
             };
             const httpInitiatorMap = {
                 spa: '应用内跳转',
-                spa_hard: '通过url进入'
+                spa_hard: '通过url访问'
             };
             if (type === 'boomerangSnippetMethod') {
                 result.forEach((item, index) => {

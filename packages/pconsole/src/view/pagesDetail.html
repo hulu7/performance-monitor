@@ -175,6 +175,7 @@
                         <tr>
                             <th>时间</th>
                             <th class="break-word">页面链接</th>
+                            <th>访问方式</th>
                             <th>页面加载时长</th>
                             <th>白屏时长</th>
                             <th>DNS解析时长</th>
@@ -189,6 +190,7 @@
                         <td style="text-align: center;">
                             <a @click="gotoDetail(item.id)" :title="item.url" style="cursor: pointer;">性能详情</a>
                         </td>
+                        <td class="tc red">{{item.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</td>
                         <td class="tc red">{{item.loadTime|toFixed(true)}}</td>
                         <td class="tc red">{{item.whiteTime|toFixed}}</td>
                         <td class="tc">{{item.dnsTime|toFixed}}</td>
