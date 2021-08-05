@@ -16,7 +16,7 @@
             <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
         </el-input>
     </div>
-    <div class="table-box common-padding mt20">
+    <div class="table-box common-padding">
         <div v-if="isLoading" class="loading-block"></div>
     </div>
     <div class="result">
@@ -25,11 +25,10 @@
                 <a class="url" @click="gotoDetail(item)">{{item.url}}</a>
                 <div class="abstract">
                     <span class="create-time">{{item.createTime|date('/',true)}} </span>
-                    <span>总加载时长 {{item.sumLoadTimes | toFixed}}</span>
-                    <span>视觉就绪时长 {{item.visuallyReadyTime | toFixed}}</span>
-                    <span>可感知加载时长 {{item.perceivedLoadTime | toFixed}}</span>
                     <span>加载时长 {{item.loadTime | toFixed(true)}}</span>
                     <span>白屏时长 {{item.whiteTime | toFixed}}</span>
+                    <span>视觉就绪时长 {{item.visuallyReadyTime | toFixed}}</span>
+                    <span>可感知加载时长 {{item.perceivedLoadTime | toFixed}}</span>
                     <span>DOM构建时长 {{item.domTime | toFixed(true)}}</span>
                     <span>解析DOM时长 {{item.analysisDomTime | toFixed(true)}}</span>
                     <span>DNS解析时长 {{item.dnsTime | toFixed}}</span>
@@ -47,7 +46,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[10, 20, 50, 100]"
+            :page-sizes="[5, 10, 20, 50, 100]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -55,7 +54,6 @@
     </div>
     <div class="tc" v-if="!listdata.length">没搜到!</div>
 </div>
-<script src="/js/Page.js"></script>
 <script src="/js/view-search.js"></script>
 <style scoped>
 .el-button+.el-button {
@@ -79,7 +77,7 @@
     width: 800px;
 }
 .item {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 .url {
     cursor: pointer;

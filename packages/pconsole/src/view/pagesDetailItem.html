@@ -23,6 +23,22 @@
                 <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
             </li>
             <li>
+                <h1>首像素时长</h1>
+                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>首次内容绘制时长</h1>
+                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>视觉就绪时长</h1>
+                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>可感知加载时长</h1>
+                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
+            </li>
+            <li>
                 <h1>DOM构建时长</h1>
                 <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
             </li>
@@ -53,26 +69,6 @@
             <li>
                 <h1>页面准备时长</h1>
                 <h2>{{pagesItemData.readyTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>视觉就绪时长</h1>
-                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>首次内容绘制时长</h1>
-                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>首像素时长</h1>
-                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>可感知加载时长</h1>
-                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>总加载时长</h1>
-                <h2>{{pagesItemData.sumLoadTimes | toFixed}}</h2>
             </li>
         </div>
         <div class="common-block fr">
@@ -120,23 +116,23 @@
         <div class="common-block">
             <h1 class="h1">页面资源信息</h1>
             <li>
-                <h1>主框架的DOM节点数</h1>
+                <h1>主框架DOM节点数</h1>
                 <h2>{{pagesItemData.domsNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的script节点数</h1>
+                <h1>主框架script节点数</h1>
                 <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的外部script节点数</h1>
+                <h1>主框架外部script节点数</h1>
                 <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的HTML字节数</h1>
+                <h1>主框架HTML字节数</h1>
                 <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
             </li>
             <li>
-                <h1>主框架的资源请求数</h1>
+                <h1>主框架资源请求数</h1>
                 <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
             </li>
             <li>
@@ -156,7 +152,7 @@
                 <h2>{{pagesItemData.cssNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主页中唯一域的数量</h1>
+                <h1>主页中唯一域数量</h1>
                 <h2>{{pagesItemData.uniqueDomainsNumber | toInit}}</h2>
             </li>
             <li>

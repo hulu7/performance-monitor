@@ -26,16 +26,28 @@
                 <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
             </li>
             <li>
+                <h1>平均首像素时长</h1>
+                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均首次内容绘制时长</h1>
+                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均视觉就绪时长</h1>
+                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>平均可感知加载时长</h1>
+                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
+            </li>
+            <li>
                 <h1>平均DOM构建时长</h1>
                 <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
             </li>
             <li>
                 <h1>平均解析DOM时长</h1>
                 <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>访问次数</h1>
-                <h2>{{pagesItemData.count | toInit}}</h2>
             </li>
             <li>
                 <h1>平均DNS解析时长</h1>
@@ -62,46 +74,30 @@
                 <h2>{{pagesItemData.readyTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均视觉就绪时长</h1>
-                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均首次内容绘制时长</h1>
-                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均首像素时长</h1>
-                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均可感知加载时长</h1>
-                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均总加载时长</h1>
-                <h2>{{pagesItemData.sumLoadTimes | toFixed}}</h2>
+                <h1>访问总次数</h1>
+                <h2>{{pagesItemData.count | toInit}}</h2>
             </li>
         </div>
         <div class="item-full div1">
             <h1 class="h1">页面资源信息平均值</h1>
             <li>
-                <h1>主框架的DOM节点数</h1>
+                <h1>主框架DOM节点数</h1>
                 <h2>{{pagesItemData.domsNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的script节点数</h1>
+                <h1>主框架script节点数</h1>
                 <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的外部script节点数</h1>
+                <h1>主框架外部script节点数</h1>
                 <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的资源请求数</h1>
+                <h1>主框架资源请求数</h1>
                 <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架的HTML字节数</h1>
+                <h1>主框架HTML字节数</h1>
                 <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
             </li>
             <li>
@@ -190,7 +186,8 @@
                         <td style="text-align: center;">
                             <a @click="gotoDetail(item.id)" :title="item.url" style="cursor: pointer;">性能详情</a>
                         </td>
-                        <td class="tc red">{{item.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</td>
+                        <td class="tc" :class="item.httpInitiator === 'spa' ? '' : 'red'">
+                            {{item.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</td>
                         <td class="tc red">{{item.loadTime|toFixed(true)}}</td>
                         <td class="tc red">{{item.whiteTime|toFixed}}</td>
                         <td class="tc">{{item.dnsTime|toFixed}}</td>

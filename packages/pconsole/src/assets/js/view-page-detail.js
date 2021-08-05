@@ -276,8 +276,7 @@ new Vue({
                 '视觉就绪时长',
                 '首次内容绘制时长',
                 '首像素时长',
-                '可感知加载时长',
-                '总加载时长'
+                '可感知加载时长'
             ]
             let xAxisData   = []
             let seriesData  = []
@@ -330,9 +329,6 @@ new Vue({
                             break;
                         case 13:
                             data.data.push(proItem.perceivedLoadTime);
-                            break;
-                        case 14:
-                            data.data.push(proItem.sumLoadTimes);
                             break;
                     }
                 })
