@@ -21,18 +21,7 @@ router.get(['/'], async(ctx, next) => {
 	}
 
 	await ctx.render('system',{
-		datas:datas
-	}); 
-});
-
-/*登录*/
-router.get(['/login'], async(ctx, next) => {
-	let datas = {
-		title:'用户登录',
-	}
-
-	await ctx.render('login',{
-		datas:datas
+		datas
 	}); 
 });
 
@@ -43,7 +32,7 @@ router.get(['/addSystem'], async(ctx, next) => {
 	}
 
 	await ctx.render('addSystem',{
-		datas:datas
+		datas
 	}); 
 });
 
@@ -53,7 +42,7 @@ router.get(['/pages'], async(ctx, next) => {
 		title:'page性能分析',
 	}
 	await ctx.render('pages',{
-		datas:datas
+		datas
 	}); 
 });
 
@@ -63,7 +52,7 @@ router.get(['/search'], async(ctx, next) => {
 		title: '历史搜索',
 	}
 	await ctx.render('search',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -73,7 +62,7 @@ router.get(['/pages/detail'], async(ctx, next) => {
 		title:'page详情性能分析',
 	}
 	await ctx.render('pagesDetail',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -82,7 +71,7 @@ router.get(['/pages/detail/item'], async(ctx, next) => {
 		title:'单个页面详情性能分析',
 	}
 	await ctx.render('pagesDetailItem',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -92,7 +81,7 @@ router.get(['/ajax'], async(ctx, next) => {
 		title:'Ajax列表',
 	}
 	await ctx.render('ajax',{
-		datas: datas
+		datas
 	}); 
 });
 // ajaxDetail详情
@@ -101,7 +90,7 @@ router.get(['/ajax/detail'], async(ctx, next) => {
 		title:'单个Ajax性能分析',
 	}
 	await ctx.render('ajaxDetail',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -111,7 +100,7 @@ router.get(['/slowpages/detail'], async(ctx, next) => {
 		title:'慢页面加载页面列表',
 	}
 	await ctx.render('slowPagesDetail',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -121,7 +110,7 @@ router.get(['/slowresources'], async(ctx, next) => {
 		title:'慢资源统计列表',
 	}
 	await ctx.render('slowresources',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -131,7 +120,7 @@ router.get(['/slowresources/detail'], async(ctx, next) => {
 		title:'慢资源统计列表详情',
 	}
 	await ctx.render('slowresourcesDetail',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -141,7 +130,7 @@ router.get(['/setting'], async(ctx, next) => {
 		title:'系统设置',
 	}
 	await ctx.render('setting',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -151,7 +140,7 @@ router.get(['/httptest'], async(ctx, next) => {
 		title:'HTTP测试分析',
 	}
 	await ctx.render('httptest',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -161,7 +150,7 @@ router.get(['/webpagetest'], async(ctx, next) => {
 		title:'WEB页面性能分析测试',
 	}
 	await ctx.render('webpagetest',{
-		datas:datas
+		datas
 	}); 
 });
 
@@ -171,7 +160,7 @@ router.get(['/error'], async(ctx, next) => {
 		title:'错误分析',
 	}
 	await ctx.render('error',{
-		datas: datas
+		datas
 	}); 
 });
 
@@ -181,7 +170,7 @@ router.get(['/error/detail'], async(ctx, next) => {
 		title:'错误分析列表详情',
 	}
 	await ctx.render('errorDetail',{
-		datas: datas
+		datas
 	}); 
 });
 // 错误信息Item详情
@@ -190,7 +179,7 @@ router.get(['/error/detail/item'], async(ctx, next) => {
 		title: '错误分析Item详情',
 	}
 	await ctx.render('errorDetailItem',{
-		datas:datas
+		datas
 	}); 
 });
 
@@ -199,6 +188,16 @@ router.get(['/.well-known/pki-validation/fileauth.txt'], async(ctx, next) => {
 	let string = fs.readFileSync(path.resolve(__dirname, '../assets/other/fileauth.txt')).toString()
 	ctx.body=string
 })
+
+//帮助文档
+router.get(['/help'], async(ctx, next) => {
+	let datas = {
+		title:'帮助文档',
+	}
+	await ctx.render('help',{
+		datas: datas
+	}); 
+});
 
 
 module.exports = router

@@ -263,20 +263,20 @@ new Vue({
             let datas       = this.listdata;
             if(!datas.length) return;
             let legendData  = [
-                '页面加载时长',
-                '白屏时长',
-                'DOM构建时长',
+                '页面加载时间',
+                '白屏时间',
+                'DOM构建时间',
                 '解析DOM耗时',
-                'request请求时长',
-                '页面准备时长',
+                'request请求时间',
+                '页面准备时间',
                 'DNS解析',
-                'TCP连接时长',
-                '重定向时长',
-                'unload时长',
-                '视觉就绪时长',
-                '首次内容绘制时长',
-                '首像素时长',
-                '可感知加载时长'
+                'TCP连接时间',
+                '重定向时间',
+                'unload时间',
+                '视觉就绪时间',
+                '首次内容绘制时间',
+                '首像素时间',
+                '可感知加载时间'
             ]
             let xAxisData   = []
             let seriesData  = []
