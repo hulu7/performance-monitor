@@ -11,9 +11,7 @@ import {
 
 class user {
     //初始化对象
-    constructor() {
-
-    };
+    constructor() {};
 
     // 查询应用list
     async getSystemList(ctx){
@@ -116,7 +114,7 @@ class user {
                 timestamp,
                 random:util.randomString()
             }).paySign;
-            let script = `<script src="${SYSTEM.ORIGIN}/monitor/boomerang-1.0.0.min.js"><\/script><script src=${SYSTEM.ORIGIN}/monitor/history.min.js"><\/script><script >BOOMR.init({beacon_url: "${SYSTEM.ORIGIN}/report",AppId:"${token}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
+            let script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${token}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
 
             // 插入数据
             let data={

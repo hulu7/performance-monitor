@@ -4,12 +4,20 @@ let PROT = 18088;
 // ORIGIN参数匹配是否是https
 const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
 let ORIGIN = `http://127.0.0.1:${PROT}`
-if(IS_HTTPS == 'TRUE') ORIGIN = `https://127.0.0.1:${PROT}`
+const PRODORIGIN = 'dev.performance-monitor.local'
+if(IS_HTTPS == 'TRUE') {
+	ORIGIN = `https://127.0.0.1:${PROT}`
+}
 
 // 系统配置
 export let SYSTEM = {
+	//端口协议
+	IS_HTTPS,
+
 	//允许调用接口的域名，用来检测防盗链
-	ORIGIN: ORIGIN,
+	ORIGIN,
+
+	PRODORIGIN,
 
 	// HTTP服务器端口号
 	PROT: PROT,
