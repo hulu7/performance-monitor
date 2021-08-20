@@ -12,7 +12,9 @@
     <div class="common_table_nav">
         <li :class="{active:table==1}" @click="changeTable(1)">性能概览</li>
     </div>
-    <div class="current-page">评测页面: {{pagesItemData.url}}</div>
+    <div class="current-page">
+        <span>页面 {{pagesItemData.url}}</span>
+    </div>
     <!-- 页面平均耗时说明 -->
     <div class="block-time" v-show="table==1">
         <div class="item-full div1">

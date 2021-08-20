@@ -9,7 +9,9 @@
         <el-button type="text" @click="goToPageHistory">页面性能历史数据</el-button>/
         <el-button type="text" style="color: black;">页面性能详情</el-button>
     </div>
-    <div class="current-page">评测页面: {{pagesItemData.url}}</div>
+    <div class="current-page">
+        <span>页面 {{pagesItemData.url}}</span>
+    </div>
     <!-- 页面平均耗时说明 -->
     <div class="common-margin">
         <div class="common-block fl">

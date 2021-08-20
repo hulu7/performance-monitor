@@ -776,6 +776,9 @@ class utilfn {
 		};
 
 		option && myChart.setOption(option);
+		window.onresize = () => {
+			myChart.resize();
+		};
 	}
 }
 

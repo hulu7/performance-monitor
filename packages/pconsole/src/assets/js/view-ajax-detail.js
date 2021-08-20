@@ -136,6 +136,9 @@ new Vue({
                 }]
             };
             myChart.setOption(option);
+            window.onresize = () => {
+                myChart.resize();
+            };
         }
        
     }

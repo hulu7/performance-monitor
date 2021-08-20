@@ -2,7 +2,7 @@
     <div class="side-main">
         <ul id="side-main-nav">
             <li data-mark="app">
-                <div class="app-title" @click="goHome">当前系统：{{ systemName }}</div>
+                <div class="app-title" @click="goHome">{{ systemName }}</div>
             </li>
             <li data-mark="zane">
                 <a @click="goToPagesList">
@@ -42,6 +42,7 @@
     text-align: center;
     color: #ffffff;
     font-size: 14px;
+    box-shadow: 0 5px 12px 5px rgb(0 0 0 / 10%);
 }
 .nav-title {
     font-size: 14px;

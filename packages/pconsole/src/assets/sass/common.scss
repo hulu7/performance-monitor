@@ -18,11 +18,11 @@
     line-height:40px;
     background:#fff;
     overflow:hidden;
-    padding:0 20px;
     position:fixed;
     left:0;
     top:0;
     z-index:10000;
+    border-bottom: 1px solid rgba(0,0,0,.12);
     .left{
         img{
             height:25px;

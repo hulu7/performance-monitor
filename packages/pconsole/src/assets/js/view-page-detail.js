@@ -239,10 +239,20 @@ new Vue({
                         }
                     }
                 },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: {show: true}
+                    }
+                },
                 series: [{
                     type: 'pie',
-                    radius : '45%',
-                    center: ['22%', '50%'],
+                    radius : [20, 60],
+                    center: ['30%', '50%'],
+                    roseType: 'area',
+                    itemStyle: {
+                        borderRadius: 4
+                    },
                     label: {
                         normal: {
                             show: false,
@@ -252,6 +262,9 @@ new Vue({
                 }]
             };
             myChart.setOption(option);
+            window.onresize = () => {
+                myChart.resize();
+            };
         },
         showCharts(){
             this.isShowCharts = !this.isShowCharts
@@ -389,6 +402,9 @@ new Vue({
                 series : seriesData
             };
             myChart.setOption(option);
+            window.onresize = () => {
+                myChart.resize();
+            };
         },
         gotoAjaxDetail(item){
             location.href="/ajax/detail?name="+encodeURIComponent(item.name)

@@ -159,6 +159,9 @@ new Vue({
                 series : seriesData
             };
             myChart.setOption(option);
+            window.onresize = () => {
+                myChart.resize();
+            };
         }
        
     }
