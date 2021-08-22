@@ -1,12 +1,7 @@
 import sql from 'node-transform-mysql'
-import moment from 'moment'
-import {
-    SYSTEM
-} from '../config'
 import {
     util,
     mysql,
-    getsql,
 } from '../tool'
 
 class pages {
@@ -18,13 +13,13 @@ class pages {
         try {
             let beginTime   = ctx.request.body.beginTime || ''
             let endTime     = ctx.request.body.endTime || ''
-            let url         = ctx.request.body.url
+            let pageId         = ctx.request.body.pageId
             let type        = ctx.request.body.type || 1
 
-            if(!url){
+            if(!pageId){
                 ctx.body = util.result({
                     code: 1001,
-                    desc: 'url参数有误!'
+                    desc: 'pageId参数有误!'
                 });
                 return
             }
@@ -34,7 +29,7 @@ class pages {
             let group = type;
 
             // 公共参数
-            let data = { url };
+            let data = { pageId };
             if(beginTime && endTime) {
                 data.createTime = {
                     egt: beginTime,
@@ -57,6 +52,7 @@ class pages {
                 s: 'src'
             };
             const httpInitiatorMap = {
+                cache: '页面缓存',
                 spa: '应用内跳转',
                 spa_hard: '通过url访问'
             };

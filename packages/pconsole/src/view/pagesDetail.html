@@ -166,86 +166,78 @@
     <!-- page详情性能列表 -->
     <div class="common-head-title" v-show="table==1">
         <h1>页面性能历史数据 <button class="button" @click="showCharts">表格/曲线图</button></h1> 
-        <!-- <div class="table-box main-block" v-show="table==1"> -->
             <div v-show="listdata.length && !isShowCharts">
-                <table class="table"> 
-                    <thead>
-                        <tr>
-                            <th>时间</th>
-                            <th class="break-word">页面链接</th>
-                            <th>访问方式</th>
-                            <th>页面加载时间</th>
-                            <th>白屏时间</th>
-                            <th>DNS解析时间</th>
-                            <th>TCP连接时间</th>
-                            <th>页面重定向时间</th>
-                            <th>request请求时间</th>
-                            <th>操作</th>  
-                        </tr>
-                    </thead>
-                    <tr v-for="(item, index) in listdata" :key="index">
-                        <td class="tc">{{item.dateTime}}</td>
-                        <td style="text-align: center;">
-                            <a @click="gotoDetail(item.id)" :title="item.url" style="cursor: pointer;">性能详情</a>
-                        </td>
-                        <td class="tc" :class="item.httpInitiator === 'spa' ? '' : 'red'">
-                            {{item.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</td>
-                        <td class="tc red">{{item.loadTime|toFixed(true)}}</td>
-                        <td class="tc red">{{item.whiteTime|toFixed}}</td>
-                        <td class="tc">{{item.dnsTime|toFixed}}</td>
-                        <td class="tc">{{item.tcpTime|toFixed}}</td>
-                        <td class="tc">{{item.redirectTime|toFixed}}</td>
-                        <td class="tc">{{item.requestTime|toFixed}}</td>
-                        <td class="tc"><a @click="gotoDetail(item.id)" style="cursor: pointer;">详情</a></td>
-                    </tr>
-                </table>
-                <!--  分页 -->
-                <div class="tc common_page_style">
-                    <div id="copot-page-pages" class="copot-page"></div>
+                <el-table
+                    :data="listdata"
+                    style="width: 100%"
+                    max-height="600px">
+                    <el-table-column
+                        prop="dateTime"
+                        label="时间">
+                        <template slot-scope="scope">
+                            <span>{{ scope.row.dateTime }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="id"
+                        label="页面链接">
+                        <template slot-scope="scope">
+                            <el-button
+                                @click.native.prevent="gotoDetail(scope.row.id)"
+                                type="text"
+                                size="small">
+                                性能详情
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="httpInitiator"
+                        label="访问方式">
+                        <template slot-scope="scope">
+                            <span class="tc" :class="scope.row.httpInitiator === 'spa' ? '' : 'red'">
+                                {{scope.row.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="loadTime"
+                        label="页面加载时间">
+                        <template slot-scope="scope">
+                            <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="requestTime"
+                        label="请求时间">
+                        <template slot-scope="scope">
+                            <span class="tc">{{scope.row.requestTime|toFixed(true)}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="whiteTime"
+                        label="白屏时间">
+                        <template slot-scope="scope">
+                            <span class="tc">{{scope.row.whiteTime|toFixed(true)}}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="tc common_page_style" v-show="!isLoading && listdata.length">
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[5, 10, 20, 50, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total">
+                    </el-pagination>
                 </div>
             </div>
-            <div v-show="!listdata.length&&!isLoadEnd" class="loading-block"></div>
-            <div v-show="!listdata.length&&isLoadEnd" class="common-no-data">暂无数据!</div>
+            <div v-show="!listdata.length && isLoading" class="loading-block"></div>
+            <div v-show="!listdata.length && !isLoading" class="common-no-data">暂无数据!</div>
         <!-- </div> -->
         <div id="charts-pages" v-show="isShowCharts" class="charts-pages"></div>
     </div>
-    <!-- 页面慢加载 -->
-    <div class="table-box main-block" v-show="table==2">
-        <div v-show="listslowpages.length">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="break-word">URL</th>
-                        <th>页面总耗时</th>
-                        <th>页面加载时间</th>
-                        <th>白屏时间</th>
-                        <th>DOM构建时间</th>
-                        <th>解析dom耗时</th>
-                        <th>页面准备时间</th> 
-                        <th>创建时间</th>
-                    </tr>
-                </thead>
-                <tr v-for="(item,index) in listslowpages" :key="index">
-                    <td><a :href="'/pages/detail/item?id='+item.id+'&type=slow'" :title="item.url">{{item.url|limitTo(40)}}</a></td>
-                    <td class="tc">{{item.loadTime|toFixed(true)}}</td>
-                    <td class="tc">{{item.whiteTime|toFixed}}</td>
-                    <td class="tc"><a :href="'/pages/detail/item?id='+item.id+'&type=slow'">{{item.resourceTime|toFixed(true)}}</a></td>
-                    <td class="tc">{{item.domTime|toFixed(true)}}</td>
-                    <td class="tc">{{item.analysisDomTime|toFixed(true)}}</td>
-                    <td class="tc">{{item.readyTime|toFixed}}</td>
-                    <td class="tc">{{item.createTime|date('/',true)}}</td>
-                </tr>
-            </table>
-            <!--  分页 -->
-            <div class="tc common_page_style">
-                <div id="copot-page-slowpages" class="copot-page"></div>
-            </div>
-        </div>
-        <div v-show="!listslowpages.length&&!isLoadEnd" class="loading-block"></div>
-        <div v-show="!listslowpages.length&&isLoadEnd" class="common-no-data">暂无数据!</div>
-    </div>
 </div>
-<script src="/js/Page.js"></script>
 <script src="/js/view-page-detail.js"></script>
 <style scoped>
 .el-button+.el-button {

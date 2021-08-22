@@ -7,8 +7,8 @@ new Vue({
             pagesItemData: {},
             sourceslist: [],
             systemId: '',
-            url: '',
-            isMainApp: false
+            pageId: '',
+            url: ''
         }
     },
     filters: {
@@ -32,6 +32,7 @@ new Vue({
     methods: {
         init() {
             this.systemId = util.queryParameters('systemId');
+            this.pageId = util.getQueryString('pageId');
         },
         goHome() {
             window.location.href = '/';
@@ -40,7 +41,7 @@ new Vue({
             window.location.href = `/pages?systemId=${this.systemId}`;
         },
         goToPageHistory() {
-            window.location.href = `/pages/detail?systemId=${this.systemId}&&url=${this.url}`;
+            window.location.href = `/pages/detail?systemId=${this.systemId}&pageId=${this.pageId}`;
         },
         emptyHint(id) {
             const e = document.getElementById(id);
@@ -63,13 +64,12 @@ new Vue({
                 success: data => {
                     this.pagesItemData = data.data;
                     this.url = this.pagesItemData.url;
-                    this.isMainApp = this.pagesItemData.app === 'main';
                     if(this.pagesItemData.mainRestiming && JSON.parse(this.pagesItemData.mainRestiming).length > 0) {
                         util.drawWaterfall('main-app', JSON.parse(this.pagesItemData.mainRestiming));
                     } else {
                         this.emptyHint('main-app');
                     }
-                    if (this.pagesItemData.restiming && JSON.parse(this.pagesItemData.restiming).length > 0 && !this.isMainApp) {
+                    if (this.pagesItemData.restiming && JSON.parse(this.pagesItemData.restiming).length > 0) {
                         util.drawWaterfall('sub-app', JSON.parse(this.pagesItemData.restiming));
                     } else {
                         this.emptyHint('sub-app');

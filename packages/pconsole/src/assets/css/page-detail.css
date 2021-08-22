@@ -21,6 +21,7 @@
     overflow: hidden;
     padding: 20px; }
   .block-time .h1 {
+    border-radius: 3px;
     font: 300 18px/14px 'Roboto', sans-serif;
     letter-spacing: 0;
     background-color: #eee;
@@ -38,7 +39,7 @@
       float: left;
       margin: 8px 0; }
     .block-time .item-full h1 {
-      border-radius: 2px;
+      border-radius: 3px;
       font: 300 18px/14px 'Roboto', sans-serif;
       letter-spacing: 0;
      }

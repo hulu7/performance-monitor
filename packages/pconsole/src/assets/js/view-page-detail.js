@@ -7,17 +7,16 @@ new Vue({
             listAjax: [],
             listslowpages: [],
             listresources: [],
-            pageNo: 1,
             pageSize: config.pageSize,
-            totalNum: 0,
-            isLoadEnd: false,
-            url: '',
+            total: 0,
+            currentPage: 1,
+            isLoading: false,
             pagesItemData: {},
             isShowCharts: false,
             systemId: '',
         }
     },
-    filters:{
+    filters: {
         toFloat1: (input) => {
             return input ? parseFloat(input).toFixed(1) : 0.0;
         },
@@ -31,10 +30,10 @@ new Vue({
     },
     beforeMount(){
         this.init();
-        if(this.url){
+        if(this.pageId){
             this.getAverageValues()
         }
-        this.changeTable(1);
+        this.fetchHistory();
         const statics = [
             'browser', //浏览器
             'system', //操作系统
@@ -47,6 +46,14 @@ new Vue({
     },
     mounted(){},
     methods:{
+        handleSizeChange(pageSize) {
+            this.pageSize = pageSize;
+            this.fetchHistory();
+        },
+        handleCurrentChange(currentPage) {
+            this.currentPage = currentPage
+            this.fetchHistory();
+        },
         goHome() {
             window.location.href = '/';
         },
@@ -55,18 +62,17 @@ new Vue({
         },
         init() {
             this.systemId = util.queryParameters('systemId');
-            this.url = util.getQueryString('url');
+            this.pageId = util.getQueryString('pageId');
         },
         gotoDetail(id) {
-            location.href = `/pages/detail/item?systemId=${this.systemId}&&id=${id}`;
+            window.open(`/pages/detail/item?systemId=${this.systemId}&id=${id}`, `_blank`);
         },
-        // 获得平均性能
         getAverageValues() {
             util.ajax({
-                url: `${config.baseApi}api/pages/getPageList`,
+                url: `${config.baseApi}api/pages/getPageAverage`,
                 data: {
                     systemId: this.systemId,
-                    url: this.url,
+                    pageId: this.pageId,
                     isAllAvg: false,
                 },
                 success: data => {
@@ -74,82 +80,21 @@ new Vue({
                 }
             })
         },
-        changeTable(number) {
-            this.isLoadEnd  =false
-            this.pageNo     = 1
-            this.table      = number
-            let api         = ''
-            let pageName    = ''
-            switch(number){
-                case 1:
-                    if(!this.listdata.length){
-                        api         = 'api/pages/getPageItemDetail',
-                        pageName    = '#copot-page-pages'
-                        this.getinit(api,pageName);
-                    } 
-                    break;
-                case 2:
-                    if(!this.listAjax.length){
-                        api         = 'api/ajax/getPageItemDetail',
-                        pageName    = '#copot-page-ajax'
-                        this.getinit(api,pageName);
-                    }
-                    break;
-                case 3:
-                    if(!this.listslowpages.length) {
-                        api         = 'api/slowpages/getSlowPageItem',
-                        pageName    = '#copot-page-slowpages'
-                        this.getinit(api,pageName);
-                    }
-                    break;
-                case 4:
-                    if(!this.listresources.length){
-                        api         = 'api/slowresources/getSlowResourcesItem',
-                        pageName    = '#copot-page-slowresources'
-                        this.getinit(api,pageName);
-                    }
-                    break;            
-            }
-        },
-        // 获得page详情
-        getinit(api, pageName) {
+        fetchHistory() {
+            this.isLoading  = true
             util.ajax({
-                url: `${config.baseApi}${api}`,
+                url: `${config.baseApi}api/pages/getPageItemDetail`,
                 data: {
-                    pageNo: this.pageNo,
+                    pageNo: this.currentPage,
                     pageSize: this.pageSize,
-                    url: this.url,
-                    callUrl: this.url,
+                    pageId: this.pageId,
                     beginTime: '',
                     endTime: '',
                 },
                 success: data => {
-                    this.isLoadEnd=true;
-                    switch(this.table){
-                        case 1:
-                            this.listdata = data.data.datalist
-                            break;
-                        case 2:
-                            this.listAjax = data.data.datalist
-                            break;
-                        case 3:
-                            this.listslowpages = data.data.datalist
-                            break;
-                        case 4:
-                            this.listresources = data.data.datalist
-                            break;            
-                    }
-                    new Page({
-                         parent: $(pageName),
-                         nowPage: this.pageNo,
-                         pageSize: this.pageSize,
-                         totalCount: data.data.totalNum,
-                         callback:(nowPage, totalPage) =>{
-                             this.pageNo = nowPage;
-                             this.getinit(api,pageName);
-                         }
-                    });
-
+                    this.isLoading = false;
+                    this.listdata = data.data.datalist
+                    this.total = data.data.totalNum
                 }
             })
         },
@@ -158,7 +103,7 @@ new Vue({
             util.ajax({
                 url: `${config.baseApi}api/environment/getDataForEnvironment`,
                 data:{
-                    url: this.url,
+                    pageId: this.pageId,
                     beginTime: '',
                     endTime: '',
                     type
@@ -247,7 +192,7 @@ new Vue({
                 },
                 series: [{
                     type: 'pie',
-                    radius : [20, 60],
+                    radius : [10, 60],
                     center: ['30%', '50%'],
                     roseType: 'area',
                     itemStyle: {

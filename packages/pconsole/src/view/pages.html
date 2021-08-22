@@ -10,44 +10,72 @@
     </div>
     <div class="table-box common-padding mt20">
         <div v-if="listdata.length">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>URL</th>
-                        <th>访问次数</th>
-                        <th>页面加载时间</th>
-                        <th>白屏时间</th>
-                        <th>DOM构建时间</th>
-                        <th>解析dom耗时</th>
-                        <th>DNS解析时间</th>
-                        <th>TCP连接时间</th>
-                        <th>页面重定向时间</th>
-                        <th>unload时间</th>
-                        <th>request请求耗时</th>
-                        <th>页面准备时间</th>
-                    </tr>
-                </thead>
-                <tr v-for="(item,index) in listdata" :key="index">
-                    <td><a href="javascript:" @click="gotodetail(item)">{{item.url}}</a></td>
-                    <td class="tc">{{item.count}}</td>
-                    <td class="tc red">{{item.loadTime|toFixed(true)}}</td>
-                    <td class="tc red">{{item.whiteTime|toFixed}}</td>
-                    <td class="tc">{{item.domTime|toFixed(true)}}</td>
-                    <td class="tc">{{item.analysisDomTime|toFixed(true)}}</td>
-                    <td class="tc">{{item.dnsTime|toFixed}}</td>
-                    <td class="tc">{{item.tcpTime|toFixed}}</td>
-                    <td class="tc">{{item.redirectTime|toFixed}}</td>
-                    <td class="tc">{{item.unloadTime|toFixed}}</td>
-                    <td class="tc">{{item.requestTime|toFixed}}</td>
-                    <td class="tc">{{item.readyTime|toFixed}}</td>
-                </tr>
-            </table>
+            <el-table
+                :data="listdata"
+                style="width: 100%"
+                max-height="600px">
+                <el-table-column
+                    prop="url"
+                    label="页面链接">
+                    <template slot-scope="scope">
+                        <a
+                            @click="gotodetail(scope.row)"
+                            class="text-overflow">
+                            {{scope.row.url}}
+                        </a>
+                    </template>
+                </el-table-column>
+                <el-table-column width="100px">
+                    <template slot-scope="scope">
+                        <el-tooltip
+                        effect="dark"
+                        placement="top">
+                        <span slot="content">{{ scope.row.url }}</span>
+                        <span>
+                            更多
+                        </span>
+                    </el-tooltip>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="count"
+                    label="访问次数">
+                </el-table-column>
+                <el-table-column
+                    prop="loadTime"
+                    label="页面加载时间">
+                    <template slot-scope="scope">
+                        <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="requestTime"
+                    label="请求时间">
+                    <template slot-scope="scope">
+                        <span class="tc">{{scope.row.requestTime|toFixed(true)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="whiteTime"
+                    label="白屏时间">
+                    <template slot-scope="scope">
+                        <span class="tc">{{scope.row.whiteTime|toFixed(true)}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="tc common_page_style" v-show="!isLoading && listdata.length">
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[5, 10, 20, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
+            </div>
         </div>
-        <div v-if="!isLoadend" class="loading-block"></div>
-    </div>
-    <!--  分页 -->
-    <div class="tc common_page_style" v-show="isLoadend&&listdata.length">
-        <div id="copot-page" class="copot-page"></div>
+        <div v-if="isLoading" class="loading-block"></div>
     </div>
     <!-- 暂无数据 -->
     <div class="tc" v-if="!listdata.length">暂无数据!</div>

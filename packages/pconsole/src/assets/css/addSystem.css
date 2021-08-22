@@ -10,6 +10,7 @@
     margin: 30px 0; }
     .addSystem .main .h1 {
       background: #f5f5f5;
+      border-radius: 3px;
       font-size: 16px;
       margin-bottom: 10px;
       padding-bottom: 5px;
@@ -20,6 +21,10 @@
       margin: 20px;
       font-size: 14px;
       color: #666; }
+      .addSystem .main .block .copy {
+        float: right;
+        transform: translate(-10px, -50px);
+        font-size: 12px; }
       .addSystem .main .block .item {
         margin-top: 15px;
         display: flex;
@@ -59,6 +64,7 @@
       .addSystem .main .block .script-text {
         background: #000;
         color: #fff;
+        border-radius: 3px;
         font-size: 14px;
         border: none;
         height: 100px;

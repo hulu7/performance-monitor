@@ -40,6 +40,8 @@ router.post('/api/system/isStatisData', controllers.system.isStatisData)
 //----------------------------PAGES--------------------------------------
 // 获得page列表
 router.post('/api/pages/getPageList', controllers.pages.getPageList)
+// 获得page概览
+router.post('/api/pages/getPageAverage', controllers.pages.getPageAverage)
 // 获得page详情性能信息
 router.post('/api/pages/getPageItemDetail', controllers.pages.getPageItemDetail)
 // 根据ID获得page详情性能信息

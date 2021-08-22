@@ -679,7 +679,7 @@ class utilfn {
 			let baseTime = startTime + category.startTime;
 			let duration = 0;
 			stages.forEach(stage => {
-				const { name } = category;
+				const { name, initiatorType, startTime, transferSize  } = category;
 				const diff = category[stage.end] - category[stage.start];
 				duration = diff < 0 ? 0 : diff;
 				if (stage.name === 'ssl' && category[stage.start] === 0) {
@@ -689,6 +689,9 @@ class utilfn {
 					name,
 					type: stage.name,
 					duration,
+					initiatorType,
+					startTime,
+					transferSize,
 					value: [
 						index,
 						baseTime,
@@ -733,14 +736,23 @@ class utilfn {
 		const option = {
 			tooltip: {
 				formatter: function (params) {
-					return `${params.marker} [ ${params.data.type} : ${params.data.duration.toFixed(1)} ms ] -- ${params.data.name}`;
+					return `${params.marker} <span>${params.data.name}</span>
+							<div style="border-bottem: 1px solid"></div>
+							<div style="width: 100%; text-align: left;">
+								<div>类型：${params.data.type}</div>
+								<div>请求类型：${params.data.initiatorType}</div>
+								<div>开始时间：${params.data.startTime.toFixed(1)} ms</div>
+								<div>结束时间：${(params.data.startTime + params.data.duration).toFixed(1)} ms</div>
+								<div>持续时间：${params.data.duration.toFixed(1)} ms</div>
+								<div>数据大小：${(params.data.transferSize / 1000).toFixed(1)} Kb</div>
+							</div>`;
 				}
 			},
 			dataZoom: [{
 				type: 'slider',
 				filterMode: 'weakFilter',
 				showDataShadow: false,
-				top: 30,
+				top: 25,
 				labelFormatter: ''
 			}, {
 				type: 'inside',
@@ -779,6 +791,28 @@ class utilfn {
 		window.onresize = () => {
 			myChart.resize();
 		};
+	}
+
+	//复制
+
+	initInputElement() {
+		const inputElement = document.createElement('input');
+		inputElement.style.pointerEvents = 'none';
+		inputElement.style.opacity = '0';
+		inputElement.style.position = 'fixed';
+		document.body.appendChild(inputElement);
+		return inputElement;
+	}
+
+	copy(text) {
+		const inputElement = this.initInputElement();
+		inputElement.value = text;
+		inputElement.select();
+		try {
+			return document.execCommand('copy');
+		} catch (e) {
+			return false;
+		}
 	}
 }
 

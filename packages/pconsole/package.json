@@ -79,6 +79,7 @@
   "dependencies": {
     "mysql2": "^2.2.5",
     "address": "^1.0.3",
+    "md5": "^2.3.0",
     "externalip": "^1.0.2",
     "greenlock-express": "^2.0.12",
     "install": "^0.10.2",

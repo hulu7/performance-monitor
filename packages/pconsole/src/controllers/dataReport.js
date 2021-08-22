@@ -1,16 +1,12 @@
 import moment from 'moment';
 import sql from 'node-transform-mysql';
 import UAParser from 'ua-parser-js';
-import axios from 'axios';
 import url from 'url';
+import md5 from 'md5';
 import querystring from 'querystring';
 import {
-    SYSTEM
-} from '../config';
-import {
     util,
-    mysql,
-    getsql,
+    mysql
 } from '../tool';
 const imgsrc = 'console.log(0)';
 const querySystems = (appId) => {
@@ -49,7 +45,7 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             u: url, 
             v: boomerangVersion, 
             sm: boomerangSnippetMethod, 
-            pid: pageId,
+            pid: pageMark,
             n: beaconNumber,
             t_resp: backTime,
             t_page: frontTime, 
@@ -163,12 +159,14 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             fp: firstPaint,
             fcp: firstContentfulPaint
         } = pt ? pt : {};
+        const decodedUrl = decodeURIComponent(url) || '/';
+        const pageId = md5(decodedUrl);
 
-        let dat = {
+        const dat = {
             systemId: systemItem.id,
             createTime: createTime || null,
-            url: decodeURIComponent(url) || null,
-            markPage: pageId || null,
+            url: decodedUrl || null,
+            markPage: pageMark || null,
             loadTime: loadTime || '0',
             dnsTime: dnsTime || '0',
             tcpTime: tcpTime || '0',
@@ -218,7 +216,7 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             scriptNumber: scriptNumber || '0',
             externalScriptNumber: externalScriptNumber || '0',
             htmlSize: htmlSize || '0',
-            httpInitiator: initiator || null,
+            httpInitiator: initiator || 'cache',
             downlink: downlink || null,
             effectiveType: effectiveType || null,
             roundTripTime: roundTripTime || null,
@@ -231,7 +229,7 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             usedSessionStorageKeys: usedSessionStorageKeys || '0',
             beaconNumber: beaconNumber || '0',
             nocookie: nocookie || null,
-            pageId: pageId || null,
+            pageId,
             firstContentfulPaint: firstContentfulPaint || '0',
             firstPaint: firstPaint || '0',
             restiming: restiming || null,
@@ -262,7 +260,7 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             transferSize: transferSize || '0'
         }
         console.log('-----------monitor data-----------', dat);
-        let sqlstr1 = sql
+        const sqlstr1 = sql
             .table('web_pages')
             .data(dat)
             .insert()

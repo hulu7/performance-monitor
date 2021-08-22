@@ -9,15 +9,16 @@ new Vue({
                 slowPageTime: '',
                 slowJsTime: '',
                 slowCssTime: '',
-                slowImgTime: ''
+                slowImgTime: '',
+                enable: true,
+                subSystems: []
             },
             systemInfo: {},
             systemId: '',
-            enable: true
         }
     },
     filters:{
-        toFixed:window.Filter.toFixed
+        toFixed: window.Filter.toFixed
     },
     mounted(){
         this.getDetail();
@@ -30,13 +31,21 @@ new Vue({
             this.systemId = util.queryParameters('systemId');
             util.ajax({
                 url: `${config.baseApi}api/system/getItemSystem`,
-                data:{
+                data: {
                     systemId: this.systemId
                 },
-                success:data=>{
+                success: data => {
                     this.systemInfo = data.data || {};
-                    this.enable = this.systemInfo.isUse === 0;
-                    this.pagexingneng();
+                    const {
+                        isUse, subSystems, systemName, systemDomain
+                    } = this.systemInfo;
+
+                    Object.assign(this.setting, {
+                        systemDomain,
+                        systemName,
+                        enable: isUse === 0,
+                        subSystems: JSON.parse(subSystems)
+                    });
                 }
             });
         },
@@ -48,21 +57,41 @@ new Vue({
                 data: {
                     systemId,
                     key:'isUse',
-                    value: this.enable ? 0 : 1
+                    value: this.setting.enable ? 0 : 1
                 },
                 success: data => {
+                    this.getDetail();
                     popup.miss({title:'操作成功!'})
                 }
             });
         },
         updateSystem() {
-            if(!this.systemInfo.systemName){ popup.alert({title: '请正确填写应用名称!'});  return false; }
-            if(!this.systemInfo.systemDomain){ popup.alert({title: '请正确填写应用域名!'}); return false; }
+            if(!this.systemInfo.systemName) {
+                popup.alert({title: '请正确填写应用名称!'}); 
+                return false;
+            }
+            if(!this.systemInfo.systemDomain) {
+                popup.alert({title: '请正确填写应用地址!'});
+                return false;
+            }
+            const {
+                systemDomain,
+                systemName,
+                enable,
+                subSystems
+            } = this.setting;
+            Object.assign(this.systemInfo, {
+                systemDomain,
+                systemName,
+                isUse: enable ? 0 : 1,
+                subSystems: JSON.stringify(subSystems)
+            });
             util.ajax({
-                url:config.baseApi + 'api/system/updateSystem',
-                data:this.systemInfo,
-                success:data=>{
+                url: `${config.baseApi}api/system/updateSystem`,
+                data: this.systemInfo,
+                success: data => {
                     popup.miss({title:"操作成功！"});
+                    this.getDetail();
                 }
             })
         },
@@ -114,18 +143,37 @@ new Vue({
 
             });
         },
-        setDatas(key,value){
+        setDatas(key, value) {
             util.ajax({
-                url:config.baseApi+'api/system/isStatisData',
-                data:{
-                    key:key,
-                    value:value
+                url: `${config.baseApi}api/system/isStatisData`,
+                data: {
+                    key,
+                    value
                 },
-                success:data=>{
+                success: data => {
+                    this.getDetail();
                     popup.miss({title:'操作成功!'})
                 }
             }) 
+        },
+        addNewSubsystem() {
+            this.setting.subSystems.push({
+                name: '',
+                rule: ''
+            });
+        },
+        deleteSubsystem(index) {
+            if (this.setting.subSystems.length < 2) {
+                return;
+            }
+            this.setting.subSystems.splice(index, 1);
+        },
+        copy() {
+            if (this.systemInfo.script && util.copy(this.systemInfo.script)) {
+                popup.miss({title:'已拷贝至剪贴板!'})
+            } else {
+                popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
+            }
         }
-        
     }
 })

@@ -2,17 +2,17 @@ new Vue({
     el: '#addSystem',
     data: function(){
         return{
-            systemDomain:'',
-            systemName:'',
-            scriptstr:'',
-            slowPageTime:'',
-            slowJsTime:'',
-            slowCssTime:'',
-            slowImgTime:'',
-            appId:'',
-            subSystems:[{
-                name: '',
-                rule: ''
+            systemDomain: '',
+            systemName: '',
+            scriptstr: '',
+            slowPageTime: '',
+            slowJsTime: '',
+            slowCssTime: '',
+            slowImgTime: '',
+            appId: '',
+            subSystems: [{
+                name: 'main',
+                rule: '/'
             }]
         }
     },
@@ -47,7 +47,13 @@ new Vue({
         addSystem(){
             let _this=this;
             if(!this.systemName){ popup.alert({title: '请正确填写应用名称!'});  return false; }
-            if(!this.systemDomain){ popup.alert({title: '请正确填写应用域名!'}); return false; }
+            if(!this.systemDomain){ popup.alert({title: '请正确填写应用地址!'}); return false; }
+            if (!this.subSystems.length) {
+                this.subSystems = [{
+                    name: 'main',
+                    rule: '/'
+                }];
+            }
             util.ajax({
                 url: `${config.baseApi}api/system/addSystem`,
                 data:{
@@ -65,17 +71,24 @@ new Vue({
                 }
             })
         },
-        addNewSubsystem(){
+        addNewSubsystem() {
             this.subSystems.push({
                 name: '',
                 rule: ''
             });
         },
-        deleteSubsystem(index){
+        deleteSubsystem(index) {
             if (this.subSystems.length < 2) {
                 return;
             }
             this.subSystems.splice(index, 1);
+        },
+        copy() {
+            if (this.scriptstr && util.copy(this.scriptstr)) {
+                popup.miss({title:'已拷贝至剪贴板!'})
+            } else {
+                popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
+            }
         }
     }
 })

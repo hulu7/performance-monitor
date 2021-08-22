@@ -32,6 +32,7 @@
     .block-time li.li3 {
       width: 100px; }
   .block-time h1 {
+    border-radius: 3px;
     font: 300 18px/14px 'Roboto', sans-serif;
     letter-spacing: 0;
     color: #999;

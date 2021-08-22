@@ -5,3 +5,9 @@
 .copot-page a:hover{background:#2077ff;color:#fff;}
 .copot-page a.nowPage{background:#2077ff;border:solid 1px #2077ff;color: #fff;} 
 .copot-page .page-msg {margin-left: 15px;}
+.text-overflow {
+    cursor: pointer;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

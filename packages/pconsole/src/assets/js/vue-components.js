@@ -1,7 +1,7 @@
 let Component = {
     commonsearch:{
         template: `<div class="search">
-            <a href="/addSystem"><button class="cursor">+添加应用</button></a>
+            <a href="/addSystem"><el-button type='primary' class="cursor">+添加应用</el-button></a>
         </div>`,
         props:{
             done:{

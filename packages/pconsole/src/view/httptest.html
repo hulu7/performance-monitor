@@ -12,17 +12,16 @@
         <li :class="{active:table==1}" @click="changeTable(1)">HTTP接口测试</li>
     </div>
     <div class="setting-body" v-show="table==1?true:false">
-        <div class="inp-text">
-            <select v-model="method" class="input">
-                <option value="GET">GET</option>
-                <option value="POST">POST</option>
-                <option value="GET">PUT</option>
-                <option value="GET">PATCH</option>
-                <option value="GET">DELETE</option>
-            </select>
-            <input class="input" v-model.trim="url" type="text" placeholder="输入网址地址">
-            <button class="input" @click="getHttptest">发送请求</button>
-        </div>
+        <el-input placeholder="输入接口地址" v-model.trim="url" class="input-with-select">
+        <el-select v-model="method" slot="prepend" placeholder="选择协议" style="width: 100px;">
+            <el-option label="GET" value="GET"></el-option>
+            <el-option label="POST" value="POST"></el-option>
+            <el-option label="PUT" value="PUT"></el-option>
+            <el-option label="PATCH" value="PATCH"></el-option>
+            <el-option label="DELETE" value="DELETE"></el-option>
+        </el-select>
+        <el-button slot="append" type="primary" @click="getHttptest">发送请求</el-button>
+        </el-input>
         
         <div class="switchTable">
             <h1 class="h1">Request</h1>

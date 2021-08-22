@@ -2,14 +2,15 @@ new Vue({
     el: '#pages',
     data: function(){
         return{
-            listdata:[],
-            pageNo:1,
-            pageSize:config.pageSize,
-            totalNum:0,
-            slow:util.getQueryString('type'),
-            beginTime:'',
-            endTime:'',
-            isLoadend:false,
+            listdata: [],
+            pageNo: 1,
+            pageSize: config.pageSize,
+            total: 0,
+            currentPage: 1,
+            slow: util.getQueryString('type'),
+            beginTime: '',
+            endTime: '',
+            isLoading: false,
             systemId: ''
         }
     },
@@ -20,12 +21,20 @@ new Vue({
         this.getinit();
     },
     methods:{
+        handleSizeChange(pageSize) {
+            this.pageSize = pageSize;
+            this.getinit();
+        },
+        handleCurrentChange(currentPage) {
+            this.currentPage = currentPage
+            this.getinit();
+        },
         goHome() {
             window.location.href = '/';
         },
         getinit(){
             this.systemId = util.queryParameters('systemId');
-            this.isLoadend=false;
+            this.isLoading = true;
             let times = util.getSearchTime();
             this.beginTime = times.beginTime;
             this.endTime = times.endTime;
@@ -48,19 +57,12 @@ new Vue({
                     endTime: this.endTime ,
                 },
                 success:data => {
-                    this.isLoadend=true;
-                    if(!data.data.datalist&&!data.data.datalist.length)return;
+                    this.isLoading = false;
+                    if(!data.data.datalist&&!data.data.datalist.length) {
+                        return;
+                    }
                     this.listdata = data.data.datalist;
-                    new Page({
-                         parent: $("#copot-page"),
-                         nowPage: this.pageNo,
-                         pageSize: this.pageSize,
-                         totalCount: data.data.totalNum,
-                         callback:(nowPage, totalPage) =>{
-                             this.pageNo = nowPage;
-                             this.getinit();
-                         }
-                     });
+                    this.total = data.data.totalNum;
                 }
             })
         },
@@ -68,7 +70,7 @@ new Vue({
             if(this.slow && this.slow=='slow'){
                 location.href=`/slowpages/detail?systemId=${this.systemId}`;
             } else {
-                location.href=`/pages/detail?systemId=${this.systemId}&&url=${item.url}`;
+                location.href=`/pages/detail?systemId=${this.systemId}&pageId=${item.pageId}`;
             }
         }
     }

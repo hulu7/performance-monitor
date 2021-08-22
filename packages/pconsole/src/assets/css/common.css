@@ -48,12 +48,13 @@
 
 .side {
   width: 180px;
-  background: #f9f9f9;
   height: 100%;
   position: fixed;
   left: 0;
   top: 40px;
-  z-index: 101; }
+  z-index: 101;
+  background: #f9f9f9;
+  box-shadow: 0 5px 12px 5px rgb(0 0 0 / 10%); }
   .side .top {
     height: 50px;
     background: #2077ff;

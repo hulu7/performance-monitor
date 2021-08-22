@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 测试数据库
+ Source Server         : 前端性能监控系统数据库
  Source Server Type    : MySQL
  Source Server Version : 50718
  Source Host           : localhost
@@ -23,6 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- DROP TABLE IF EXISTS `web_pages`;
 CREATE TABLE `web_pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
+  `pageId` varchar(32) NOT NULL COMMENT '页面全局id',
   `systemId` int(11) NOT NULL COMMENT '所属系统id',
   `url` varchar(255) NOT NULL COMMENT 'url域名',
   `createTime` datetime NOT NULL COMMENT '访问页面时间',
@@ -91,7 +92,6 @@ CREATE TABLE `web_pages` (
   `usedSessionStorageKeys` int(11) NOT NULL DEFAULT '0' COMMENT 'SessionStorage的key数量',
   `beaconNumber` int(11) NOT NULL DEFAULT '0' COMMENT '信标的数量',
   `nocookie` tinyint(1) DEFAULT NULL COMMENT 'cookie的使用情况1未使用',
-  `pageId` varchar(20) DEFAULT NULL COMMENT '页面ID',
   `firstContentfulPaint` int(11) NOT NULL DEFAULT '0' COMMENT '首次内容绘制时间 (ms)',
   `firstPaint` int(11) NOT NULL DEFAULT '0' COMMENT '首像素时间 (ms)',
   `restiming` LongText DEFAULT NULL COMMENT '瀑布流数据',
@@ -120,7 +120,7 @@ CREATE TABLE `web_pages` (
   `boomerangVersion` varchar(10) DEFAULT NULL COMMENT 'Boomerang版本',
   `pageVisibility` varchar(20) DEFAULT NULL COMMENT '返回数据时页面的可见性',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `web_system`
@@ -145,6 +145,6 @@ CREATE TABLE `web_system` (
   `isMonitorResource` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面加载资源性能信息 0：是    1：否',
   `isMonitorSystem` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否存储用户系统信息资源信息',
   PRIMARY KEY (`id`,`appId`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -19,85 +19,49 @@
             <div class="content">
                 <span class="mr10">是否启用:</span>
                 <el-switch
-                    v-model="enable"
+                    v-model="setting.enable"
                     active-color="#13ce66"
                     inactive-color="#ff4949"
                     @change="settingIsUse">
               </el-switch>
             </div>
-            <h1 class="h1">埋点代码</h1>
-            <div class="content">
-                <div class="script-text"><code>{{systemInfo.script}}</code></div>
+            <h1 class="h1" v-if="setting.enable">基本信息</h1>
+            <div class="content" v-if="setting.enable">
+                <div class="item">
+                    <div class="left">主应用名称：</div>
+                    <el-input class="input" v-model.trim="setting.systemName" placeholder="请填写应用名称"></el-input>
+                </div>
+                <div class="item">
+                    <div class="left">应用地址：</div>
+                    <el-input class="input" v-model.trim="setting.systemDomain" placeholder="应用地址，例如 http://example.com/"></el-input>
+                </div>
+                <div class="item">
+                    <div class="left">子应用：</div>
+                    <div class="input">
+                        <div class="pair" v-for="(sys, $index) in setting.subSystems" v-key="$index">
+                            <el-input v-model.trim="sys.name" placeholder="子应用名称"></el-input>
+                            <div class="equal">=</div>
+                            <el-input v-model.trim="sys.rule" placeholder="子应用路径匹配规则，例如 /example/"></el-input>
+                            <el-button class="delete" type="text" @click="deleteSubsystem($index)">删除</el-button>
+                        </div>
+                        <el-button type="text" style="margin-left: 10px;" @click="addNewSubsystem">+ 新增子应用</el-button>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="save-botton">
+                        <el-button class="button" type="primary" @click="updateSystem">更新</el-button>
+                    </div>
+                </div>
             </div>
-            <h1 class="h1">埋点说明</h1>
-            <div class="content code">
+            <h1 class="h1" v-if="setting.enable">埋点代码</h1>
+            <div class="content" v-if="setting.enable">
+                <div class="script-text"><code>{{systemInfo.script}}</code></div>
+                <el-button class="copy" type="primary" plain @click="copy">复制</el-button>
+            </div>
+            <h1 class="h1" v-if="setting.enable">埋点说明</h1>
+            <div class="content code" v-if="setting.enable">
                 <p>复制生成的代码，将其粘贴在<code>&lt;head&gt;</code>中。</p>
                 <p class="notice">注意：需要将代码粘贴在<code>&lt;meta&gt;</code>后面，所有<code>&lt;script&gt;</code>前面。</p>
-            </div>
-        </div>
-        <div class="block" v-show="table==2">
-            <h1 class="h1">各项阀值设置</h1>
-            <div class="block-center">
-                <div class="item mt20">
-                    <span class="left">应用名称：</span>
-                    <input type="text" v-model.trim="systemInfo.systemName" placeholder="我的博客">
-                </div>
-                <div class="item">
-                    <span class="left">应用域名：</span>
-                    <input type="text" v-model.trim="systemInfo.systemDomain" placeholder="http://seosiwei.com/">
-                </div>
-                <div class="item">
-                    <span class="left">页面慢加载阀值(s)：</span>
-                    <input type="text" v-model.trim="systemInfo.slowPageTime" placeholder="默认8s">
-                </div>
-                <div class="item">
-                    <span class="left">JS慢加载阀值(s)：</span>
-                    <input type="text" v-model.trim="systemInfo.slowJsTime" placeholder="默认2s">
-                </div>
-                <div class="item">
-                    <span class="left">CSS慢加载阀值(s)：</span>
-                    <input type="text" v-model.trim="systemInfo.slowCssTime" placeholder="默认1s">
-                </div>
-                <div class="item">
-                    <span class="left">IMG慢加载阀值(s)：</span>
-                    <input type="text" v-model.trim="systemInfo.slowImgTime" placeholder="默认2s">
-                </div>
-                <button class="button left-botton" @click="updateSystem">保存</button>
-            </div>
-        </div>
-        <div class="block block-two" v-show="table==3">
-            <div class="block-center">
-                <div class="onepart">
-                    <h1 class="h1">是否统计页面性能指标:</h1>
-                    <div class="content">
-                        <span class="mr10">是否启用:</span>
-                        <input type="checkbox" class="js-switch-item js-switch-1" checked />
-                    </div>
-                </div>
-                <div class="onepart">
-                    <h1 class="h1">是否统计AJAX性能指标:</h1>
-                    <div class="content">
-                        <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch-item js-switch-2" checked />
-                    </div>
-                </div>
-                <div class="onepart">
-                    <h1 class="h1">是否统计资源性能指标:</h1>
-                    <div class="content">
-                        <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch-item js-switch-3" checked />
-                    </div>
-                </div>
-                <div class="onepart">
-                    <h1 class="h1">是否存储访问者系统信息:</h1>
-                    <div class="content">
-                        <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch-item js-switch-4" checked />
-                    </div>
-                </div>
-                <div class="onepart">
-                    <h1 class="h1">是否统计错误信息:</h1>
-                    <div class="content">
-                        <span class="mr10">是否启用:</span><input type="checkbox" class="js-switch-item js-switch-5" checked />
-                    </div>
-                </div>
             </div>
         </div>
         <div class="block block-two" v-show="table==4||table==5">

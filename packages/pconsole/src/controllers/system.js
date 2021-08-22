@@ -114,10 +114,10 @@ class user {
                 timestamp,
                 random:util.randomString()
             }).paySign;
-            let script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${token}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
+            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${token}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
 
             // 插入数据
-            let data={
+            const data = {
                 systemName,
                 systemDomain,
                 subSystems,
@@ -186,14 +186,10 @@ class user {
     // 修改应用
     async updateSystem(ctx) {
         try {
-            let id              = ctx.request.body.id
-            let slowPageTime    = ctx.request.body.slowPageTime
-            let slowJsTime      = ctx.request.body.slowJsTime
-            let slowCssTime     = ctx.request.body.slowCssTime
-            let slowImgTime     = ctx.request.body.slowImgTime
-            let slowAajxTime    = ctx.request.body.slowAajxTime
-            let systemDomain    = ctx.request.body.systemDomain
-            let systemName      = ctx.request.body.systemName
+            const {
+                id, slowPageTime, slowJsTime, slowCssTime, slowImgTime, slowAjaxTime,
+                systemDomain, systemName, isUse, subSystems, appId
+            } = ctx.request.body;
 
             if(!systemDomain || !systemName){
                 ctx.body = util.result({
@@ -203,21 +199,17 @@ class user {
                 return
             }
 
-            let sqlstr = sql
+            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${appId}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${subSystems},});</script>`;
+            const sqlstr = sql
                 .table('web_system')
                 .data({
-                    slowPageTime:slowPageTime,
-                    slowJsTime:slowJsTime,
-                    slowCssTime:slowCssTime,
-                    slowImgTime:slowImgTime,
-                    slowAajxTime:slowAajxTime,
-                    systemDomain:systemDomain,
-                    systemName:systemName,
+                    slowPageTime, slowJsTime, slowCssTime, slowImgTime, slowAjaxTime,
+                    systemDomain, systemName, isUse, subSystems, script
                 })
-                .where({id:id})
+                .where({id})
                 .update()
 
-            let result = await mysql(sqlstr);
+            const result = await mysql(sqlstr);
 
             ctx.body = util.result({
                 data: result

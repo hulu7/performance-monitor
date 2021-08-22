@@ -3,7 +3,6 @@ new Vue({
     data: () => {
         return{
             listdata:[],
-            pageNo: 1,
             pageSize: 10,
             total: 0,
             isLoading: false,
