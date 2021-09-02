@@ -47,9 +47,14 @@ function output
 function build
 {
     # 安装依赖
-    echo "Start to build."
-    npm install --save lerna
-    npm run reinstall
+    echo "Start to build pconsole."
+    cd packages/pconsole/
+    npm install
+    npm run build
+
+    echo "Start to build boomerang."
+    cd ../boomerang/
+    npm install
     npm run build
 }
 
