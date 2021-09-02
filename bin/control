@@ -20,11 +20,11 @@ status(){
 }
 
 start(){
-    node start
+    npm start
 }
 
 stop(){
-    node stop
+    npm stop
 }
 
 restart(){
