@@ -173,7 +173,6 @@ if(IS_HTTPS=='TRUE') originurl = 'https://pm.seosiwei.com'
 gulp.task('replace:config', gulp.series(() => {
     return gulp.src([buildUrl + '/config.js'])
         .pipe(replace(/ORIGIN(.+)?ORIGIN/, `'ORIGIN':'${originurl}'`))
-        .pipe(replace('172.16.50.158', 'localhost'))
         .pipe(replace(/PASSWORD(.+)?123456'/, "PASSWORD:'root'"))
         .pipe(replace('use(KoaLogger())', ""))
         .pipe(gulp.dest(buildUrl));
