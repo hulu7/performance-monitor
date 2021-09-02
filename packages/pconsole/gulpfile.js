@@ -208,11 +208,8 @@ gulp.task('vue:back', gulp.series(() => {
         .pipe(gulp.dest(buildUrl + '/assets/js/'));
 }));
 
-
 gulp.task('build', gulp.series(
     'clean:dist', 'copy-all','babel', 'concat:js','replace:config','replace:webgetdatas',['js:minify', 'css:minify'], 
     ['babel:server:gen','babel:server:con','babel:server:routers','babel:server:tool','babel:server:con:back','babel:server:con:front'],
     'vue:back'
 ));
-
-
