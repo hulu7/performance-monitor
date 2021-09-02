@@ -48,8 +48,7 @@ function build
 {
     # 安装依赖
     echo "Start to build."
-    npm i -g lerna
-    npm install
+    npm install --save lerna
     npm run reinstall
     npm run build
 }
