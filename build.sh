@@ -23,11 +23,17 @@ function output
     echo "Create output directory."
     mkdir -p output
 
+    to_folder='packages/pconsole/dist/build/assets/js/boomerang'
     # 复制探针编译代码至控制台代码
     echo "Combine compiled files."
-    mkdir packages/pconsole/dist/build/assets/js/boomerang
-    cp -r packages/boomerang/build/* packages/pconsole/dist/build/assets/js/boomerang
-    cp -r packages/pconsole/dist/build/assets/js/boomerang/plugins/* packages/pconsole/dist/build/assets/js/boomerang
+    if [ ! -d ${to_folder} ];then
+        echo "Folder not exists create new one."
+        mkdir ${to_folder}
+    else
+        echo "Folder exists skip this step."
+    fi
+    cp -r packages/boomerang/build/* ${to_folder}
+    cp -r packages/pconsole/dist/build/assets/js/boomerang/plugins/* ${to_folder}
 
     # 复制bin至output
     echo "Copy bin to output folder."
@@ -40,11 +46,12 @@ function output
 
     # 安装依赖
     echo "Downloading server node_modules."
-    yarn --cwd output --production
+    cd output
+    npm install
 
     # 执行权限
     echo "Set priority to bin."
-    chmod +x output/bin/control
+    chmod +x bin/control
 }
 
 function build
