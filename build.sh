@@ -53,7 +53,8 @@ function build
     npm run build
 
     echo "Start to build boomerang."
-    cd ../boomerang/
+    cd ..
+    cd boomerang/
     npm install
     npm run build
 }
