@@ -25,6 +25,7 @@ function output
 
     # 复制探针编译代码至控制台代码
     echo "Combine compiled files."
+    mkdir packages/pconsole/dist/build/assets/js/boomerang
     cp -r packages/boomerang/build/* packages/pconsole/dist/build/assets/js/boomerang
     cp -r packages/pconsole/dist/build/assets/js/boomerang/plugins/* packages/pconsole/dist/build/assets/js/boomerang
 
