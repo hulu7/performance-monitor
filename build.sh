@@ -8,9 +8,11 @@ function clean
     rm -rf output
 
     # 探针编译代码
+    rm -rf packages/boomerang/node_modules
     rm -rf packages/boomerang/build
 
     # 控制台编译代码
+    rm -rf packages/pconsole/node_modules
     rm -rf packages/pconsole/dist/build
 
     echo "Clean up successfully!"
@@ -57,6 +59,7 @@ function build
     cd boomerang/
     npm install
     npm run build
+    cd ../../
 }
 
 function main
