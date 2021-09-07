@@ -13,29 +13,29 @@ const querySystems = (appId) => {
     let sqlstr = sql
     .table('web_system')
     .field('id,'+ 
-           'systemDomain,'+
-           'systemName,'+
-           'subSystems,'+
+           'system_domain,'+
+           'system_name,'+
+           'sub_systems,'+
            'script,'+
-           'isUse,'+
-           'createTime,'+
-           'slowPageTime,'+
-           'slowJsTime,'+
-           'slowCssTime,'+
-           'slowImgTime,'+
-           'slowAjaxTime,'+
-           'appId,'+
-           'isMonitorPages,'+
-           'isMonitorAjax,'+
-           'isMonitorResource,'+
-           'isMonitorSystem')
-    .where({appId})
+           'is_use,'+
+           'create_time,'+
+           'slow_page_time,'+
+           'slow_js_time,'+
+           'slow_css_time,'+
+           'slow_img_time,'+
+           'slow_ajax_time,'+
+           'app_id,'+
+           'is_monitor_pages,'+
+           'is_monitor_ajax,'+
+           'is_monitor_resource,'+
+           'is_monitor_system')
+    .where({ app_id: appId })
     .select()
     return mysql(sqlstr);
 }
 
 const storePagePerformance = (createTime, resourceDatas, systemItem) => {
-    if(systemItem.isMonitorPages === 0){
+    if(systemItem.is_monitor_pages === 0){
         const {
             mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
             nocookie,
@@ -43,221 +43,221 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
             app,
             appin,
             u: url, 
-            v: boomerangVersion, 
-            sm: boomerangSnippetMethod, 
+            v: boomerang_version, 
+            sm: boomerang_snippet_method, 
             pid: pageMark,
-            n: beaconNumber,
-            t_resp: backTime,
-            t_page: frontTime, 
-            t_done: perceivedLoadTime,
-            t_other: additionalTimers,
-            main_restiming: mainRestiming,
-            nt_nav_st: navigationStart,
-            nt_fet_st: fetchStart,
-            nt_dns_st: domainLookupStart,
-            nt_dns_end: domainLookupEnd,
-            nt_con_st: connectStart,
-            nt_con_end: connectEnd,
-            nt_req_st: requestStart,
-            nt_res_st: responseStart,
-            nt_res_end: responseEnd,
-            nt_domloading: domLoading,
-            nt_domint: domInteractive,
-            nt_domcontloaded_st: domContentLoadedEventStart,
-            nt_domcontloaded_end: domContentLoadedEventEnd,
-            nt_domcomp: domComplete,
-            nt_load_st: loadEventStart,
-            nt_load_end: loadEventEnd,
-            nt_unload_st: unloadEventStart,
-            nt_unload_end: unloadEventEnd,
-            nt_dns: dnsTime,
-            nt_tcp: tcpTime,
-            nt_white: whiteTime,
-            nt_dom: domTime,
-            nt_load: loadTime,
-            nt_ready: readyTime,
-            nt_redirect: redirectTime,
-            nt_unload: unloadTime,
-            nt_request: requestTime,
-            nt_analysisdom: analysisDomTime,
-            nt_dec_size: bodySize,
-            nt_enc_size: encodedBodySize,
-            nt_nav_type: navigationType,
-            nt_protocol: nextHopProtocol,
-            nt_red_cnt: redirectCount,
-            nt_trn_size: transferSize,
+            n: beacon_number,
+            t_resp: back_time,
+            t_page: front_time, 
+            t_done: perceived_load_time,
+            t_other: additional_timers,
+            main_restiming: main_restiming,
+            nt_nav_st: navigation_start,
+            nt_fet_st: fetch_start,
+            nt_dns_st: domain_lookup_start,
+            nt_dns_end: domain_lookup_end,
+            nt_con_st: connect_start,
+            nt_con_end: connect_end,
+            nt_req_st: request_start,
+            nt_res_st: response_start,
+            nt_res_end: response_end,
+            nt_domloading: dom_loading,
+            nt_domint: dom_interactive,
+            nt_domcontloaded_st: dom_content_loaded_event_start,
+            nt_domcontloaded_end: dom_content_loaded_event_end,
+            nt_domcomp: dom_complete,
+            nt_load_st: load_event_start,
+            nt_load_end: load_event_end,
+            nt_unload_st: unload_event_start,
+            nt_unload_end: unload_event_end,
+            nt_dns: dns_time,
+            nt_tcp: tcp_time,
+            nt_white: white_time,
+            nt_dom: dom_time,
+            nt_load: load_time,
+            nt_ready: ready_time,
+            nt_redirect: redirect_time,
+            nt_unload: unload_time,
+            nt_request: request_time,
+            nt_analysisdom: analysis_dom_time,
+            nt_dec_size: body_size,
+            nt_enc_size: encoded_body_size,
+            nt_nav_type: navigation_type,
+            nt_protocol: next_hop_protocol,
+            nt_red_cnt: redirect_count,
+            nt_trn_size: transfer_size,
         } = resourceDatas;
 
         const {
-            etype: effectiveType,
+            etype: effective_type,
             dl: downlink,
-            rtt: roundTripTime
+            rtt: round_trip_time
         } = mob ? mob : {};
 
         const {
-            e: continuityEpoch,
-            lb: continuityLastBeacon,
+            e: continuity_epoch,
+            lb: continuity_last_beacon,
             tti
         } = c ? c : {};
         const {
-            m: timeToInteractiveMethod,
-            vr: visuallyReadyTime
+            m: time_to_interactive_method,
+            vr: visually_ready_time
         } = tti ? tti : {};
         const {
-            start: triggerMethod,
-            si: sessionId,
-            ss: sessionStart,
-            sl: sessionLength,
-            bmr: boomerTime,
-            tstart: triggerStart,
-            bstart: boomerangStartTime,
-            end: boomerangEndTime,
-            tt: sumLoadTimes,
-            obo: noLoadPagesNumber
+            start: trigger_method,
+            si: session_id,
+            ss: session_start,
+            sl: session_length,
+            bmr: boomer_time,
+            tstart: trigger_start,
+            bstart: boomerang_start_time,
+            end: boomerang_end_time,
+            tt: sum_load_times,
+            obo: no_load_pages_number
         } = rt ? rt : {};
         const {
             plt: system,
             vnd: browser
         } = ua ? ua : {};
         const {
-            doms: uniqueDomainsNumber,
-            ln: domsNumber,
-            sz: htmlSize,
-            ck: cookiesSize,
-            img: imgNumber,
+            doms: unique_domains_number,
+            ln: doms_number,
+            sz: html_size,
+            ck: cookies_size,
+            img: img_number,
             script,
-            iframe: iframeNumber,
+            iframe: iframe_number,
             link,
-            res: resourcesFetchNumber
+            res: resources_fetch_number
         } = dom ? dom : {};
-        const [linkNumber, css] = link ? link : [];
-        const { css: cssNumber } = css ? css : {};
-        const [scriptNumber, ext] = script ? script : [];
-        const { ext: externalScriptNumber } = ext ? ext : {};
-        const { st: pageVisibility } = vis ? vis : {};
+        const [link_number, css] = link ? link : [];
+        const { css: css_number } = css ? css : {};
+        const [script_number, ext] = script ? script : [];
+        const { ext: external_script_number } = ext ? ext : {};
+        const { st: page_visibility } = vis ? vis : {};
         const {
-            total: totalJSHeapSize,
-            limit: jsHeapSizeLimit,
-            used: usedJSHeapSize,
-            lsln: usedLocalStorageKeys,
-            ssln: usedSessionStorageKeys,
-            lssz: usedLocalStorageSize,
-            sssz: usedSessionStorageSize
+            total: total_js_heap_size,
+            limit: js_heap_size_limit,
+            used: used_js_heap_size,
+            lsln: used_local_storage_keys,
+            ssln: used_session_storage_keys,
+            lssz: used_local_storage_size,
+            sssz: used_session_storage_size
         } = mem ? mem : {};
         const {
-            xy: screenSize,
-            bpp: screenColorDepth,
-            orn: screenOrientation
+            xy: screen_size,
+            bpp: screen_color_depth,
+            orn: screen_orientation
         } = scr ? scr : {};
         const {
-            cnc: cpuConcurrency
+            cnc: cpu_concurrency
         } = cpu ? cpu : {};
         const {
             initiator
         } = http ? http : {};
         const {
-            fp: firstPaint,
-            fcp: firstContentfulPaint
+            fp: first_paint,
+            fcp: first_contentful_paint
         } = pt ? pt : {};
         const decodedUrl = decodeURIComponent(url) || '/';
-        const pageId = md5(decodedUrl);
+        const page_id = md5(decodedUrl);
 
         const dat = {
             systemId: systemItem.id,
-            createTime: createTime || null,
-            url: decodedUrl || null,
-            markPage: pageMark || null,
-            loadTime: loadTime || '0',
-            dnsTime: dnsTime || '0',
-            tcpTime: tcpTime || '0',
-            domTime: domTime || '0',
-            whiteTime: whiteTime || '0',
-            redirectTime: redirectTime || '0',
-            unloadTime: unloadTime || '0',
-            requestTime: requestTime || '0',
-            analysisDomTime: analysisDomTime || '0',
-            readyTime: readyTime || '0',
-            connectEnd: connectEnd || '0',
-            connectStart: connectStart || '0',
-            bodySize: bodySize || '0',
-            domainLookupStart: domainLookupStart || '0',
-            domainLookupEnd: domainLookupEnd || '0',
-            domComplete: domComplete || '0',
-            domContentLoadedEventStart: domContentLoadedEventStart || '0',
-            domContentLoadedEventEnd: domContentLoadedEventEnd || '0',
-            domInteractive: domInteractive || '0',
-            encodedBodySize: encodedBodySize || '0',
-            fetchStart: fetchStart || '0',
-            loadEventStart: loadEventStart || '0',
-            loadEventEnd: loadEventEnd || '0',
-            navigationStart: navigationStart || '0',
-            navigationType: navigationType || '0',
-            nextHopProtocol: nextHopProtocol || null,
-            redirectCount: redirectCount || '0',
-            requestStart: requestStart || '0',
-            responseEnd: responseEnd || '0',
-            responseStart: responseStart || '0',
-            unloadEventEnd: unloadEventEnd || '0',
-            unloadEventStart: unloadEventStart || '0',
-            boomerTime: boomerTime || null,
-            continuityEpoch: continuityEpoch || null,
-            continuityLastBeacon: continuityLastBeacon || null,
-            timeToInteractiveMethod: timeToInteractiveMethod || null,
-            cpuConcurrency: cpuConcurrency || '0',
-            visuallyReadyTime: visuallyReadyTime || '0',
-            cookiesSize: cookiesSize || '0',
-            uniqueDomainsNumber: uniqueDomainsNumber || '0',
-            iframeNumber: iframeNumber || '0',
-            imgNumber: imgNumber || '0',
-            linkNumber: linkNumber || '0',
-            cssNumber: cssNumber || '0',
-            domsNumber: domsNumber || '0',
-            resourcesFetchNumber: resourcesFetchNumber || '0',
-            scriptNumber: scriptNumber || '0',
-            externalScriptNumber: externalScriptNumber || '0',
-            htmlSize: htmlSize || '0',
+            create_time: createTime || '',
+            url: decodedUrl || '',
+            mark_page: pageMark || '',
+            load_time: load_time || '0',
+            dns_time: dns_time || '0',
+            tcp_time: tcp_time || '0',
+            dom_time: dom_time || '0',
+            white_time: white_time || '0',
+            redirect_time: redirect_time || '0',
+            unload_time: unload_time || '0',
+            request_time: request_time || '0',
+            analysis_dom_time: analysis_dom_time || '0',
+            ready_time: ready_time || '0',
+            connect_end: connect_end || '0',
+            connect_start: connect_start || '0',
+            body_size: body_size || '0',
+            domain_lookup_start: domain_lookup_start || '0',
+            domain_lookup_end: domain_lookup_end || '0',
+            dom_complete: dom_complete || '0',
+            dom_content_loaded_event_start: dom_content_loaded_event_start || '0',
+            dom_content_loaded_event_end: dom_content_loaded_event_end || '0',
+            dom_interactive: dom_interactive || '0',
+            encoded_body_size: encoded_body_size || '0',
+            fetch_start: fetch_start || '0',
+            load_event_start: load_event_start || '0',
+            load_event_end: load_event_end || '0',
+            navigation_start: navigation_start || '0',
+            navigation_type: navigation_type || '0',
+            next_hop_protocol: next_hop_protocol || '',
+            redirect_count: redirect_count || '0',
+            request_start: request_start || '0',
+            response_end: response_end || '0',
+            response_start: response_start || '0',
+            unload_event_end: unload_event_end || '0',
+            unload_event_start: unload_event_start || '0',
+            boomer_time: boomer_time || '',
+            continuity_epoch: continuity_epoch || '',
+            continuity_last_beacon: continuity_last_beacon || '',
+            time_to_interactive_method: time_to_interactive_method || '',
+            cpu_concurrency: cpu_concurrency || '0',
+            visually_ready_time: visually_ready_time || '0',
+            cookies_size: cookies_size || '0',
+            unique_domains_number: unique_domains_number || '0',
+            iframe_number: iframe_number || '0',
+            img_number: img_number || '0',
+            link_number: link_number || '0',
+            css_number: css_number || '0',
+            doms_number: doms_number || '0',
+            resources_fetch_number: resources_fetch_number || '0',
+            script_number: script_number || '0',
+            external_script_number: external_script_number || '0',
+            html_size: html_size || '0',
             httpInitiator: initiator || 'cache',
-            downlink: downlink || null,
-            effectiveType: effectiveType || null,
-            roundTripTime: roundTripTime || null,
-            totalJSHeapSize: totalJSHeapSize || '0',
-            jsHeapSizeLimit: jsHeapSizeLimit || '0',
-            usedJSHeapSize: usedJSHeapSize || '0',
-            usedLocalStorageSize: usedLocalStorageSize || '0',
-            usedLocalStorageKeys: usedLocalStorageKeys || '0',
-            usedSessionStorageSize: usedSessionStorageSize || '0',
-            usedSessionStorageKeys: usedSessionStorageKeys || '0',
-            beaconNumber: beaconNumber || '0',
-            nocookie: nocookie || null,
-            pageId,
-            firstContentfulPaint: firstContentfulPaint || '0',
-            firstPaint: firstPaint || '0',
-            restiming: restiming || null,
-            appin: appin || null,
-            mainRestiming: mainRestiming || null,
-            app: app || null,
-            boomerangStartTime: boomerangStartTime || null,
-            boomerangEndTime: boomerangEndTime || null,
-            noLoadPagesNumber: noLoadPagesNumber || '0',
-            sessionId: sessionId || null,
-            sessionLength: sessionLength || '0',
-            sessionStart: sessionStart || '0',
-            triggerMethod: triggerMethod || null,
-            triggerStart: triggerStart || '0',
-            sumLoadTimes: sumLoadTimes || '0',
-            screenColorDepth: screenColorDepth || null,
-            screenOrientation: screenOrientation || null,
-            screenSize: screenSize || null,
-            boomerangSnippetMethod: boomerangSnippetMethod || null,
-            perceivedLoadTime: perceivedLoadTime || '0',
-            additionalTimers: additionalTimers || null,
-            frontTime: frontTime || '0',
-            backTime: backTime || '0',
-            system: system || null,
-            browser: browser || null,
-            boomerangVersion: boomerangVersion || null,
-            pageVisibility: pageVisibility || null,
-            transferSize: transferSize || '0'
+            downlink: downlink || '',
+            effective_type: effective_type || '',
+            round_trip_time: round_trip_time || '',
+            total_js_heap_size: total_js_heap_size || '0',
+            js_heap_size_limit: js_heap_size_limit || '0',
+            used_js_heap_size: used_js_heap_size || '0',
+            used_local_storage_size: used_local_storage_size || '0',
+            used_local_storage_keys: used_local_storage_keys || '0',
+            used_session_storage_size: used_session_storage_size || '0',
+            used_session_storage_keys: used_session_storage_keys || '0',
+            beacon_number: beacon_number || '0',
+            nocookie: nocookie || '',
+            page_id,
+            first_contentful_paint: first_contentful_paint || '0',
+            first_paint: first_paint || '0',
+            restiming: restiming || '',
+            appin: appin || '',
+            main_restiming: main_restiming || '',
+            app: app || '',
+            boomerang_start_time: boomerang_start_time || '',
+            boomerang_end_time: boomerang_end_time || '',
+            no_load_pages_number: no_load_pages_number || '0',
+            session_id: session_id || '',
+            session_length: session_length || '0',
+            session_start: session_start || '0',
+            trigger_method: trigger_method || '',
+            trigger_start: trigger_start || '0',
+            sum_load_times: sum_load_times || '0',
+            screen_color_depth: screen_color_depth || '',
+            screen_orientation: screen_orientation || '',
+            screen_size: screen_size || '',
+            boomerang_snippet_method: boomerang_snippet_method || '',
+            perceived_load_time: perceived_load_time || '0',
+            additional_timers: additional_timers || '',
+            front_time: front_time || '0',
+            back_time: back_time || '0',
+            system: system || '',
+            browser: browser || '',
+            boomerang_version: boomerang_version || '',
+            page_visibility: page_visibility || '',
+            transfer_size: transfer_size || '0'
         }
         console.log('-----------monitor data-----------', dat);
         const sqlstr1 = sql
@@ -271,7 +271,7 @@ const storePagePerformance = (createTime, resourceDatas, systemItem) => {
 const queryIsUse = (appId) => {
     const sqlstr = sql
         .table('web_system')
-        .where({ appId })
+        .where({ app_id: appId })
         .select();
     return mysql(sqlstr);
 }
@@ -284,7 +284,7 @@ class data {
         try {
             const cookies = ctx.cookie;
             let timestamp = new Date().getTime();
-            let markUser,markPage,IP;
+            let markUser,mark_page,IP;
             let maxAge = 864000000;  //cookie超时时间
 
             if(cookies && cookies.markUser){}else{
@@ -298,12 +298,12 @@ class data {
             }
 
             // 每次页面标识
-            markPage = util.signwx({
-                mark:'markPage',
+            mark_page = util.signwx({
+                mark:'mark_page',
                 timestamp:timestamp,
                 random:util.randomString()
             }).paySign;
-            ctx.cookies.set('markPage',markPage)
+            ctx.cookies.set('mark_page',mark_page)
 
             // 用户IP标识
             let userSystemInfo = {}
@@ -346,8 +346,8 @@ class data {
 
             let script = `if(window.getCookies){
                 getCookies({
-                    markPage:'${markPage}',
-                    markUser:'${markUser}',
+                    mark_page:'${mark_page}',
+                    mark_user:'${markUser}',
                     IP:'${userSystemInfo.ip}',
                     isp:'${userSystemInfo.isp}',
                     county:'${userSystemInfo.country}',
@@ -373,8 +373,8 @@ class data {
             }; 
             let sqlstr = sql
                 .table('web_system')
-                .field('isUse,id,isStatisiSystem')
-                .where({appId:appId})
+                .field('is_use,id')
+                .where({ app_id: appId })
                 .select()
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
@@ -382,7 +382,7 @@ class data {
                 return; 
             };
             let systemItem = systemMsg[0]
-            if(systemItem.isUse !== 0 || systemItem.isStatisiSystem!==0){
+            if(systemItem.is_use !== 0 || systemItem.isStatisiSystem!==0){
                 ctx.body=imgsrc;
                 return; 
             };
@@ -404,20 +404,20 @@ class data {
 
             // environment表数据
             let environment={
-                systemId:systemItem.id,
-                IP:ctx.query.IP||'',
-                isp:ctx.query.isp||'',
-                county:ctx.query.county||'',
-                province:ctx.query.province||'',
-                city:ctx.query.city||'',
-                browser:result.browser.name||'',
-                borwserVersion:result.browser.version||'',
-                system:result.os.name||'',
-                systemVersion:result.os.version||'',
-                markUser:ctx.query.markUser||'',
-                markPage:ctx.query.markPage||'',
-                url:decodeURIComponent(ctx.query.url)||'',
-                createTime:moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
+                systemId: systemItem.id,
+                IP: ctx.query.IP||'',
+                isp: ctx.query.isp||'',
+                county: ctx.query.county||'',
+                province: ctx.query.province||'',
+                city: ctx.query.city||'',
+                browser: result.browser.name||'',
+                borwserVersion: result.browser.version||'',
+                system: result.os.name||'',
+                systemVersion: result.os.version||'',
+                markUser: ctx.query.markUser||'',
+                mark_page: ctx.query.markPage||'',
+                url: decodeURIComponent(ctx.query.url)||'',
+                create_time: moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
             }
 
             let sqlstr1 = sql
@@ -447,7 +447,7 @@ class data {
                 return; 
             };
             let systemItem = systems[0]
-            if(systemItem.isUse !== 0){
+            if(systemItem.is_use !== 0){
                 ctx.body=imgsrc;
                 return;
             };
@@ -476,8 +476,8 @@ class data {
             }; 
             let sqlstr = sql
                 .table('web_system')
-                .field('isUse,id,slowPageTime,isStatisiPages,slowJsTime,slowCssTime,slowImgTime,isStatisiAjax,isStatisiResource')
-                .where({appId:appId})
+                .field('is_use,id,slow_page_time,isStatisiPages,slow_js_time,slow_css_time,slow_img_time,isStatisiAjax,isStatisiResource')
+                .where({ app_id:appId })
                 .select()
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
@@ -485,7 +485,7 @@ class data {
                 return; 
             };
             let systemItem = systemMsg[0]
-            if(systemItem.isUse !== 0){
+            if(systemItem.is_use !== 0){
                 ctx.body=imgsrc;
                 return; 
             };
@@ -496,28 +496,28 @@ class data {
             if(systemItem.isStatisiPages === 0) {
                 let pageTimes = resourceDatas.pageTimes || {}
                 let datas={
-                    loadTime:pageTimes.loadTime,
-                    dnsTime:pageTimes.dnsTime,
-                    tcpTime:pageTimes.tcpTime,
-                    domTime:pageTimes.domTime,
-                    whiteTime:pageTimes.whiteTime,
-                    redirectTime:pageTimes.redirectTime,
-                    unloadTime:pageTimes.unloadTime,
-                    requestTime:pageTimes.requestTime,
-                    analysisDomTime:pageTimes.analysisDomTime,
-                    readyTime:pageTimes.readyTime,
+                    load_time:pageTimes.loadTime,
+                    dns_time:pageTimes.dnsTime,
+                    tcp_time:pageTimes.tcpTime,
+                    dom_time:pageTimes.domTime,
+                    white_time:pageTimes.whiteTime,
+                    redirect_time:pageTimes.redirectTime,
+                    unload_time:pageTimes.unloadTime,
+                    request_time:pageTimes.requestTime,
+                    analysis_dom_time:pageTimes.analysisDomTime,
+                    ready_time:pageTimes.readyTime,
                     resourceTime:pageTimes.resourceTime,
                     preUrl:pageTimes.preUrl,
                     url:decodeURIComponent(resourceDatas.url),
                     markUser:resourceDatas.markUser,
-                    markPage:resourceDatas.markPage,
-                    createTime:createTime,
+                    mark_page:resourceDatas.markPage,
+                    create_time:createTime,
                     systemId:systemItem.id
                 }
 
                 let table = 'web_pages';
                 // 判断是否存入慢表
-                if((pageTimes.loadTime+pageTimes.resourceTime) >= systemItem.slowPageTime*1000) table = 'web_slowpages';
+                if((pageTimes.loadTime+pageTimes.resourceTime) >= systemItem.slow_page_time*1000) table = 'web_slowpages';
 
                 const sqlstr1 = sql
                     .table(table)
@@ -530,10 +530,10 @@ class data {
 
             let datas = {
                 systemId:systemItem.id,
-                markPage:resourceDatas.markPage,
+                mark_page:resourceDatas.markPage,
                 markUser:resourceDatas.markUser,
                 callUrl:decodeURIComponent(resourceDatas.url),
-                createTime:createTime,
+                create_time:createTime,
             }
             resourceDatas.list.forEach(async item=>{
                 let duration = 0;
@@ -545,9 +545,9 @@ class data {
                 items.method = item.method
 
                 if(item.type === 'script'){
-                    duration = systemItem.slowJsTime
+                    duration = systemItem.slow_js_time
                 }else if(item.type === 'link'||item.type === 'css'){
-                    duration = systemItem.slowCssTime
+                    duration = systemItem.slow_css_time
                 }else if(item.type === 'xmlhttprequest'){
                     let newurl      = url.parse(item.name)
                     let newName     = newurl.protocol+'//'+newurl.host+newurl.pathname
@@ -562,7 +562,7 @@ class data {
                     table = 'web_ajax' 
 
                 }else if(item.type === 'img'){
-                    duration = systemItem.slowImgTime
+                    duration = systemItem.slow_img_time
                 }
                 if(parseInt(item.duration) >= duration*1000){
                     table = 'web_slowresources'
@@ -611,8 +611,8 @@ class data {
             }; 
             let sqlstr = sql
                 .table('web_system')
-                .field('isUse,id,isStatisiError')
-                .where({appId:appId})
+                .field('is_use,id')
+                .where({ app_id: appId })
                 .select()
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
@@ -620,7 +620,7 @@ class data {
                 return; 
             };
             let systemItem = systemMsg[0]
-            if(systemItem.isUse !== 0){
+            if(systemItem.is_use !== 0){
                 ctx.body=imgsrc;
                 return; 
             };
@@ -649,7 +649,7 @@ class data {
                         line:item.data.line||'',
                         method:item.method,
                         fullurl:item.data.resourceUrl,
-                        createTime:moment(new Date(item.t)).format('YYYY-MM-DD HH:mm:ss'),
+                        create_time:moment(new Date(item.t)).format('YYYY-MM-DD HH:mm:ss'),
                         systemId:systemItem.id
                     }
 
