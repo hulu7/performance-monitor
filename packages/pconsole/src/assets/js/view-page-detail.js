@@ -65,7 +65,7 @@ new Vue({
             this.pageId = util.getQueryString('pageId');
         },
         gotoDetail(id) {
-            window.open(`/pages/detail/item?systemId=${this.systemId}&id=${id}`, `_blank`);
+            window.open(`/pages/detail/item?systemId=${this.systemId}&id=${id}&pageId=${this.pageId}`, `_blank`);
         },
         getAverageValues() {
             util.ajax({

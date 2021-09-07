@@ -29,16 +29,16 @@ class pages {
             let group = type;
 
             // 公共参数
-            let data = { pageId };
+            let data = { page_id: pageId };
             if(beginTime && endTime) {
-                data.createTime = {
+                data.create_time = {
                     egt: beginTime,
                     elt: endTime
                 };
             }
             // 请求列表数据
             let sqlstr = sql.field(field)
-                .table('web_pages')
+                .table('web_pages_client')
                 .where(data)
                 .group(group)
                 .limit(0,6)
@@ -58,12 +58,12 @@ class pages {
             };
             if (type === 'boomerangSnippetMethod') {
                 result.forEach((item, index) => {
-                    result[index].boomerangSnippetMethod = boomerangSnippetMethodMap[item.boomerangSnippetMethod]
+                    result[index].boomerangSnippetMethod = boomerangSnippetMethodMap[item.boomerang_snippet_method]
                 });
             }
             if (type === 'httpInitiator') {
                 result.forEach((item, index) => {
-                    result[index].httpInitiator = httpInitiatorMap[item.httpInitiator];
+                    result[index].httpInitiator = httpInitiatorMap[item.http_initiator];
                 });
             }
             ctx.body = util.result({
@@ -95,13 +95,13 @@ class pages {
             // 请求列表数据
             let sqlstr = sql
                 .table('web_environment')
-                .where({markPage:markPage})
+                .where({ markPage: markPage })
                 .select()
 
             let result = await mysql(sqlstr);
 
             ctx.body = util.result({
-                data: result&&result.length?result[0]:{}
+                data: result && result.length ? result[0] : {}
             });
 
         } catch (err) {

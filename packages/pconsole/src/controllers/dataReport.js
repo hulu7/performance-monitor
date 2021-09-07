@@ -2,279 +2,12 @@ import moment from 'moment';
 import sql from 'node-transform-mysql';
 import UAParser from 'ua-parser-js';
 import url from 'url';
-import md5 from 'md5';
 import querystring from 'querystring';
 import {
     util,
     mysql
 } from '../tool';
 const imgsrc = 'console.log(0)';
-const querySystems = (appId) => {
-    let sqlstr = sql
-    .table('web_system')
-    .field('id,'+ 
-           'system_domain,'+
-           'system_name,'+
-           'sub_systems,'+
-           'script,'+
-           'is_use,'+
-           'create_time,'+
-           'slow_page_time,'+
-           'slow_js_time,'+
-           'slow_css_time,'+
-           'slow_img_time,'+
-           'slow_ajax_time,'+
-           'app_id,'+
-           'is_monitor_pages,'+
-           'is_monitor_ajax,'+
-           'is_monitor_resource,'+
-           'is_monitor_system')
-    .where({ app_id: appId })
-    .select()
-    return mysql(sqlstr);
-}
-
-const storePagePerformance = (createTime, resourceDatas, systemItem) => {
-    if(systemItem.is_monitor_pages === 0){
-        const {
-            mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
-            nocookie,
-            restiming,
-            app,
-            appin,
-            u: url, 
-            v: boomerang_version, 
-            sm: boomerang_snippet_method, 
-            pid: pageMark,
-            n: beacon_number,
-            t_resp: back_time,
-            t_page: front_time, 
-            t_done: perceived_load_time,
-            t_other: additional_timers,
-            main_restiming: main_restiming,
-            nt_nav_st: navigation_start,
-            nt_fet_st: fetch_start,
-            nt_dns_st: domain_lookup_start,
-            nt_dns_end: domain_lookup_end,
-            nt_con_st: connect_start,
-            nt_con_end: connect_end,
-            nt_req_st: request_start,
-            nt_res_st: response_start,
-            nt_res_end: response_end,
-            nt_domloading: dom_loading,
-            nt_domint: dom_interactive,
-            nt_domcontloaded_st: dom_content_loaded_event_start,
-            nt_domcontloaded_end: dom_content_loaded_event_end,
-            nt_domcomp: dom_complete,
-            nt_load_st: load_event_start,
-            nt_load_end: load_event_end,
-            nt_unload_st: unload_event_start,
-            nt_unload_end: unload_event_end,
-            nt_dns: dns_time,
-            nt_tcp: tcp_time,
-            nt_white: white_time,
-            nt_dom: dom_time,
-            nt_load: load_time,
-            nt_ready: ready_time,
-            nt_redirect: redirect_time,
-            nt_unload: unload_time,
-            nt_request: request_time,
-            nt_analysisdom: analysis_dom_time,
-            nt_dec_size: body_size,
-            nt_enc_size: encoded_body_size,
-            nt_nav_type: navigation_type,
-            nt_protocol: next_hop_protocol,
-            nt_red_cnt: redirect_count,
-            nt_trn_size: transfer_size,
-        } = resourceDatas;
-
-        const {
-            etype: effective_type,
-            dl: downlink,
-            rtt: round_trip_time
-        } = mob ? mob : {};
-
-        const {
-            e: continuity_epoch,
-            lb: continuity_last_beacon,
-            tti
-        } = c ? c : {};
-        const {
-            m: time_to_interactive_method,
-            vr: visually_ready_time
-        } = tti ? tti : {};
-        const {
-            start: trigger_method,
-            si: session_id,
-            ss: session_start,
-            sl: session_length,
-            bmr: boomer_time,
-            tstart: trigger_start,
-            bstart: boomerang_start_time,
-            end: boomerang_end_time,
-            tt: sum_load_times,
-            obo: no_load_pages_number
-        } = rt ? rt : {};
-        const {
-            plt: system,
-            vnd: browser
-        } = ua ? ua : {};
-        const {
-            doms: unique_domains_number,
-            ln: doms_number,
-            sz: html_size,
-            ck: cookies_size,
-            img: img_number,
-            script,
-            iframe: iframe_number,
-            link,
-            res: resources_fetch_number
-        } = dom ? dom : {};
-        const [link_number, css] = link ? link : [];
-        const { css: css_number } = css ? css : {};
-        const [script_number, ext] = script ? script : [];
-        const { ext: external_script_number } = ext ? ext : {};
-        const { st: page_visibility } = vis ? vis : {};
-        const {
-            total: total_js_heap_size,
-            limit: js_heap_size_limit,
-            used: used_js_heap_size,
-            lsln: used_local_storage_keys,
-            ssln: used_session_storage_keys,
-            lssz: used_local_storage_size,
-            sssz: used_session_storage_size
-        } = mem ? mem : {};
-        const {
-            xy: screen_size,
-            bpp: screen_color_depth,
-            orn: screen_orientation
-        } = scr ? scr : {};
-        const {
-            cnc: cpu_concurrency
-        } = cpu ? cpu : {};
-        const {
-            initiator
-        } = http ? http : {};
-        const {
-            fp: first_paint,
-            fcp: first_contentful_paint
-        } = pt ? pt : {};
-        const decodedUrl = decodeURIComponent(url) || '/';
-        const page_id = md5(decodedUrl);
-
-        const dat = {
-            systemId: systemItem.id,
-            create_time: createTime || '',
-            url: decodedUrl || '',
-            mark_page: pageMark || '',
-            load_time: load_time || '0',
-            dns_time: dns_time || '0',
-            tcp_time: tcp_time || '0',
-            dom_time: dom_time || '0',
-            white_time: white_time || '0',
-            redirect_time: redirect_time || '0',
-            unload_time: unload_time || '0',
-            request_time: request_time || '0',
-            analysis_dom_time: analysis_dom_time || '0',
-            ready_time: ready_time || '0',
-            connect_end: connect_end || '0',
-            connect_start: connect_start || '0',
-            body_size: body_size || '0',
-            domain_lookup_start: domain_lookup_start || '0',
-            domain_lookup_end: domain_lookup_end || '0',
-            dom_complete: dom_complete || '0',
-            dom_content_loaded_event_start: dom_content_loaded_event_start || '0',
-            dom_content_loaded_event_end: dom_content_loaded_event_end || '0',
-            dom_interactive: dom_interactive || '0',
-            encoded_body_size: encoded_body_size || '0',
-            fetch_start: fetch_start || '0',
-            load_event_start: load_event_start || '0',
-            load_event_end: load_event_end || '0',
-            navigation_start: navigation_start || '0',
-            navigation_type: navigation_type || '0',
-            next_hop_protocol: next_hop_protocol || '',
-            redirect_count: redirect_count || '0',
-            request_start: request_start || '0',
-            response_end: response_end || '0',
-            response_start: response_start || '0',
-            unload_event_end: unload_event_end || '0',
-            unload_event_start: unload_event_start || '0',
-            boomer_time: boomer_time || '',
-            continuity_epoch: continuity_epoch || '',
-            continuity_last_beacon: continuity_last_beacon || '',
-            time_to_interactive_method: time_to_interactive_method || '',
-            cpu_concurrency: cpu_concurrency || '0',
-            visually_ready_time: visually_ready_time || '0',
-            cookies_size: cookies_size || '0',
-            unique_domains_number: unique_domains_number || '0',
-            iframe_number: iframe_number || '0',
-            img_number: img_number || '0',
-            link_number: link_number || '0',
-            css_number: css_number || '0',
-            doms_number: doms_number || '0',
-            resources_fetch_number: resources_fetch_number || '0',
-            script_number: script_number || '0',
-            external_script_number: external_script_number || '0',
-            html_size: html_size || '0',
-            httpInitiator: initiator || 'cache',
-            downlink: downlink || '',
-            effective_type: effective_type || '',
-            round_trip_time: round_trip_time || '',
-            total_js_heap_size: total_js_heap_size || '0',
-            js_heap_size_limit: js_heap_size_limit || '0',
-            used_js_heap_size: used_js_heap_size || '0',
-            used_local_storage_size: used_local_storage_size || '0',
-            used_local_storage_keys: used_local_storage_keys || '0',
-            used_session_storage_size: used_session_storage_size || '0',
-            used_session_storage_keys: used_session_storage_keys || '0',
-            beacon_number: beacon_number || '0',
-            nocookie: nocookie || '',
-            page_id,
-            first_contentful_paint: first_contentful_paint || '0',
-            first_paint: first_paint || '0',
-            restiming: restiming || '',
-            appin: appin || '',
-            main_restiming: main_restiming || '',
-            app: app || '',
-            boomerang_start_time: boomerang_start_time || '',
-            boomerang_end_time: boomerang_end_time || '',
-            no_load_pages_number: no_load_pages_number || '0',
-            session_id: session_id || '',
-            session_length: session_length || '0',
-            session_start: session_start || '0',
-            trigger_method: trigger_method || '',
-            trigger_start: trigger_start || '0',
-            sum_load_times: sum_load_times || '0',
-            screen_color_depth: screen_color_depth || '',
-            screen_orientation: screen_orientation || '',
-            screen_size: screen_size || '',
-            boomerang_snippet_method: boomerang_snippet_method || '',
-            perceived_load_time: perceived_load_time || '0',
-            additional_timers: additional_timers || '',
-            front_time: front_time || '0',
-            back_time: back_time || '0',
-            system: system || '',
-            browser: browser || '',
-            boomerang_version: boomerang_version || '',
-            page_visibility: page_visibility || '',
-            transfer_size: transfer_size || '0'
-        }
-        console.log('-----------monitor data-----------', dat);
-        const sqlstr1 = sql
-            .table('web_pages')
-            .data(dat)
-            .insert()
-        return mysql(sqlstr1);
-    }
-}
-
-const queryIsUse = (appId) => {
-    const sqlstr = sql
-        .table('web_system')
-        .where({ app_id: appId })
-        .select();
-    return mysql(sqlstr);
-}
 
 class data {
     //初始化对象
@@ -435,13 +168,14 @@ class data {
     async getPagePerformance(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
         try {
+            const dataInstance = new data();
             const resourceDatas = ctx.request.body || {};
             const appId = resourceDatas.appId;
             if(!appId) {
                 ctx.body=imgsrc;
                 return;
             }; 
-            let systems = await querySystems(appId);
+            let systems = await dataInstance.querySystems(appId);
             if(!systems || !systems.length){
                 ctx.body=imgsrc;
                 return; 
@@ -454,7 +188,7 @@ class data {
             console.log('---start store performance data--');
             let createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
             //----------------------------------------存储页面page性能----------------------------------------
-            await storePagePerformance(createTime, resourceDatas, systemItem);
+            await dataInstance.storePagePerformance(createTime, resourceDatas, systemItem);
             ctx.body=imgsrc;
             return;
         }catch(err){
@@ -597,7 +331,7 @@ class data {
         }  
     }
     // 页面错误上报收集
-    async getErrorMsg(ctx){
+    async getErrorMsg(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
         try{
             //------------校验token是否存在----------------------------------------------------- 
@@ -669,6 +403,322 @@ class data {
             ctx.body=imgsrc
         }  
     }
+
+    async querySystems(appId) {
+        let sqlstr = sql
+        .table('web_system')
+        .field('id,'+ 
+               'system_domain,'+
+               'system_name,'+
+               'sub_systems,'+
+               'script,'+
+               'is_use,'+
+               'create_time,'+
+               'slow_page_time,'+
+               'slow_js_time,'+
+               'slow_css_time,'+
+               'slow_img_time,'+
+               'slow_ajax_time,'+
+               'app_id,'+
+               'is_monitor_pages,'+
+               'is_monitor_ajax,'+
+               'is_monitor_resource,'+
+               'is_monitor_system')
+        .where({ app_id: appId })
+        .select()
+        return mysql(sqlstr);
+    }
+    
+    async storePagePerformance(createTime, resourceDatas, systemItem) {
+        if(systemItem.is_monitor_pages === 0){
+            const {
+                mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
+                nocookie,
+                restiming,
+                app,
+                appin,
+                u: url, 
+                v: boomerang_version, 
+                sm: boomerang_snippet_method, 
+                pid: pageMark,
+                n: beacon_number,
+                t_resp: back_time,
+                t_page: front_time, 
+                t_done: perceived_load_time,
+                t_other: additional_timers,
+                main_restiming: main_restiming,
+                nt_nav_st: navigation_start,
+                nt_fet_st: fetch_start,
+                nt_dns_st: domain_lookup_start,
+                nt_dns_end: domain_lookup_end,
+                nt_con_st: connect_start,
+                nt_con_end: connect_end,
+                nt_req_st: request_start,
+                nt_res_st: response_start,
+                nt_res_end: response_end,
+                nt_domloading: dom_loading,
+                nt_domint: dom_interactive,
+                nt_domcontloaded_st: dom_content_loaded_event_start,
+                nt_domcontloaded_end: dom_content_loaded_event_end,
+                nt_domcomp: dom_complete,
+                nt_load_st: load_event_start,
+                nt_load_end: load_event_end,
+                nt_unload_st: unload_event_start,
+                nt_unload_end: unload_event_end,
+                nt_dns: dns_time,
+                nt_tcp: tcp_time,
+                nt_white: white_time,
+                nt_dom: dom_time,
+                nt_load: load_time,
+                nt_ready: ready_time,
+                nt_redirect: redirect_time,
+                nt_unload: unload_time,
+                nt_request: request_time,
+                nt_analysisdom: analysis_dom_time,
+                nt_dec_size: body_size,
+                nt_enc_size: encoded_body_size,
+                nt_nav_type: navigation_type,
+                nt_protocol: next_hop_protocol,
+                nt_red_cnt: redirect_count,
+                nt_trn_size: transfer_size,
+            } = resourceDatas;
+    
+            const {
+                etype: effective_type,
+                dl: downlink,
+                rtt: round_trip_time
+            } = mob ? mob : {};
+    
+            const {
+                e: continuity_epoch,
+                lb: continuity_last_beacon,
+                tti
+            } = c ? c : {};
+            const {
+                m: time_to_interactive_method,
+                vr: visually_ready_time
+            } = tti ? tti : {};
+            const {
+                start: trigger_method,
+                si: session_id,
+                ss: session_start,
+                sl: session_length,
+                bmr: boomer_time,
+                tstart: trigger_start,
+                bstart: boomerang_start_time,
+                end: boomerang_end_time,
+                tt: sum_load_times,
+                obo: no_load_pages_number
+            } = rt ? rt : {};
+            const {
+                plt: system,
+                vnd: browser
+            } = ua ? ua : {};
+            const {
+                doms: unique_domains_number,
+                ln: doms_number,
+                sz: html_size,
+                ck: cookies_size,
+                img: img_number,
+                script,
+                iframe: iframe_number,
+                link,
+                res: resources_fetch_number
+            } = dom ? dom : {};
+            const [link_number, css] = link ? link : [];
+            const { css: css_number } = css ? css : {};
+            const [script_number, ext] = script ? script : [];
+            const { ext: external_script_number } = ext ? ext : {};
+            const { st: page_visibility } = vis ? vis : {};
+            const {
+                total: total_js_heap_size,
+                limit: js_heap_size_limit,
+                used: used_js_heap_size,
+                lsln: used_local_storage_keys,
+                ssln: used_session_storage_keys,
+                lssz: used_local_storage_size,
+                sssz: used_session_storage_size
+            } = mem ? mem : {};
+            const {
+                xy: screen_size,
+                bpp: screen_color_depth,
+                orn: screen_orientation
+            } = scr ? scr : {};
+            const {
+                cnc: cpu_concurrency
+            } = cpu ? cpu : {};
+            const {
+                initiator
+            } = http ? http : {};
+            const {
+                fp: first_paint,
+                fcp: first_contentful_paint
+            } = pt ? pt : {};
+            const decodedUrl = decodeURIComponent(url || '');
+            const page_id = util.getPageId(decodedUrl);
+            const web_pages_basic_data = {
+                page_id,
+                url: decodedUrl || '',
+                system_id: systemItem.id,
+                create_time: createTime || '',
+                mark_page: pageMark || '',
+                app: app || ''
+            };
+    
+            const storePagesBasicSqlStr = sql
+                .table('web_pages_basic')
+                .data(web_pages_basic_data)
+                .insert();
+            const operationResult = await mysql(storePagesBasicSqlStr);
+            const { insertId: monitor_id } = operationResult;
+    
+            const web_pages_timing_data = {
+                monitor_id,
+                page_id,
+                url: decodedUrl || '',
+                load_time: load_time || '0',
+                white_time: white_time || '0',
+                first_paint: first_paint || '0',
+                first_contentful_paint: first_contentful_paint || '0',
+                visually_ready_time: visually_ready_time || '0',
+                perceived_load_time: perceived_load_time || '0',
+                dom_time: dom_time || '0',
+                analysis_dom_time: analysis_dom_time || '0',
+                dns_time: dns_time || '0',
+                tcp_time: tcp_time || '0',
+                redirect_time: redirect_time || '0',
+                unload_time: unload_time || '0',
+                request_time: request_time || '0',
+                ready_time: ready_time || '0',
+                boomerang_start_time: boomerang_start_time || '',
+                boomerang_end_time: boomerang_end_time || '',
+                no_load_pages_number: no_load_pages_number || '0',
+                session_id: session_id || '',
+                session_length: session_length || '0',
+                session_start: session_start || '0',
+                sum_load_times: sum_load_times || '0',
+                additional_timers: additional_timers || '',
+                front_time: front_time || '0',
+                back_time: back_time || '0'
+            };
+    
+            const web_pages_main_restiming_data = {
+                monitor_id,
+                main_restiming: main_restiming || ''
+            };
+    
+            const web_pages_restiming_data = {
+                monitor_id,
+                restiming: restiming || ''
+            };
+    
+            const web_pages_navigation_data = {
+                monitor_id,
+                connect_end: connect_end || '0',
+                connect_start: connect_start || '0',
+                domain_lookup_end: domain_lookup_end || '0',
+                domain_lookup_start: domain_lookup_start || '0',
+                dom_complete: dom_complete || '0',
+                dom_content_loaded_event_end: dom_content_loaded_event_end || '0',
+                dom_content_loaded_event_start: dom_content_loaded_event_start || '0',
+                dom_interactive: dom_interactive || '0',
+                dom_loading,
+                fetch_start: fetch_start || '0',
+                load_event_end: load_event_end || '0',
+                load_event_start: load_event_start || '0',
+                navigation_start: navigation_start || '0',
+                request_start: request_start || '0',
+                response_end: response_end || '0',
+                response_start: response_start || '0',
+                unload_event_end: unload_event_end || '0',
+                unload_event_start: unload_event_start || '0'
+            };
+    
+            const web_pages_resources_data = {
+                monitor_id,
+                page_id,
+                url: decodedUrl || '',
+                body_size: body_size || '0',
+                encoded_body_size: encoded_body_size || '0',
+                redirect_count: redirect_count || '0',
+                transfer_size: transfer_size || '0',
+                doms_number: doms_number || '0',
+                script_number: script_number || '0',
+                external_script_number: external_script_number || '0',
+                resources_fetch_number: resources_fetch_number || '0',
+                html_size: html_size || '0',
+                img_number: img_number || '0',
+                link_number: link_number || '0',
+                css_number: css_number || '0',
+                iframe_number: iframe_number || '0',
+                unique_domains_number: unique_domains_number || '0',
+                cookies_size: cookies_size || '0',
+                total_js_heap_size: total_js_heap_size || '0',
+                js_heap_size_limit: js_heap_size_limit || '0',
+                used_js_heap_size: used_js_heap_size || '0',
+                used_local_storage_size: used_local_storage_size || '0',
+                used_local_storage_keys: used_local_storage_keys || '0',
+                used_session_storage_size: used_session_storage_size || '0',
+                used_session_storage_keys: used_session_storage_keys || '0',
+                nocookie: nocookie || ''
+            };
+    
+            const web_pages_client_data = {
+                monitor_id,
+                page_id,
+                url: decodedUrl || '',
+                appin: appin || '',
+                navigation_type: navigation_type || '0',
+                next_hop_protocol: next_hop_protocol || '',
+                system: system || '',
+                browser: browser || '',
+                cpu_concurrency: cpu_concurrency || '0',
+                screen_color_depth: screen_color_depth || '',
+                screen_orientation: screen_orientation || '',
+                screen_size: screen_size || '',
+                http_initiator: initiator || 'cache',
+                effective_type: effective_type || '',
+                downlink: downlink || '',
+                round_trip_time: round_trip_time || ''
+            };
+    
+            const web_pages_probe_data = {
+                monitor_id,
+                boomerang_snippet_method: boomerang_snippet_method || '',
+                time_to_interactive_method: time_to_interactive_method || '',
+                trigger_method: trigger_method || '',
+                trigger_start: trigger_start || '0',
+                boomer_time: boomer_time || '',
+                continuity_epoch: continuity_epoch || '',
+                continuity_last_beacon: continuity_last_beacon || '',
+                beacon_number: beacon_number || '0',
+                boomerang_version: boomerang_version || '',
+                page_visibility: page_visibility || ''
+            };
+    
+            console.log('-----------monitor data-----------', dat);
+            const tables = [
+                'web_pages_basic',
+                'web_pages_timing',
+                'web_pages_main_restiming',
+                'web_pages_restiming',
+                'web_pages_navigation',
+                'web_pages_resources',
+                'web_pages_client',
+                'web_pages_probe',
+                'web_system'
+            ]
+    
+            const storePerformanceData = tables.map(table => {
+                    const sqlStr = sql
+                        .table(table)
+                        .data(`${table}_data`)
+                        .insert();
+                    return mysql(sqlStr);
+                });
+            return Promise.all(storePerformanceData);
+        }
+    }    
 }
 
 module.exports = new data();

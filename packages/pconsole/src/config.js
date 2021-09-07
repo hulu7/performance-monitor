@@ -48,7 +48,7 @@ export let DB = {
 	PASSWORD: '123456',
 
 	// 数据库名称    
-	DATABASE: 'web-performance',
+	DATABASE: 'web_performance',
 
 	// 默认"api_"
 	PREFIX: 'web_',

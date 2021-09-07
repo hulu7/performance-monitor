@@ -17,28 +17,28 @@
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- ----------------------------------------------
---  Table 1 structure for `web_pages_basic`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_basic`;
+-- --------------------------------------------------------------
+--  Table `web_pages_basic`: 单次采集数据页面基本信息
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_basic` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
   `system_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属系统标识符，对应web_system的id',
-  `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url域名',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '访问页面时间',
   `mark_page` char(80) NOT NULL DEFAULT '' COMMENT '所有资源页面统一标识',
   `app` varchar(255) NOT NULL DEFAULT '' COMMENT '子应用的名称或者标识符',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 2 structure for `web_pages_timing`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_timing`;
+-- --------------------------------------------------------------
+--  Table `web_pages_timing`: 单次采集的时间相关性能数据
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_timing` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `load_time` int(11) NOT NULL DEFAULT '0' COMMENT '页面完全加载时间 单位：ms',
   `white_time` int(11) NOT NULL DEFAULT '0' COMMENT '白屏时间 单位：ms',
   `first_paint` int(11) NOT NULL DEFAULT '0' COMMENT '首像素时间 (ms)',
@@ -66,10 +66,9 @@ CREATE TABLE `web_pages_timing` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 3 structure for `web_pages_main_restiming`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_main_restiming`;
+-- --------------------------------------------------------------
+--  Table `web_pages_main_restiming`: 单次采集的主应用瀑布流数据
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_main_restiming` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
@@ -77,10 +76,9 @@ CREATE TABLE `web_pages_main_restiming` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 4 structure for `web_pages_restiming`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_restiming`;
+-- --------------------------------------------------------------
+--  Table `web_pages_restiming`: 单次采集的子应用瀑布流数据
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_restiming` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
@@ -88,10 +86,9 @@ CREATE TABLE `web_pages_restiming` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 5 structure for `web_pages_navigation`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_navigation`;
+-- --------------------------------------------------------------
+--  Table `web_pages_navigation`: 单次采集的Navigation Timing数据
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_navigation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
@@ -116,13 +113,14 @@ CREATE TABLE `web_pages_navigation` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 6 structure for `web_pages_resources`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_resources`;
+-- --------------------------------------------------------------
+--  Table `web_pages_resources`: 单次采集的页面资源数据
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_resources` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `body_size` int(11) NOT NULL DEFAULT '0' COMMENT '解码后Body大小',
   `encoded_body_size` int(11) NOT NULL DEFAULT '0' COMMENT '编码后的body大小',
   `redirect_count` int(11) NOT NULL DEFAULT '0' COMMENT '重定向数量',
@@ -149,13 +147,14 @@ CREATE TABLE `web_pages_resources` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 7 structure for `web_pages_client`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_client`;
+-- --------------------------------------------------------------
+--  Table `web_pages_client`: 单次采集的客户端信息
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_client` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `appin` char(10) NOT NULL DEFAULT '' COMMENT 'App进入点',
   `navigation_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '导航方式：0 链接；1 重新加载； 2 前进、后退； 255 其他',
   `next_hop_protocol` char(70) NOT NULL DEFAULT '' COMMENT '网络协议 ',
@@ -172,10 +171,9 @@ CREATE TABLE `web_pages_client` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 8 structure for `web_pages_probe`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_pages_probe`;
+-- --------------------------------------------------------------
+--  Table `web_pages_probe`: 单次采集的探针信息
+-- --------------------------------------------------------------
 CREATE TABLE `web_pages_probe` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
@@ -192,10 +190,9 @@ CREATE TABLE `web_pages_probe` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------------
---  Table 9 structure for `web_system`
--- ----------------------------------------------
--- DROP TABLE IF EXISTS `web_system`;
+-- --------------------------------------------------------------
+--  Table `web_system`: 系统注册信息
+-- --------------------------------------------------------------
 CREATE TABLE `web_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `system_domain` char(50) NOT NULL DEFAULT '' COMMENT '系统域名',

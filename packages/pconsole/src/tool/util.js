@@ -259,7 +259,7 @@ class util {
     }
 
     //node删除文件夹内的所有文件
-    cleanFiles(pathImg){
+    cleanFiles(pathImg) {
         //删除上传到本地的文件
         let files = fs.readdirSync(pathImg);
         files.forEach(function (file, index) {
@@ -270,6 +270,14 @@ class util {
                 fs.unlinkSync(curPath);  
             }  
         })
+    }
+
+    //获取pageId
+    getPageId(url) {
+        if (!url) {
+            return '';
+        }
+        return md5(url.indexOf('?') == -1 ? url : url.replace(url.substr(url.indexOf('?')), ''));
     }
 }
 
