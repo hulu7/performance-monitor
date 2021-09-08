@@ -4,7 +4,7 @@ let PROT = 18088;
 // ORIGIN参数匹配是否是https
 const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
 let ORIGIN = `http://127.0.0.1:${PROT}`
-const PRODORIGIN = 'dev.performance-monitor.local'
+const PRODORIGIN = 'performance-monitor-stag.jdcloud.com'
 if(IS_HTTPS == 'TRUE') {
 	ORIGIN = `https://127.0.0.1:${PROT}`
 }
