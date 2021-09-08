@@ -4307,6 +4307,7 @@ BOOMR_check_doc_domain();
 		 * @param {object} data Data
 		 */
 		sendBeaconData: function(data) {
+			console.log('-------------------', data);
 			var urlFirst = [], urlLast = [], params, paramsJoined,
 			    url, img, useImg = true, xhr, ret;
 

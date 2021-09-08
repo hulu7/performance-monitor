@@ -36,16 +36,16 @@ export let SYSTEM = {
 
 export let DB = {
 	// 服务器地址
-	HOST: 'localhost',
+	HOST: 'stag-sqnew02-m.mysql.jddb.jcloud.com',
 
 	// 数据库端口号     
-	PROT: 3306,
+	PROT: 3358,
 
 	// 数据库用户名              
-	USER: 'root',
+	USER: 'webperformancerw',
 
 	// 数据库密码    
-	PASSWORD: '123456',
+	PASSWORD: 'XWTv06s8MeIOhqPlpYfU',
 
 	// 数据库名称    
 	DATABASE: 'web_performance',
