@@ -154,7 +154,7 @@ gulp.task("concat:js", gulp.series(() => {
 
 // 压缩所有前端js
 gulp.task('js:minify', gulp.series(() => {
-    return gulp.src([buildUrl+'/assets/js/*.js'], {allowEmpty: true})
+    return gulp.src([buildUrl + '/assets/js/*.js'], {allowEmpty: true})
         .pipe(uglify())
         .pipe(gulp.dest(buildUrl+'/assets/js/'));
 }));
@@ -200,10 +200,16 @@ gulp.task('replace:template', gulp.series(() => {
         .pipe(replace(reg, '<script src="/js/main.js"></script>'))
         .pipe(gulp.dest(buildUrl + '/view'));
 }));
- 
-// 还原 vue-component.js  和 vue-filters.js
+
+// 恢复不需要压缩的js文件
 gulp.task('vue:back', gulp.series(() => {
-    return gulp.src(['./src/assets/js/vue-components.js','./src/assets/js/vue-filters.js'])
+    return gulp.src([
+        './src/assets/js/vue-components.js',
+        './src/assets/js/vue-filters.js',
+        './src/assets/js/element-ui.min.js',
+        './src/assets/js/echarts.min.js',
+        './src/assets/js/vue.min.js'
+    ])
         .pipe(gulp.dest(buildUrl + '/assets/js/'));
 }));
 

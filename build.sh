@@ -60,6 +60,7 @@ function build
     echo "Start to build pconsole."
     cd packages/pconsole/
     mv ./src/config_prd.js ./src/config.js
+    mv ./src/view/template_prd.html ./src/view/template.html
     npm install
     npm run build
 
