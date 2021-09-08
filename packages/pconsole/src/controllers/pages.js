@@ -13,10 +13,10 @@ class pages {
     constructor() {
 
     };
+
     // 获得pages页面列表
     async getPageList(ctx) {
         try {
-            const pagesInstance = new pages();
             let systemId    = ctx.request.body.systemId;
             let pageNo      = ctx.request.body.pageNo || 1;
             let pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
@@ -38,7 +38,7 @@ class pages {
                     });
                     return
                 }
-                data.url = decodeURIComponent(url);
+                data.page_id = util.getPageId(decodeURIComponent(url));
             }
 
             if (beginTime && endTime) {
@@ -49,7 +49,7 @@ class pages {
             }
             let totalNum = 0;
             if (isAllAvg != 'false') {
-                let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('url').select(); 
+                let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('page_id').select(); 
                 let total = await mysql(sqlTotal);
                 if(total.length) {
                     totalNum = total.length;
@@ -57,33 +57,52 @@ class pages {
             }
 
             // 请求页面基础信息数据
-            const testsss = sql
-                .table('web_pages_basic')
-                .page(pageNo, pageSize)
-                .where(data)
-                .select();
-            let test = await mysql(testsss);
+            const sqlPageIds = sql.field(`page_id,
+                    count(page_id) as count
+                    `)
+            .table('web_pages_basic')
+            .group('page_id')
+            .order('count desc')
+            .page(pageNo, pageSize)
+            .where(data)
+            .select();
+            const result = await mysql(sqlPageIds);
+            const performanceDataQuery = result.map(async (page) => {
+                const data = {
+                    page_id: page.page_id
+                };
+                const sqlPageTiming = sql.field(`page_id,
+                            avg(load_time) as load_time,
+                            avg(request_time) as request_time,
+                            avg(white_time) as white_time
+                            `)
+                    .table('web_pages_timing')
+                    .group('page_id')
+                    .where(data)
+                    .select();
+                return mysql(sqlPageTiming);
+            });
 
-            console.log('------------------', test)
+            const basicQuery = result.map(async (page) => {
+                const sqlBasic = sql
+                    .table('web_pages_basic')
+                    .where({ page_id: page.page_id })
+                    .limit(0, 1)
+                    .select()
 
-            // 请求列表数据
-            const sqlstr_web_pages_timing = sql.field(`url,
-                        avg(load_time) as load_time,
-                        avg(request_time) as request_time,
-                        avg(white_time) as white_time,
-                        count(url) as count
-                        `)
-                .table('web_pages_timing')
-                .group('url')
-                .order('count desc')
-                .page(pageNo, pageSize)
-                .where(data)
-                .select();
+                return mysql(sqlBasic);
+            });
 
-            let result = await mysql(sqlstr_web_pages_timing);
-            result.forEach((item, index) => {
-                result[index].pageId = util.getPageId(decodeURIComponent(item.url))
-            })
+            const performanceData = await Promise.all(performanceDataQuery);
+            const basicData = await Promise.all(basicQuery);
+
+            result.forEach(item => {
+                const performance = performanceData.find(i => i[0].page_id === item.page_id);
+                const basic = basicData.find(i => i[0].page_id === item.page_id);
+                const { load_time: loadTime, request_time: requestTime, white_time: whiteTime } = performance[0];
+                const { url } = basic[0];
+                Object.assign(item, { loadTime, requestTime, whiteTime, url, pageId: util.getPageId(decodeURIComponent(url)) });
+            });
 
             let valjson = {}
             if(isAllAvg=='false') {
@@ -127,9 +146,7 @@ class pages {
             const pageId         = ctx.request.body.pageId;
 
             // 公共参数
-            let data = {
-                system_id: systemId
-            };
+            let data = {};
 
             if(isAllAvg === 'false') {
                 if(!pageId) {
@@ -157,7 +174,7 @@ class pages {
 
 
             // 请求性能表格数据
-            const sqlstr_web_pages_timing = sql.field(`page_id,
+            const sqlPagesTiming = sql.field(`page_id,
                         avg(load_time) as load_time,
                         avg(white_time) as white_time,
                         avg(first_paint) as first_paint,
@@ -174,7 +191,7 @@ class pages {
                         avg(ready_time) as ready_time,
                         avg(sum_load_times) as sum_load_times,
                         avg(additional_timers) as additional_timers,
-                        count(url) as count
+                        count(page_id) as count
                         `)
                 .table('web_pages_timing')
                 .group('page_id')
@@ -184,7 +201,7 @@ class pages {
                 .select();
 
             // 请求资源表格数据
-            const sqlstr_web_pages_resources = sql.field(`page_id,
+            const sqlPagesResources = sql.field(`page_id,
                         avg(body_size) as body_size,
                         avg(encoded_body_size) as encoded_body_size,
                         avg(redirect_count) as redirect_count,
@@ -199,7 +216,7 @@ class pages {
                         avg(script_number) as script_number,
                         avg(external_script_number) as external_script_number,
                         avg(html_size) as html_size,
-                        count(url) as count
+                        count(page_id) as count
                         `)
                 .table('web_pages_resources')
                 .group('page_id')
@@ -209,11 +226,11 @@ class pages {
                 .select();
 
             // 请求客户端表格数据
-            const sqlstr_web_pages_client = sql.field(`page_id,
+            const sqlPagesClient = sql.field(`page_id,
                         avg(cpu_concurrency) as cpu_concurrency,
                         avg(round_trip_time) as round_trip_time,
                         avg(downlink) as downlink,
-                        count(url) as count
+                        count(page_id) as count
                         `)
                 .table('web_pages_client')
                 .group('page_id')
@@ -222,9 +239,9 @@ class pages {
                 .where(data)
                 .select();
 
-            const result_web_pages_timing = await mysql(sqlstr_web_pages_timing);
-            const result_web_pages_resources = await mysql(sqlstr_web_pages_resources);
-            const result_web_pages_client = await mysql(sqlstr_web_pages_client);
+            const resultPagesTiming = await mysql(sqlPagesTiming);
+            const resultPagesResources = await mysql(sqlPagesResources);
+            const resultPagesClient = await mysql(sqlPagesClient);
 
             let valjson = {}
 
@@ -236,7 +253,7 @@ class pages {
 
             const pageIds = await mysql(queryPageId);
             if(isAllAvg === 'false') {
-                if (result_web_pages_timing.length) {
+                if (resultPagesTiming.length) {
                     const {
                         load_time: loadTime,
                         white_time: whiteTime,
@@ -255,7 +272,7 @@ class pages {
                         sum_load_times: sumLoadTimes,
                         additional_timers: additionalTimers,
                         url
-                    } = result_web_pages_timing[0];
+                    } = resultPagesTiming[0];
 
                     const {
                         body_size: bodySize,
@@ -271,16 +288,17 @@ class pages {
                         resources_fetch_number: resourcesFetchNumber,
                         script_number: scriptNumber,
                         external_script_number: externalScriptNumber,
-                        html_size: htmlSize
-                    } = result_web_pages_resources[0];
+                        html_size: htmlSize,
+                        count
+                    } = resultPagesResources[0];
 
                     const {
                         cpu_concurrency: cpuConcurrency,
                         round_trip_time: roundTripTime,
                         downlink,
-                    } = result_web_pages_client[0];
+                    } = resultPagesClient[0];
 
-                    Object.assign(valjson, { loadTime, whiteTime, firstPaint, firstContentfulPaint, visuallyReadyTime,
+                    Object.assign(valjson, { loadTime, whiteTime, firstPaint, firstContentfulPaint,     visuallyReadyTime, count,
                         perceivedLoadTime, domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, requestTime,
                         readyTime, sumLoadTimes, additionalTimers, bodySize, encodedBodySize, redirectCount, transferSize,
                         uniqueDomainsNumber, iframeNumber, imgNumber, linkNumber, cssNumber, domsNumber, resourcesFetchNumber,
@@ -293,7 +311,7 @@ class pages {
             }
 
             if (pageIds && pageIds.length) {
-                Object.assign(valjson, { url: pageIds[0].url});
+                Object.assign(valjson, { url: pageIds[0].url });
             }
 
             ctx.body = util.result({
@@ -312,6 +330,7 @@ class pages {
     // 页面性能详情
     async getPageItemDetail(ctx) {
         try {
+            const pagesInstance = new pages();
             const pageNo      = ctx.request.body.pageNo || 1
             const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE
             const beginTime   = ctx.request.body.beginTime || ''
@@ -353,24 +372,17 @@ class pages {
             let result = await mysql(sqlstr_web_pages_basic);
 
             if(result && result.length) {
-                result.forEach(async (item) => {
+                const queryList = [];
+                result.forEach(item => {
                     item.dateTime = moment(new Date(item.create_time)).format('YYYY-MM-DD HH:mm:ss');
-                    const [
-                        resultPageTiming,
-                        resultPageMainRestiming,
-                        resultPageRestiming,
-                        resultPageResources,
-                        resultPageClient
-                    ] = await Promise.all([
-                        this.queryPageTimingById(item.monitor_id),
-                        this.queryPageMainRestimingById(item.monitor_id),
-                        this.queryPageRestimingById(item.monitor_id),
-                        this.queryPageResourcesById(item.monitor_id),
-                        this.queryPageClientById(item.monitor_id)
-                    ]);
-                    Object.assign(item, resultPageTiming[0], resultPageMainRestiming[0], resultPageRestiming[0],
-                        resultPageResources[0], resultPageClient[0]);
+                    queryList.push(pagesInstance.queryPageTimingById(item.id));
                 })
+                const queryResult = await Promise.all(queryList);
+                result = result.map(item => {
+                    const target = queryResult.find(i => i.monitorId === item.id);
+                    Object.assign(item, target);
+                    return item;
+                });
             }
 
             ctx.body = util.result({
@@ -455,7 +467,7 @@ class pages {
                 requestTime, readyTime
             });
         }
-        return valjson;
+        return Promise.resolve(valjson);
     }
 
     // 页面主应用流水线
@@ -476,9 +488,9 @@ class pages {
                 monitor_id: monitorId,
                 main_restiming: mainRestiming
             } = result[0];
-            Object.assign(valjson, { monitorId, mainRestiming });
+            Object.assign(valjson, { monitorId, mainRestiming: util.decompress(mainRestiming) });
         }
-        return valjson;
+        return Promise.resolve(valjson);
     }
 
     // 页面子应用流水线
@@ -499,9 +511,9 @@ class pages {
                 monitor_id: monitorId,
                 restiming: restiming
             } = result[0];
-            Object.assign(valjson, { monitorId, restiming });
+            Object.assign(valjson, { monitorId, restiming: util.decompress(restiming) });
         }
-        return valjson;
+        return Promise.resolve(valjson);
     }
 
     // 页面资源信息
@@ -548,7 +560,7 @@ class pages {
                 totalJSHeapSize, jsHeapSizeLimit, usedJSHeapSize, usedLocalStorageSize, usedLocalStorageKeys
             });
         }
-        return valjson;
+        return Promise.resolve(valjson);
     }
 
     // 客户端信息
@@ -588,12 +600,13 @@ class pages {
                 effectiveType, downlink, roundTripTime
             });
         }
-        return valjson;
+        return Promise.resolve(valjson);
     }
 
     // 根据ID获得page详情性能信息
     async getPageItemForId(ctx) {
         try {
+            const pagesInstance = new pages();
             let id       = ctx.request.body.id
 
             if(!id){
@@ -604,26 +617,25 @@ class pages {
                 return
             }
             let valjson = {}
-            let result = await this.queryPageBasicById(id);
-            if (result.length) {
-                const [
-                    resultPageTiming,
-                    resultPageMainRestiming,
-                    resultPageRestiming,
-                    resultPageResources,
-                    resultPageClient
-                ] = await Promise.all([
-                    this.queryPageTimingById(id),
-                    this.queryPageMainRestimingById(id),
-                    this.queryPageRestimingById(id),
-                    this.queryPageResourcesById(id),
-                    this.queryPageClientById(id)
-                ]);
 
-                Object.assign(valjson, result[0], resultPageTiming[0], resultPageMainRestiming[0],
-                    resultPageRestiming[0], resultPageResources[0], resultPageClient[0]);
-            }
+            const [
+                resultPageBasic,
+                resultPageTiming,
+                resultPageMainRestiming,
+                resultPageRestiming,
+                resultPageResources,
+                resultPageClient
+            ] = await Promise.all([
+                pagesInstance.queryPageBasicById(id),
+                pagesInstance.queryPageTimingById(id),
+                pagesInstance.queryPageMainRestimingById(id),
+                pagesInstance.queryPageRestimingById(id),
+                pagesInstance.queryPageResourcesById(id),
+                pagesInstance.queryPageClientById(id)
+            ]);
 
+            Object.assign(valjson, resultPageBasic, resultPageTiming, resultPageMainRestiming,
+                resultPageRestiming, resultPageResources, resultPageClient);
             ctx.body = util.result({
                 data: valjson
             });

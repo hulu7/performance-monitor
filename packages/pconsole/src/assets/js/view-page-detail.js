@@ -37,10 +37,10 @@ new Vue({
         const statics = [
             'browser', //浏览器
             'system', //操作系统
-            'effectiveType', //带宽类型
-            'screenOrientation', //屏幕方向
-            'screenSize', //屏幕尺寸
-            'httpInitiator', //页面切换类型
+            'effective_type', //带宽类型
+            'screen_orientation', //屏幕方向
+            'screen_size', //屏幕尺寸
+            'http_initiator', //页面切换类型
         ];
         statics.map((type) => this.getDataForEnvironment(type));
     },
@@ -114,10 +114,10 @@ new Vue({
                 }
             })
         },
-        getData(datas, id, tyle){
+        getData(datas, id, tyle) {
             let seriesData=[];
-            let legendData=[]
-            let totalcount=0
+            let legendData=[];
+            let totalcount=0;
             if(!datas.length) return;
             datas.forEach(item=>{
                 totalcount+=item.count
@@ -129,9 +129,9 @@ new Vue({
                     icon: 'circle',
                 })
                 seriesData.push({
-                    name:name,
-                    value:item.count,
-                    percentage:((item.count/totalcount)*100).toFixed()+'%'
+                    name: name,
+                    value: item.count,
+                    percentage: ((item.count/totalcount)*100).toFixed()+'%'
                 })
             })
             this.echartBorwsers(id, legendData, seriesData)

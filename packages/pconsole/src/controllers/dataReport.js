@@ -430,7 +430,7 @@ class data {
     }
     
     async storePagePerformance(createTime, resourceDatas, systemItem) {
-        if(systemItem.is_monitor_pages === 0){
+        if(systemItem.is_monitor_pages === 0 && resourceDatas.appin){
             const {
                 mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
                 nocookie,
@@ -604,14 +604,14 @@ class data {
     
             const web_pages_main_restiming_data = {
                 monitor_id,
-                main_restiming: main_restiming || ''
+                main_restiming: util.compress(main_restiming) || ''
             };
     
             const web_pages_restiming_data = {
                 monitor_id,
-                restiming: restiming || ''
+                restiming: util.compress(restiming) || ''
             };
-    
+
             const web_pages_navigation_data = {
                 monitor_id,
                 connect_end: connect_end || '0',
@@ -622,7 +622,7 @@ class data {
                 dom_content_loaded_event_end: dom_content_loaded_event_end || '0',
                 dom_content_loaded_event_start: dom_content_loaded_event_start || '0',
                 dom_interactive: dom_interactive || '0',
-                dom_loading,
+                dom_loading: dom_loading || '0',
                 fetch_start: fetch_start || '0',
                 load_event_end: load_event_end || '0',
                 load_event_start: load_event_start || '0',
@@ -660,7 +660,7 @@ class data {
                 used_local_storage_keys: used_local_storage_keys || '0',
                 used_session_storage_size: used_session_storage_size || '0',
                 used_session_storage_keys: used_session_storage_keys || '0',
-                nocookie: nocookie || ''
+                nocookie: nocookie || '0'
             };
     
             const web_pages_client_data = {
@@ -678,8 +678,8 @@ class data {
                 screen_size: screen_size || '',
                 http_initiator: initiator || 'cache',
                 effective_type: effective_type || '',
-                downlink: downlink || '',
-                round_trip_time: round_trip_time || ''
+                downlink: downlink || '0',
+                round_trip_time: round_trip_time || '0'
             };
     
             const web_pages_probe_data = {
@@ -695,8 +695,17 @@ class data {
                 boomerang_version: boomerang_version || '',
                 page_visibility: page_visibility || ''
             };
+
+            const dataMap = {
+                web_pages_timing_data,
+                web_pages_main_restiming_data,
+                web_pages_restiming_data,
+                web_pages_navigation_data,
+                web_pages_resources_data,
+                web_pages_client_data,
+                web_pages_probe_data
+            };
     
-            console.log('-----------monitor data-----------', dat);
             const tables = [
                 'web_pages_basic',
                 'web_pages_timing',
@@ -712,7 +721,7 @@ class data {
             const storePerformanceData = tables.map(table => {
                     const sqlStr = sql
                         .table(table)
-                        .data(`${table}_data`)
+                        .data(dataMap[`${table}_data`])
                         .insert();
                     return mysql(sqlStr);
                 });

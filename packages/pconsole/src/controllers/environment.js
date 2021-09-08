@@ -56,20 +56,19 @@ class pages {
                 spa: '应用内跳转',
                 spa_hard: '通过url访问'
             };
-            if (type === 'boomerangSnippetMethod') {
-                result.forEach((item, index) => {
-                    result[index].boomerangSnippetMethod = boomerangSnippetMethodMap[item.boomerang_snippet_method]
+            if (type === 'boomerang_snippet_method') {
+                result.forEach(item => {
+                    item.boomerang_snippet_method = boomerangSnippetMethodMap[item.boomerang_snippet_method]
+                });
+            } else if (type === 'http_initiator') {
+                result.forEach(item => {
+                    item.http_initiator = httpInitiatorMap[item.http_initiator];
                 });
             }
-            if (type === 'httpInitiator') {
-                result.forEach((item, index) => {
-                    result[index].httpInitiator = httpInitiatorMap[item.http_initiator];
-                });
-            }
+
             ctx.body = util.result({
                 data: result
             });
-            console.log(result);
         } catch (err) {
             console.log(err)
             ctx.body = util.result({
