@@ -59,6 +59,7 @@ function build
     # 安装依赖
     echo "Start to build pconsole."
     cd packages/pconsole/
+    mv ./src/config_prd.js ./src/config.js
     npm install
     npm run build
 

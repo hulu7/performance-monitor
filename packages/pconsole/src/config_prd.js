@@ -1,9 +1,10 @@
+import path from 'path'
 let PROT = 18088;
 
 // ORIGIN参数匹配是否是https
 const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
 let ORIGIN = `http://127.0.0.1:${PROT}`
-const PRODORIGIN = 'dev.performance-monitor.local'
+const PRODORIGIN = 'performance-monitor-stag.jdcloud.com'
 if(IS_HTTPS == 'TRUE') {
 	ORIGIN = `https://127.0.0.1:${PROT}`
 }
@@ -35,16 +36,16 @@ export let SYSTEM = {
 
 export let DB = {
 	// 服务器地址
-	HOST: 'localhost',
+	HOST: 'stag-sqnew02-m.mysql.jddb.jcloud.com',
 
 	// 数据库端口号     
-	PROT: 3306,
+	PROT: 3358,
 
 	// 数据库用户名              
-	USER: 'root',
+	USER: 'webperformancerw',
 
 	// 数据库密码    
-	PASSWORD: '123456',
+	PASSWORD: 'XWTv06s8MeIOhqPlpYfU',
 
 	// 数据库名称    
 	DATABASE: 'web_performance',
