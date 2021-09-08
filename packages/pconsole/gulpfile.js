@@ -83,7 +83,7 @@ gulp.task('copy-all', gulp.series(() => {
 gulp.task('babel', gulp.series(() => {
     return gulp.src([buildUrl+'/assets/js/*.js'], {allowEmpty: true})
         .pipe(babel({
-            "presets": ["es2015", "stage-2"],
+            "presets": ["es2015", "stage-2"]
         }))
         .pipe(gulp.dest(buildUrl+ "/assets/js"));
 }));
@@ -208,7 +208,9 @@ gulp.task('vue:back', gulp.series(() => {
         './src/assets/js/vue-filters.js',
         './src/assets/js/element-ui.min.js',
         './src/assets/js/echarts.min.js',
-        './src/assets/js/vue.min.js'
+        './src/assets/js/vue.min.js',
+        './src/assets/js/jquery.min.js',
+        './src/assets/js/polyfill.min.js'
     ])
         .pipe(gulp.dest(buildUrl + '/assets/js/'));
 }));
