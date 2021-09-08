@@ -217,7 +217,8 @@ class user {
             console.log(err)
             ctx.body = util.result({
                 code: 1001,
-                desc: '系统错误!'
+                desc: '系统错误!',
+                err
             });
             return '';
         }
