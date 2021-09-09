@@ -571,7 +571,6 @@ class data {
                 .insert();
             const operationResult = await mysql(storePagesBasicSqlStr);
             const { insertId: monitor_id } = operationResult;
-    
             const web_pages_timing_data = {
                 monitor_id,
                 page_id,
@@ -707,7 +706,6 @@ class data {
             };
     
             const tables = [
-                'web_pages_basic',
                 'web_pages_timing',
                 'web_pages_main_restiming',
                 'web_pages_restiming',
