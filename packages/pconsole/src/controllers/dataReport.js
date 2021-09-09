@@ -714,8 +714,7 @@ class data {
                 'web_pages_navigation',
                 'web_pages_resources',
                 'web_pages_client',
-                'web_pages_probe',
-                'web_system'
+                'web_pages_probe'
             ]
     
             const storePerformanceData = tables.map(table => {
