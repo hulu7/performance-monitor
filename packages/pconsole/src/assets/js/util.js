@@ -814,6 +814,13 @@ class utilfn {
 			return false;
 		}
 	}
+
+	getPageUrl(url) {
+        if(!url) {
+            return '';
+        }
+        return url.indexOf('?') == -1 ? url : url.replace(url.substr(url.indexOf('?')), '');
+    }
 }
 
 //初始化util对象

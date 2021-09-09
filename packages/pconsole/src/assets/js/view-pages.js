@@ -61,6 +61,9 @@ new Vue({
                     if(!data.data.datalist&&!data.data.datalist.length) {
                         return;
                     }
+                    data.data.datalist.forEach(page => {
+                        page.url = util.getPageUrl(page.url);
+                    });
                     this.listdata = data.data.datalist;
                     this.total = data.data.totalNum;
                 }
