@@ -43,6 +43,7 @@ function output
     echo "Copy files to output."
     cp -r packages/pconsole/dist/build/* output
     cp -r packages/pconsole/package* output
+    cp -r packages/pconsole/pm2.config.json output
 
     # 安装依赖
     echo "Downloading server node_modules."
