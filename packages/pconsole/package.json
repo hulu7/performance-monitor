@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "BABEL_ENV=development gulp",
     "build": "BABEL_ENV=production gulp build",
-    "start": "BABEL_ENV=production pm2 start pm2.config.json",
-    "stop": "pm2 stop pm2.config.json",
+    "start": "BABEL_ENV=production node app.js",
+    "stop": "echo 'exit(0)'",
     "test-build": "npm run build && node ./build/http.push.tar.gz.js"
   },
   "repository": {
