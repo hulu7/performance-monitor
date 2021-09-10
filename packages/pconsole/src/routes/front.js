@@ -17,7 +17,7 @@ const checkfn = controllers.common.checkRequestUrl;
 /*首页页面*/
 router.get(['/'], async(ctx, next) => {
 	let datas = {
-		title:'HOME首页',
+		title:'前端性能分析',
 	}
 
 	await ctx.render('system',{
@@ -39,7 +39,7 @@ router.get(['/addSystem'], async(ctx, next) => {
 //pages性能分析页面
 router.get(['/pages'], async(ctx, next) => {
 	let datas = {
-		title:'page性能分析',
+		title:'前端性能分析',
 	}
 	await ctx.render('pages',{
 		datas

@@ -54,7 +54,7 @@
   top: 40px;
   z-index: 101;
   background: #f9f9f9;
-  box-shadow: 0 5px 12px 5px rgb(0 0 0 / 10%); }
+  border-right: 1px solid rgba(0,0,0,.12); }
   .side .top {
     height: 50px;
     background: #2077ff;
@@ -96,8 +96,7 @@
   padding: 10px 0;
   background: #f4f4f4;
   text-align: center;
-  line-height: 20px;
-  margin-top: 50px; }
+  line-height: 20px; }
 
 .container {
   margin: 40px 0 0 180px; }
@@ -108,7 +107,6 @@
 .common-title {
   height: 50px;
   line-height: 50px;
-  background: #f9f9f9;
   padding: 0 10px; }
   .common-title h1 {
     font-size: 14px;
