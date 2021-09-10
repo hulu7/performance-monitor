@@ -1,6 +1,6 @@
 #!/bin/bash
 cd "$(dirname $0)"/.. || exit 1
-PROC_NAME='web-performance-monitoring-system'
+PROC_NAME='performance-monitor'
 
 help(){
     echo "${0} <start|stop|restart|status>"
@@ -8,7 +8,7 @@ help(){
 }
 
 status(){
-    ps -eo 'pid,command' | grep "\-\-title=$PROC_NAME" | grep -v grep > /dev/null 2>&1
+    ps -eo 'pid,command' | grep "$PROC_NAME" | grep -v grep > /dev/null 2>&1
     ret=$?
     if [ 0 -eq $ret ]; then
         echo "running"

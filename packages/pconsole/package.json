@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "BABEL_ENV=development gulp",
     "build": "BABEL_ENV=production gulp build",
-    "start": "BABEL_ENV=production node app.js",
-    "stop": "echo 'exit(0)'",
+    "start": "BABEL_ENV=production pm2 start pm2.config.json",
+    "stop": "pm2 stop all",
     "test-build": "npm run build && node ./build/http.push.tar.gz.js"
   },
   "repository": {
@@ -83,6 +83,7 @@
     "install": "^0.10.2",
     "koa-sslify": "^2.1.2",
     "request-ip": "^2.0.2",
-    "elasticsearch": "^16.7.1"
+    "elasticsearch": "^16.7.1",
+    "pm2": "^5.1.1"
   }
 }
