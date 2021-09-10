@@ -1596,7 +1596,8 @@
 		BOOMR.utils.mark("restiming:build:start");
 		/* END_DEBUG */
 
-		r = getCompressedResourceTiming(from, to);
+		// r = getCompressedResourceTiming(from, to);
+		r = getOriginResourceTiming(from, to);
 
 		/* BEGIN_DEBUG */
 		BOOMR.utils.mark("restiming:build:end");
