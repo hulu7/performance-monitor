@@ -183,7 +183,7 @@ class user {
                 timestamp,
                 random: util.randomString()
             }).paySign;
-            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${token}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${sub_systems},});</script>`;
+            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${token}",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${sub_systems},});</script>`;
 
             // 插入数据
             const data = {
@@ -281,7 +281,7 @@ class user {
                 return
             }
 
-            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${app_id}",History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${sub_systems},});</script>`;
+            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",AppId:"${app_id}",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: ${sub_systems},});</script>`;
             const sqlstr = sql
                 .table('web_system')
                 .data({
