@@ -267,13 +267,13 @@
 						nt_dns: (p.timing.domainLookupEnd - p.timing.domainLookupStart),  // DNS解析时间
 						nt_tcp: (p.timing.connectEnd - p.timing.connectStart),  //TCP建立时间
 						nt_white: (p.timing.responseStart - p.timing.navigationStart), // 白屏时间
-						nt_dom: (p.timing.domContentLoadedEventEnd - p.timing.navigationStart),  // dom渲染完成时间
-						nt_load: (p.timing.loadEventEnd - p.timing.navigationStart),  // 页面onload时间
+						nt_dom: p.timing.domContentLoadedEventEnd ? (p.timing.domContentLoadedEventEnd - p.timing.navigationStart) : 0,  // dom渲染完成时间
+						nt_load: p.timing.loadEventEnd ? (p.timing.loadEventEnd - p.timing.navigationStart) : 0,  // 页面onload时间
 						nt_ready: (p.timing.fetchStart - p.timing.navigationStart), // 页面准备时间
 						nt_redirect: (p.timing.redirectEnd - p.timing.redirectStart), // 页面重定向时间
 						nt_unload: (p.timing.unloadEventEnd - p.timing.unloadEventStart),   // unload时间
 						nt_request: (p.timing.responseEnd - p.timing.requestStart),  // request请求耗时
-						nt_analysisdom: (p.timing.domComplete - p.timing.domInteractive)  //   页面解析dom耗时
+						nt_analysisdom: p.timing.domComplete ? (p.timing.domComplete - p.timing.domInteractive) : 0  //   页面解析dom耗时
 					};
 
 					Object.assign(BOOMR.hardNavigationTiming, data);
