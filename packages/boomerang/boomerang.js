@@ -452,6 +452,15 @@ BOOMR_check_doc_domain();
 		// Sometimes we would like to be able to set the SameSite=None from a Boomerang plugin
 		forced_same_site_cookie_none: false,
 
+		// app id, this is for the SPA or micro-frontend apps
+		app_id: '',
+
+		// routers, this is for the SPA or micro-frontend apps, { name: string, rule: string }
+		routers: [],
+
+		// callback function for restiming, this is for the SPA or micro-frontend apps. input: url, output: app name
+		restiming_map_callback: undefined,
+
 		events: {
 			/**
 			 * Boomerang event, subscribe via {@link BOOMR.subscribe}.
@@ -2720,7 +2729,10 @@ BOOMR_check_doc_domain();
 				    "strip_query_string",
 				    "user_ip",
 				    "same_site_cookie",
-				    "secure_cookie"
+				    "secure_cookie",
+					"app_id",
+					"routers",
+					"restiming_map_callback"
 			    ];
 
 			/* BEGIN_DEBUG */
@@ -2779,17 +2791,8 @@ BOOMR_check_doc_domain();
 			/* Record the hard reload timing */
 			BOOMR.hardNavigationTiming = {};
 
-			/* Record the app id */
-			BOOMR.appId = config.AppId;
-
-			/* Record the routes information : route name and active rule */
-			BOOMR.routers = config.Routers;
-
 			/* Record app access info */
 			BOOMR.appin = undefined;
-
-			/* Record resource timing for main frame */
-			BOOMR.mainRestiming  = undefined;
 
 			for (k in this.plugins) {
 				if (this.plugins.hasOwnProperty(k)) {
@@ -3985,15 +3988,37 @@ BOOMR_check_doc_domain();
 			BOOMR.sendBeacon();
 		},
 
+		/**
+		 * Dispart restiming for sub-apps and main-app
+		 *
+		 * @returns {restiming}.
+		 *
+		 * @memberof BOOMR
+		 */
+		formatRestiming: function(res) {
+			const result = '[]';
+			if (!res) {
+				return result;
+			}
+			const formRes = JSON.parse(res);
+			if (impl.restiming_map_callback && typeof impl.restiming_map_callback === 'function') {
+				formRes.forEach(item => {
+					const app = impl.restiming_map_callback.apply(this, [item.name]);
+					Object.assign(item, { app });
+				});
+			}
+
+			return JSON.stringify(formRes);
+		},
+
 		/** 
 		 * Config beacon data with:
 		 * 	  app: app name,
 		 *    appin: the hard navigation from main or sub app
-		 *    main_restiming: resource timing for main frame loading
 		*/
 		supportMicroFrontend(vars, varsSent) {
 			if (vars['u']) {
-				var matchedRouter = BOOMR.routers.find(router => {
+				var matchedRouter = impl.routers.find(router => {
 					return !!vars['u'].match(router.rule);
 				});
 				varsSent['app'] = matchedRouter ? matchedRouter.name : 'main';
@@ -4002,13 +4027,9 @@ BOOMR_check_doc_domain();
 				BOOMR.appin = varsSent['app'] === 'main' && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
 			}
 
-			if (BOOMR.appin === 'from_main' && vars['restiming'] && !BOOMR.mainRestiming) {
-				BOOMR.mainRestiming = vars['restiming'];
-			}
-
-			varsSent['appId'] = BOOMR.appId;
+			varsSent['app_id'] = impl.app_id;
 			varsSent['appin'] = BOOMR.appin;
-			varsSent['main_restiming'] = BOOMR.mainRestiming;
+			varsSent['restiming'] = BOOMR.formatRestiming(vars['restiming']);
 
 			Object.assign(varsSent, BOOMR.hardNavigationTiming);
 		},

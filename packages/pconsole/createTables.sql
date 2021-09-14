@@ -67,16 +67,6 @@ CREATE TABLE `web_pages_timing` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------------
---  Table `web_pages_main_restiming`: 单次采集的主应用瀑布流数据
--- --------------------------------------------------------------
-CREATE TABLE `web_pages_main_restiming` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
-  `main_restiming` varchar(16293) NOT NULL DEFAULT '' COMMENT '主应用瀑布流数据',
-  PRIMARY KEY (`id`,`monitor_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------------
 --  Table `web_pages_restiming`: 单次采集的子应用瀑布流数据
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_restiming` (

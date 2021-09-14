@@ -170,12 +170,12 @@ class data {
         try {
             const dataInstance = new data();
             const resourceDatas = ctx.request.body || {};
-            const appId = resourceDatas.appId;
-            if(!appId) {
+            const { app_id } = resourceDatas;
+            if(!app_id) {
                 ctx.body=imgsrc;
                 return;
             }; 
-            let systems = await dataInstance.querySystems(appId);
+            let systems = await dataInstance.querySystems(app_id);
             if(!systems || !systems.length){
                 ctx.body=imgsrc;
                 return; 
@@ -230,23 +230,23 @@ class data {
             if(systemItem.isStatisiPages === 0) {
                 let pageTimes = resourceDatas.pageTimes || {}
                 let datas={
-                    load_time:pageTimes.loadTime,
-                    dns_time:pageTimes.dnsTime,
-                    tcp_time:pageTimes.tcpTime,
-                    dom_time:pageTimes.domTime,
-                    white_time:pageTimes.whiteTime,
-                    redirect_time:pageTimes.redirectTime,
-                    unload_time:pageTimes.unloadTime,
-                    request_time:pageTimes.requestTime,
-                    analysis_dom_time:pageTimes.analysisDomTime,
-                    ready_time:pageTimes.readyTime,
-                    resourceTime:pageTimes.resourceTime,
-                    preUrl:pageTimes.preUrl,
-                    url:decodeURIComponent(resourceDatas.url),
-                    markUser:resourceDatas.markUser,
-                    mark_page:resourceDatas.markPage,
-                    create_time:createTime,
-                    systemId:systemItem.id
+                    load_time: pageTimes.loadTime,
+                    dns_time: pageTimes.dnsTime,
+                    tcp_time: pageTimes.tcpTime,
+                    dom_time: pageTimes.domTime,
+                    white_time: pageTimes.whiteTime,
+                    redirect_time: pageTimes.redirectTime,
+                    unload_time: pageTimes.unloadTime,
+                    request_time: pageTimes.requestTime,
+                    analysis_dom_time: pageTimes.analysisDomTime,
+                    ready_time: pageTimes.readyTime,
+                    resourceTime: pageTimes.resourceTime,
+                    preUrl: pageTimes.preUrl,
+                    url: decodeURIComponent(resourceDatas.url),
+                    markUser: resourceDatas.markUser,
+                    mark_page: resourceDatas.markPage,
+                    create_time: createTime,
+                    systemId: systemItem.id
                 }
 
                 let table = 'web_pages';
@@ -446,7 +446,6 @@ class data {
                 t_page: front_time, 
                 t_done: perceived_load_time,
                 t_other: additional_timers,
-                main_restiming: main_restiming,
                 nt_nav_st: navigation_start,
                 nt_fet_st: fetch_start,
                 nt_dns_st: domain_lookup_start,
@@ -601,11 +600,6 @@ class data {
                 back_time: back_time || '0'
             };
     
-            const web_pages_main_restiming_data = {
-                monitor_id,
-                main_restiming: util.compress(main_restiming) || ''
-            };
-    
             const web_pages_restiming_data = {
                 monitor_id,
                 restiming: util.compress(restiming) || ''
@@ -697,17 +691,15 @@ class data {
 
             const dataMap = {
                 web_pages_timing_data,
-                web_pages_main_restiming_data,
                 web_pages_restiming_data,
                 web_pages_navigation_data,
                 web_pages_resources_data,
                 web_pages_client_data,
                 web_pages_probe_data
             };
-    
+
             const tables = [
                 'web_pages_timing',
-                'web_pages_main_restiming',
                 'web_pages_restiming',
                 'web_pages_navigation',
                 'web_pages_resources',

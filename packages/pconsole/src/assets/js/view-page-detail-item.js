@@ -52,6 +52,38 @@ new Vue({
             label.innerHTML = '暂无数据';
             e.appendChild(label);
         },
+        drawNetworkStream(restiming) {
+            if (restiming && JSON.parse(restiming).length > 0) {
+                const apps = {};
+                const restimings = JSON.parse(restiming);
+                restimings.forEach(item => {
+                    const key = hex_md5(item.app);
+                    if (!apps[key]) {
+                        apps[key] = {
+                            app: item.app,
+                            restiming: [item]
+                        };
+                    } else {
+                        apps[key].restiming.push(item);
+                    }
+                });
+                
+                util.drawWaterfall('all-data', restimings);
+                const parent = document.getElementById('network-stream');
+                for (let key in apps) {
+                    const title = document.createElement('h2');
+                    const oText = document.createTextNode(`${apps[key].app} 数据`);
+                    title.setAttribute('class', 'waterfall-title');
+                    title.appendChild(oText);
+                    const content = document.createElement('div');
+                    content.setAttribute('class', 'waterfall-content');
+                    content.setAttribute('id', key);
+                    parent.appendChild(title);
+                    parent.appendChild(content);
+                    util.drawWaterfall(key, apps[key].restiming);
+                }
+            }
+        },
         // 获得页面请求性能详情
         getPageItemForId(){
             const api = `api/${this.type && this.type === 'slow' ? 'slowpages/getslowPageItemForId' : 'pages/getPageItemForId'}`;
@@ -64,16 +96,7 @@ new Vue({
                 success: data => {
                     this.pagesItemData = data.data;
                     this.url = this.pagesItemData.url;
-                    if(this.pagesItemData.mainRestiming && JSON.parse(this.pagesItemData.mainRestiming).length > 0) {
-                        util.drawWaterfall('main-app', JSON.parse(this.pagesItemData.mainRestiming));
-                    } else {
-                        this.emptyHint('main-app');
-                    }
-                    if (this.pagesItemData.restiming && JSON.parse(this.pagesItemData.restiming).length > 0) {
-                        util.drawWaterfall('sub-app', JSON.parse(this.pagesItemData.restiming));
-                    } else {
-                        this.emptyHint('sub-app');
-                    }
+                    this.drawNetworkStream(this.pagesItemData.restiming);
                 }
             })
         },

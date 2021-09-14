@@ -4,7 +4,42 @@
         <title><%= datas.title %></title>
         <meta name="baidu-site-verification" content="MHHnqSmeTw" />
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js"></script><script src="//performance-monitor-stag.jdcloud.com/js/boomerang/history.min.js"></script><script >BOOMR.init({beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance",AppId:"566C7C3ACC05EE23581E95F00916D02F",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: [{"name":"main","rule":"/"},{"name":"pages","rule":"/pages/"},{"name":"search","rule":"/search/"},{"name":"httptest","rule":"/httptest/"},{"name":"setting","rule":"/setting/"}],});</script>
+        <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js"></script>
+        <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/history.min.js"></script>
+        <script >
+            const restiming_map_callback = function(url) {
+                if (!url) {
+                    return '';
+                }
+                const apps = {
+                    main: ['http://performance-monitor-stag.jdcloud.com/js','http://performance-monitor-stag.jdcloud.com/css','http://performance-monitor-stag.jdcloud.com/api/system/getSystemList','http://performance-monitor-stag.jdcloud.com/images','http://performance-monitor-stag.jdcloud.com/reportPerformance'],
+                    pages: ['http://performance-monitor-stag.jdcloud.com/api/pages/getPageList'],
+                    search: ['http://performance-monitor-stag.jdcloud.com/search'],
+                    httptest: ['http://performance-monitor-stag.jdcloud.com/api/httptest/getHttpResponseData']
+                };
+                let app = 'other';
+                for (let key in apps) {
+                    const result = apps[key].find(item => url.search(item) !== -1);
+                    if (result) {
+                        app = key;
+                        break
+                    }
+                }
+                return app;
+            }
+            BOOMR.init({
+                beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance",
+                app_id:"566C7C3ACC05EE23581E95F00916D02F",
+                autorun: false,
+                History: {enabled: true,auto: true,monitorReplaceState: true,},
+                routers: [
+                    {"name":"main","rule":"/"},
+                    {"name":"pages","rule":"/pages/"},{"name":"search","rule":"/search/"},
+                    {"name":"httptest","rule":"/httptest/"},
+                    {"name":"setting","rule":"/setting/"}],
+                restiming_map_callback
+                });
+        </script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/base.css">
         <link rel="stylesheet" href="/css/PopLayer.css">

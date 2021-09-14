@@ -4,7 +4,34 @@
         <title><%= datas.title %></title>
         <meta name="baidu-site-verification" content="MHHnqSmeTw" />
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <script src="//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js"></script><script src="//dev.performance-monitor.local/js/boomerang/history.min.js"></script><script >BOOMR.init({beacon_url: "http://dev.performance-monitor.local/reportPerformance",AppId:"237962C05D0D387016C6C257C1A8A14E",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},Routers: [{"name":"main","rule":"/"},{"name":"pages","rule":"/pages/"},{"name":"search","rule":"/search/"},{"name":"httptest","rule":"/httptest/"},{"name":"setting","rule":"/setting/"}],});</script>
+        <script src="//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js"></script>
+        <script src="//dev.performance-monitor.local/js/boomerang/history.min.js"></script>
+        <script >
+            const restiming_map_callback = function(url) {
+                if (!url) {
+                    return '';
+                }
+                const apps = {
+                    main: ['http://dev.performance-monitor.local/js','http://dev.performance-monitor.local/css','http://dev.performance-monitor.local/api/system/getSystemList','http://dev.performance-monitor.local/images','http://dev.performance-monitor.local/reportPerformance'],
+                    pages: ['http://dev.performance-monitor.local/api/pages/getPageList'],
+                    search: ['http://dev.performance-monitor.local/search'],
+                    httptest: ['http://dev.performance-monitor.local/api/httptest/getHttpResponseData']
+                };
+                let app = 'other';
+                for (let key in apps) {
+                    const result = apps[key].find(item => url.search(item) !== -1);
+                    if (result) {
+                        app = key;
+                        break
+                    }
+                }
+                return app;
+            }
+            BOOMR.init({beacon_url: "http://dev.performance-monitor.local/reportPerformance",
+            app_id:"237962C05D0D387016C6C257C1A8A14E",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},
+            routers: [{"name":"main","rule":"/"},{"name":"pages","rule":"/pages/"},
+            {"name":"search","rule":"/search/"},{"name":"httptest","rule":"/httptest/"},{"name":"setting","rule":"/setting/"}],
+            restiming_map_callback});</script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/base.css">
         <link rel="stylesheet" href="/css/PopLayer.css">

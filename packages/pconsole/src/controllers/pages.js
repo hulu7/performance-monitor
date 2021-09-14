@@ -470,30 +470,7 @@ class pages {
         return Promise.resolve(valjson);
     }
 
-    // 页面主应用流水线
-    async queryPageMainRestimingById(monitorId) {
-        let valjson = {};
-        if (!monitorId) {
-            return valjson
-        }
-        // 获得列表
-        const sqlstr = sql
-            .table('web_pages_main_restiming')
-            .where({ monitor_id: monitorId })
-            .select()
-        
-        let result = await mysql(sqlstr);
-        if (result.length) {
-            const {
-                monitor_id: monitorId,
-                main_restiming: mainRestiming
-            } = result[0];
-            Object.assign(valjson, { monitorId, mainRestiming: util.decompress(mainRestiming) });
-        }
-        return Promise.resolve(valjson);
-    }
-
-    // 页面子应用流水线
+    // 页面瀑布流数据
     async queryPageRestimingById(monitorId) {
         let valjson = {};
         if (!monitorId) {
@@ -621,20 +598,18 @@ class pages {
             const [
                 resultPageBasic,
                 resultPageTiming,
-                resultPageMainRestiming,
                 resultPageRestiming,
                 resultPageResources,
                 resultPageClient
             ] = await Promise.all([
                 pagesInstance.queryPageBasicById(id),
                 pagesInstance.queryPageTimingById(id),
-                pagesInstance.queryPageMainRestimingById(id),
                 pagesInstance.queryPageRestimingById(id),
                 pagesInstance.queryPageResourcesById(id),
                 pagesInstance.queryPageClientById(id)
             ]);
 
-            Object.assign(valjson, resultPageBasic, resultPageTiming, resultPageMainRestiming,
+            Object.assign(valjson, resultPageBasic, resultPageTiming,
                 resultPageRestiming, resultPageResources, resultPageClient);
             ctx.body = util.result({
                 data: valjson

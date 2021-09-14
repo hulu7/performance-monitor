@@ -630,7 +630,7 @@ class utilfn {
 			return;
 		}
 		categories.reverse();
-		target.setAttribute('style', `height: ${times * 40 + 100}px; width: 100%;`);
+		target.setAttribute('style', `height: ${times * 30 + 100}px; width: 100%;`);
 		let data = [];
 		const chartDom = document.getElementById(elementId);
 		const myChart = echarts.init(chartDom);
