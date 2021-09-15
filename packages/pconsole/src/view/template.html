@@ -7,7 +7,7 @@
         <script src="//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js"></script>
         <script src="//dev.performance-monitor.local/js/boomerang/history.min.js"></script>
         <script >
-            const restiming_map_callback = function(url) {
+            window.restiming_map_callback = function(url) {
                 if (!url) {
                     return '';
                 }
@@ -26,12 +26,20 @@
                     }
                 }
                 return app;
-            }
-            BOOMR.init({beacon_url: "http://dev.performance-monitor.local/reportPerformance",
-            app_id:"237962C05D0D387016C6C257C1A8A14E",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},
-            routers: [{"name":"main","rule":"/"},{"name":"pages","rule":"/pages/"},
-            {"name":"search","rule":"/search/"},{"name":"httptest","rule":"/httptest/"},{"name":"setting","rule":"/setting/"}],
-            restiming_map_callback});</script>
+            };
+            BOOMR.init({
+                beacon_url: "http://dev.performance-monitor.local/reportPerformance",
+                app_id:"237962C05D0D387016C6C257C1A8A14E",
+                autorun: false,
+                History: {
+                    enabled: true,
+                    auto: true,
+                    monitorReplaceState: true
+                },
+                routers: [{"name":"main","rule":"/"},{"name":"pages","rule":"/pages/"},{"name":"search","rule":"/search/"},{"name":"httptest","rule":"/httptest/"},{"name":"setting","rule":"/setting/"}],
+                restiming_map_callback: window.restiming_map_callback
+            });
+        </script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/base.css">
         <link rel="stylesheet" href="/css/PopLayer.css">

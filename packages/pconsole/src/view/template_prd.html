@@ -7,7 +7,7 @@
         <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js"></script>
         <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/history.min.js"></script>
         <script >
-            const restiming_map_callback = function(url) {
+            window.restiming_map_callback = function(url) {
                 if (!url) {
                     return '';
                 }
@@ -26,7 +26,7 @@
                     }
                 }
                 return app;
-            }
+            };
             BOOMR.init({
                 beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance",
                 app_id:"566C7C3ACC05EE23581E95F00916D02F",
@@ -37,8 +37,8 @@
                     {"name":"pages","rule":"/pages/"},{"name":"search","rule":"/search/"},
                     {"name":"httptest","rule":"/httptest/"},
                     {"name":"setting","rule":"/setting/"}],
-                restiming_map_callback
-                });
+                restiming_map_callback: window.restiming_map_callback
+            });
         </script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/base.css">

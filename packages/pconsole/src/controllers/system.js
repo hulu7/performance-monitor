@@ -183,7 +183,23 @@ class user {
                 timestamp,
                 random: util.randomString()
             }).paySign;
-            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",app_id:"${token}",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},routers: ${sub_systems},restiming_map_callback});</script>`;
+            const script =
+                `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
+                <script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
+                <script>
+                    BOOMR.init({
+                        beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",
+                        app_id:"${token}",
+                        autorun: false,
+                        History: {
+                            enabled: true,
+                            auto: true,
+                            monitorReplaceState: true
+                        },
+                        routers: ${sub_systems},
+                        restiming_map_callback: window.restiming_map_callback
+                    });
+                </script>`;
 
             // 插入数据
             const data = {
@@ -281,7 +297,23 @@ class user {
                 return
             }
 
-            const script = `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script><script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script><script >BOOMR.init({beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",app_id:"${app_id}",autorun: false,History: {enabled: true,auto: true,monitorReplaceState: true,},routers: ${sub_systems},restiming_map_callback});</script>`;
+            const script =
+                `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
+                <script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
+                <script>
+                    BOOMR.init({
+                        beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",
+                        app_id:"${app_id}",
+                        autorun: false,
+                        History: {
+                            enabled: true,
+                            auto: true,
+                            monitorReplaceState: true
+                        },
+                        routers: ${sub_systems},
+                        restiming_map_callback: window.restiming_map_callback
+                    });
+                </script>`;
             const sqlstr = sql
                 .table('web_system')
                 .data({
