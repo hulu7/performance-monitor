@@ -3419,14 +3419,14 @@ BOOMR_check_doc_domain();
 
 					unload_handler = function(evt) {
 						if (fn) {
-							// fn.call(cb_scope, evt || w.event, cb_data);
+							fn.call(cb_scope, evt || w.event, cb_data);
 						}
 
 						// If this was the last pagehide/unload/beforeunload handler,
 						// we'll try to send the beacon immediately after it is done.
 						// The beacon will only be sent if one of the handlers has queued it.
 						if (++impl.unloadEventCalled === impl.unloadEventsCount) {
-							// BOOMR.real_sendBeacon();
+							BOOMR.real_sendBeacon();
 						}
 					};
 
