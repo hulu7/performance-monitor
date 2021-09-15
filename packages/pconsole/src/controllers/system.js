@@ -149,11 +149,11 @@ class user {
             }
 
             // 判断应用是否存在
-            let sqlstr1 = sql
+            const sqlstr1 = sql
                 .table('web_system')
                 .where({ system_name })
                 .select()
-            let systemNameMsg = await mysql(sqlstr1);
+                const systemNameMsg = await mysql(sqlstr1);
             if(systemNameMsg.length){
                 ctx.body = util.result({
                     code: 1001,
@@ -163,11 +163,11 @@ class user {
             }
 
             // 判断域名是否存在
-            let sqlstr2 = sql
+            const sqlstr2 = sql
                 .table('web_system')
                 .where({ system_domain })
                 .select()
-            let systemDomainMsg = await mysql(sqlstr2);
+            const systemDomainMsg = await mysql(sqlstr2);
             if(systemDomainMsg.length){
                 ctx.body = util.result({
                     code: 1001,
@@ -176,19 +176,20 @@ class user {
                 return
             }
 
-            let timestamp = new Date().getTime();
-            let token = util.signwx({
+            const timestamp = new Date().getTime();
+            const token = util.signwx({
                 system_name,
                 system_domain,
                 timestamp,
                 random: util.randomString()
             }).paySign;
+            const protocol = `http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}`;
             const script =
-                `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
-                <script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
+                `<script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
+                <script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
                 <script>
                     BOOMR.init({
-                        beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",
+                        beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
                         app_id:"${token}",
                         autorun: false,
                         History: {
@@ -216,7 +217,7 @@ class user {
             if(slow_css_time) data.slow_css_time = slow_css_time;
             if(slow_img_time) data.slow_img_time = slow_img_time;
             
-            let sqlstr3 = sql
+            const sqlstr3 = sql
                 .table('web_system')
                 .data(data)
                 .insert()
@@ -297,12 +298,13 @@ class user {
                 return
             }
 
+            const protocol = `http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}`;
             const script =
-                `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
-                <script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
+                `<script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
+                <script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
                 <script>
                     BOOMR.init({
-                        beacon_url: "http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}://${SYSTEM.PRODORIGIN}/reportPerformance",
+                        beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
                         app_id:"${app_id}",
                         autorun: false,
                         History: {
