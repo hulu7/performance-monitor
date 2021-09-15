@@ -72,7 +72,7 @@ new Vue({
                 const parent = document.getElementById('network-stream');
                 for (let key in apps) {
                     const title = document.createElement('h2');
-                    const oText = document.createTextNode(`${apps[key].app} 数据`);
+                    const oText = document.createTextNode(`${apps[key].app === 'other' ? '其他' : apps[key].app + ' 应用'}`);
                     title.setAttribute('class', 'waterfall-title');
                     title.appendChild(oText);
                     const content = document.createElement('div');

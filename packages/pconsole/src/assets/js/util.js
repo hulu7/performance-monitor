@@ -618,7 +618,6 @@ class utilfn {
         if (r != null) return unescape(r[2]); return null; 
     }
 
-
 	// 画瀑布流数据
 	drawWaterfall(elementId, categories) {
 		const target = document.getElementById(elementId);
@@ -752,7 +751,7 @@ class utilfn {
 				type: 'slider',
 				filterMode: 'weakFilter',
 				showDataShadow: false,
-				top: 25,
+				top: 22,
 				labelFormatter: ''
 			}, {
 				type: 'inside',
@@ -771,7 +770,21 @@ class utilfn {
 				}
 			},
 			yAxis: {
-				data: categories.map((category) => category.name)
+				offset: 0,
+				data: categories.map((category) => category.name),
+				axisLabel: {
+					show: true,
+					formatter: function (val) {
+						let valueTxt = '';
+						if (val.length > 22) {
+							valueTxt = `${val.substring(0, 10)}...${val.substring(val.length - 13, val.length - 1)}`;
+						}
+						else {
+							valueTxt = val;
+						}
+						return `${valueTxt}` ;
+					}
+				}
 			},
 			series: [{
 				type: 'custom',
