@@ -675,10 +675,9 @@ class utilfn {
 
 		// Generate waterfall data
 		categories.forEach((category, index) => {
-			let baseTime = startTime + category.startTime;
 			let duration = 0;
 			stages.forEach(stage => {
-				const { name, initiatorType, startTime, transferSize  } = category;
+				const { name, initiatorType, transferSize  } = category;
 				const diff = category[stage.end] - category[stage.start];
 				duration = diff < 0 ? 0 : diff;
 				if (stage.name === 'ssl' && category[stage.start] === 0) {
@@ -689,12 +688,13 @@ class utilfn {
 					type: stage.name,
 					duration,
 					initiatorType,
-					startTime,
+					startTime: category[stage.start],
+					endTime: category[stage.end],
 					transferSize,
 					value: [
 						index,
-						baseTime,
-						baseTime += duration,
+						startTime + ((stage.name === 'ssl' && category[stage.start] === 0) ? category[stage.end] : category[stage.start]),
+						startTime + category[stage.end],
 						duration
 					],
 					itemStyle: {
@@ -741,7 +741,7 @@ class utilfn {
 								<div>类型：${params.data.type}</div>
 								<div>请求类型：${params.data.initiatorType}</div>
 								<div>开始时间：${params.data.startTime.toFixed(1)} ms</div>
-								<div>结束时间：${(params.data.startTime + params.data.duration).toFixed(1)} ms</div>
+								<div>结束时间：${params.data.endTime.toFixed(1)} ms</div>
 								<div>持续时间：${params.data.duration.toFixed(1)} ms</div>
 								<div>数据大小：${(params.data.transferSize / 1000).toFixed(1)} Kb</div>
 							</div>`;
@@ -777,7 +777,7 @@ class utilfn {
 					formatter: function (val) {
 						let valueTxt = '';
 						if (val.length > 22) {
-							valueTxt = `${val.substring(0, 10)}...${val.substring(val.length - 13, val.length - 1)}`;
+							valueTxt = `${val.substring(0, 10)}...${val.substring(val.length - 12, val.length)}`;
 						}
 						else {
 							valueTxt = val;
