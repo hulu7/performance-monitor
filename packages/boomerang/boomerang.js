@@ -4348,11 +4348,6 @@ BOOMR_check_doc_domain();
 				return false;
 			}
 
-			// Check if data is ready
-			if (!data.appin) {
-				return false;
-			}
-
 			// Check that we have data to send
 			if (BOOMR.utils.isObjectEmpty(data)) {
 				return false;
