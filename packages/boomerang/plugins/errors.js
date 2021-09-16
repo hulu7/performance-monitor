@@ -2042,7 +2042,7 @@
 
 						// a SyntaxError can produce a null error
 						if (typeof error !== "undefined" && error !== null) {
-							impl.send(error, E.VIA_GLOBAL_EXCEPTION_HANDLER);
+							// impl.send(error, E.VIA_GLOBAL_EXCEPTION_HANDLER);
 						}
 						else {
 							// older browsers will not send an error object to the global error handler making deduplication difficult.
@@ -2051,17 +2051,17 @@
 							// We could possibly check that the last error in our queue did not arrive via the global error handler
 							// and assume it was the same error but more testing will be required. We cannot compare the error message,
 							// since the message of the original error and the one that is provided here will be different in some cases.
-							impl.send({
-								message: message,
-								fileName: fileName,
-								lineNumber: lineNumber,
-								columnNumber: columnNumber,
-								noStack: true
-							}, E.VIA_GLOBAL_EXCEPTION_HANDLER);
+							// impl.send({
+							// 	message: message,
+							// 	fileName: fileName,
+							// 	lineNumber: lineNumber,
+							// 	columnNumber: columnNumber,
+							// 	noStack: true
+							// }, E.VIA_GLOBAL_EXCEPTION_HANDLER);
 						}
 
 						if (typeof BOOMR.globalOnError === "function") {
-							return BOOMR.globalOnError.apply(BOOMR.window, arguments);
+							// return BOOMR.globalOnError.apply(BOOMR.window, arguments);
 						}
 
 						return false; // don't prevent the firing of the default event handler
