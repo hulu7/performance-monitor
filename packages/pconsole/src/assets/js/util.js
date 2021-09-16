@@ -677,23 +677,21 @@ class utilfn {
 		categories.forEach((category, index) => {
 			let duration = 0;
 			stages.forEach(stage => {
-				const { name, initiatorType, transferSize  } = category;
-				const diff = category[stage.end] - category[stage.start];
-				duration = diff < 0 ? 0 : diff;
-				if (stage.name === 'ssl' && category[stage.start] === 0) {
-					duration = 0;
-				}
+				const { name, initiatorType, startTime: start, transferSize  } = category;
+				const st = (category[stage.start] === 0 ? start : category[stage.start])
+				const diff = category[stage.end] - st;
+				duration = diff < 0  ? 0 : diff;
 				data.push({
 					name,
 					type: stage.name,
 					duration,
 					initiatorType,
-					startTime: category[stage.start],
+					startTime: st,
 					endTime: category[stage.end],
 					transferSize,
 					value: [
 						index,
-						startTime + ((stage.name === 'ssl' && category[stage.start] === 0) ? category[stage.end] : category[stage.start]),
+						startTime + st,
 						startTime + category[stage.end],
 						duration
 					],
