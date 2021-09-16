@@ -672,6 +672,7 @@ class utilfn {
 			request: '#00bfff',
 			response: '#4169e1	'
 		};
+		stages.reverse();
 
 		// Generate waterfall data
 		categories.forEach((category, index) => {
@@ -692,7 +693,7 @@ class utilfn {
 					value: [
 						index,
 						startTime + st,
-						startTime + category[stage.end],
+						startTime + category[stage.end] + (st === category[stage.end] ? 1 : 0),
 						duration
 					],
 					itemStyle: {
@@ -733,7 +734,7 @@ class utilfn {
 		const option = {
 			tooltip: {
 				formatter: function (params) {
-					return `${params.marker} <span>${params.data.name}</span>
+					return `${params.marker} <span style="max-width: 200px;">${params.data.name}</span>
 							<div style="border-bottem: 1px solid"></div>
 							<div style="width: 100%; text-align: left;">
 								<div>类型：${params.data.type}</div>
