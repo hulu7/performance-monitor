@@ -1156,7 +1156,7 @@
 								return;
 							}
 							current_event.firedEarlyBeacon = true;
-							BOOMR.plugins.Early.sendEarlyBeacon(current_event.resource, current_event.type);
+							//BOOMR.plugins.Early.sendEarlyBeacon(current_event.resource, current_event.type);
 						}, SPA_EARLY_TIMEOUT);  // give the SPA framework a bit of time to load the resource
 					}
 
