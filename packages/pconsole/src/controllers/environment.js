@@ -52,7 +52,6 @@ class pages {
                 s: 'src'
             };
             const httpInitiatorMap = {
-                cache: '页面缓存',
                 spa: '应用内跳转',
                 spa_hard: '通过url访问'
             };

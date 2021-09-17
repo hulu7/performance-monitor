@@ -430,7 +430,7 @@ class data {
     }
     
     async storePagePerformance(createTime, resourceDatas, systemItem) {
-        if(systemItem.is_monitor_pages === 0 && resourceDatas.appin){
+        if(systemItem.is_monitor_pages === 0){
             const {
                 mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
                 nocookie,
@@ -669,7 +669,7 @@ class data {
                 screen_color_depth: screen_color_depth || '',
                 screen_orientation: screen_orientation || '',
                 screen_size: screen_size || '',
-                http_initiator: initiator || 'cache',
+                http_initiator: initiator,
                 effective_type: effective_type || '',
                 downlink: downlink || '0',
                 round_trip_time: round_trip_time || '0'
@@ -706,7 +706,7 @@ class data {
                 'web_pages_client',
                 'web_pages_probe'
             ]
-    
+
             const storePerformanceData = tables.map(table => {
                     const sqlStr = sql
                         .table(table)

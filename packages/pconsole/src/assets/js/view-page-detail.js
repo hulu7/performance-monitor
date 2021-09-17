@@ -120,16 +120,16 @@ new Vue({
             let totalcount=0;
             if(!datas.length) return;
             datas.forEach(item=>{
-                totalcount+=item.count
+                totalcount += item.count
             })
             datas.forEach(item=>{
                 let name = item[tyle]
                 legendData.push({
-                    name:name,
+                    name: name || '未知',
                     icon: 'circle',
                 })
                 seriesData.push({
-                    name: name,
+                    name: name || '未知',
                     value: item.count,
                     percentage: ((item.count/totalcount)*100).toFixed()+'%'
                 })
@@ -179,7 +179,7 @@ new Vue({
                     formatter:function(name){
                         for(let i=0;i<seriesData.length;i++){
                             if(name === seriesData[i].name){
-                                return name+'  '+seriesData[i].value+'  '+seriesData[i].percentage;    
+                                return `${name || '未知'}  ${seriesData[i].value}  ${seriesData[i].percentage}`;
                             }
                         }
                     }
@@ -192,11 +192,11 @@ new Vue({
                 },
                 series: [{
                     type: 'pie',
-                    radius : [10, 60],
+                    radius: '65%',
+                    selectedMode: 'single',
                     center: ['30%', '50%'],
-                    roseType: 'area',
                     itemStyle: {
-                        borderRadius: 4
+                        borderRadius: 2
                     },
                     label: {
                         normal: {
