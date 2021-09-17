@@ -75,15 +75,16 @@
     "npm": ">= 5.0.0"
   },
   "dependencies": {
-    "mysql2": "^2.2.5",
     "address": "^1.0.3",
-    "md5": "^2.3.0",
+    "elasticsearch": "^16.7.1",
     "externalip": "^1.0.2",
     "greenlock-express": "^2.0.12",
     "install": "^0.10.2",
     "koa-sslify": "^2.1.2",
-    "request-ip": "^2.0.2",
-    "elasticsearch": "^16.7.1",
-    "pm2": "^5.1.1"
+    "marked": "^0.8.2",
+    "md5": "^2.3.0",
+    "mysql2": "^2.2.5",
+    "pm2": "^5.1.1",
+    "request-ip": "^2.0.2"
   }
 }

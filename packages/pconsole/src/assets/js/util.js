@@ -16,7 +16,7 @@ class utilfn {
 		this.isIE10 = this.UA.indexOf('MSIE 10.0;') > -1;
 		this.isIE11 = this.UA.indexOf('Trident') > -1;
 		this.C = {
-			N: 'wangwei',
+			N: '',
 			C: 'morning-star'
 		}
 	};
@@ -837,6 +837,3 @@ class utilfn {
 
 //初始化util对象
 window.util = new utilfn();
-
-
-
