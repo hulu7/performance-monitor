@@ -55,8 +55,8 @@ a {
   color: #2077ff;
   text-decoration: none; }
 
-em, i {
-  font-style: normal; }
+/* em, i {
+  font-style: normal; } */
 
 iframe {
   display: none; }
