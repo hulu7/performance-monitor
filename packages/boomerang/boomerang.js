@@ -2715,6 +2715,7 @@ BOOMR_check_doc_domain();
 		 * @memberof BOOMR
 		 */
 		init: function(config) {
+			console.log('-- start init probe --', config);
 			var i, k,
 			    properties = [
 				    "autorun",
