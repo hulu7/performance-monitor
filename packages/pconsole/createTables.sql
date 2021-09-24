@@ -16,7 +16,6 @@
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- --------------------------------------------------------------
 --  Table `web_pages_basic`: 单次采集数据页面基本信息
 -- --------------------------------------------------------------
@@ -28,6 +27,8 @@ CREATE TABLE `web_pages_basic` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '访问页面时间',
   `mark_page` char(80) NOT NULL DEFAULT '' COMMENT '所有资源页面统一标识',
   `app` varchar(255) NOT NULL DEFAULT '' COMMENT '子应用的名称或者标识符',
+  `user_id` varchar(255) NOT NULL DEFAULT '' COMMENT '用户标识符',
+  `additional_info` varchar(255) NOT NULL DEFAULT '' COMMENT '附加信息',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 

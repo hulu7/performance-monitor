@@ -297,7 +297,7 @@
 	 * @constant
 	 * @default
 	 */
-	var CLICK_XHR_TIMEOUT = 2000;
+	var CLICK_XHR_TIMEOUT = 50;
 
 
 	/**
