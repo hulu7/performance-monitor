@@ -5,12 +5,12 @@
 <link rel="stylesheet" href="/css/page-detail.css">
 <div class="container ajax mb150" id="pagesDetail" v-cloak>
    <div class="common-title">
-        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">列表</a>/<a href="/pages/detail/">页面性能</a></h1>
+        <h1 class="common-nav"><a href="/home/">首页</a>/<a href="/pages/">列表</a>/<a href="/pages/detail/">性能</a></h1>
     </div>
     <!-- 页面平均耗时说明 -->
     <div class="block-time">
         <div class="item-full div1">
-            <h1 class="h1">页面性能历史平均水平</h1>
+            <h1 class="h1">性能历史平均水平</h1>
             <li>
                 <h1>平均加载时间</h1>
                 <h2 class="red">{{pagesItemData.loadTime|toFixed(true)}}</h2>
@@ -40,7 +40,7 @@
                 <h2>{{pagesItemData.tcpTime|toFixed}}</h2>
             </li>
             <li>
-                <h1>平均页面重定向时间</h1>
+                <h1>平均重定向时间</h1>
                 <h2>{{pagesItemData.redirectTime|toFixed}}</h2>
             </li>
             <li>
@@ -52,26 +52,26 @@
                 <h2>{{pagesItemData.requestTime|toFixed}}</h2>
             </li>
             <li>
-                <h1>平均页面准备时间</h1>
+                <h1>平均准备时间</h1>
                 <h2>{{pagesItemData.readyTime|toFixed}}</h2>
             </li>
         </div>
     </div>
     <!-- page详情性能列表 -->
     <div class="common-head-title">
-        <h1>页面性能详情 <button class="button" @click="showCharts">表格/曲线图</button></h1> 
+        <h1>性能详情 <button class="button" @click="showCharts">表格/曲线图</button></h1> 
         <!-- <div class="table-box main-block" v-show="table==1"> -->
             <div v-show="listdata.length&&!isShowCharts">
                 <table class="table">
                     <thead>
                         <tr>
                             <th class="break-word">URL</th>
-                            <th>页面加载时间</th>
+                            <th>加载时间</th>
                             <th>白屏时间</th>
                             <th>DOM构建时间</th>
                             <th>解析dom耗时</th>
-                            <th>页面准备时间</th> 
-                            <th>页面请求时间</th>
+                            <th>准备时间</th> 
+                            <th>请求时间</th>
                             <th>操作</th>  
                         </tr>
                     </thead>

@@ -1,3 +1,4 @@
+
 new Vue({
     el: '#pagesDetail',
     data() {
@@ -14,6 +15,14 @@ new Vue({
             pagesItemData: {},
             isShowCharts: false,
             systemId: '',
+            app: '',
+            searchPin: '',
+            formData: {
+                dateRange: [],
+                userId: ''
+            },
+            chartType: true,
+            isSearching: false
         }
     },
     filters: {
@@ -46,6 +55,20 @@ new Vue({
     },
     mounted(){},
     methods:{
+        onSearch() {
+            if (!this.isSearching) {
+                this.currentPage = 1;
+            }
+            this.isSearching = true;
+            this.fetchHistory();
+        },
+        onReset() {
+            this.isSearching = false;
+            this.formData.dateRange = [];
+            this.formData.userId = '';
+            this.currentPage = 1;
+            this.fetchHistory();
+        },
         handleSizeChange(pageSize) {
             this.pageSize = pageSize;
             this.fetchHistory();
@@ -63,9 +86,10 @@ new Vue({
         init() {
             this.systemId = util.queryParameters('systemId');
             this.pageId = util.getQueryString('pageId');
+            this.app = util.getQueryString('app');
         },
-        gotoDetail(id) {
-            window.open(`/pages/detail/item?systemId=${this.systemId}&id=${id}&pageId=${this.pageId}`, `_blank`);
+        gotoDetail(id, app) {
+            window.open(`/pages/detail/item?systemId=${this.systemId}&id=${id}&pageId=${this.pageId}&app=${app}`, `_blank`);
         },
         getAverageValues() {
             util.ajax({
@@ -81,25 +105,30 @@ new Vue({
             })
         },
         fetchHistory() {
-            this.isLoading  = true
+            this.isLoading  = true;
             util.ajax({
                 url: `${config.baseApi}api/pages/getPageItemDetail`,
                 data: {
                     pageNo: this.currentPage,
                     pageSize: this.pageSize,
                     pageId: this.pageId,
-                    beginTime: '',
-                    endTime: '',
+                    beginTime: this.formData.dateRange.length > 1 ? this.formData.dateRange[0] : '',
+                    endTime: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : '',
+                    userId: this.formData.userId,
+                    isSearching: this.isSearching
                 },
                 success: data => {
                     this.isLoading = false;
-                    this.listdata = data.data.datalist
-                    this.total = data.data.totalNum
+                    this.listdata = data.data.datalist;
+                    this.total = data.data.totalNum;
+                    if (!this.chartType) {
+                        this.echartShowPages();
+                    }
                 }
             })
         },
         // 获得浏览器分类情况
-        getDataForEnvironment(type){
+        getDataForEnvironment(type) {
             util.ajax({
                 url: `${config.baseApi}api/environment/getDataForEnvironment`,
                 data:{
@@ -119,10 +148,10 @@ new Vue({
             let legendData=[];
             let totalcount=0;
             if(!datas.length) return;
-            datas.forEach(item=>{
+            datas.forEach(item => {
                 totalcount += item.count
             })
-            datas.forEach(item=>{
+            datas.forEach(item => {
                 let name = item[tyle]
                 legendData.push({
                     name: name || '未知',
@@ -131,12 +160,11 @@ new Vue({
                 seriesData.push({
                     name: name || '未知',
                     value: item.count,
-                    percentage: ((item.count/totalcount)*100).toFixed()+'%'
+                    percentage: `${((item.count/totalcount)*100).toFixed()}%`
                 })
             })
             this.echartBorwsers(id, legendData, seriesData)
         },
-        // echart表
         echartBorwsers(id,legendData,seriesData){
             var myChart = echarts.init(document.getElementById(id));
             var option = {
@@ -177,7 +205,7 @@ new Vue({
                     itemHeight:10,
                     data:legendData,
                     formatter:function(name){
-                        for(let i=0;i<seriesData.length;i++){
+                        for(let i = 0; i< seriesData.length; i++){
                             if(name === seriesData[i].name){
                                 return `${name || '未知'}  ${seriesData[i].value}  ${seriesData[i].percentage}`;
                             }
@@ -211,14 +239,31 @@ new Vue({
                 myChart.resize();
             };
         },
-        showCharts(){
-            this.isShowCharts = !this.isShowCharts
+        changeType(){
             setTimeout(()=>{
-                if(this.isShowCharts) this.echartShowPages()
+                if(!this.chartType) {
+                    this.echartShowPages();
+                }
             },200)
         },
-        echartShowPages(){
-            let datas       = this.listdata;
+        deepClone(o) {
+            if (typeof o === 'string' || typeof o === 'number' || typeof o === 'boolean' || typeof o === 'undefined') {
+                return o;
+            } else if (Array.isArray(o)) {
+                const _arr = [];
+                o.forEach(item => { _arr.push(item) });
+                return _arr;
+            } else if (typeof o === 'object') {
+                const _o = {};
+                for (let key in o) {
+                    _o[key] = deepClone(o[key]);
+                }
+                return _o;
+            }
+        },
+        echartShowPages() {
+            let datas       = this.deepClone(this.listdata);
+            datas.reverse();
             if(!datas.length) return;
             let legendData  = [
                 '页面加载时间',
@@ -235,15 +280,15 @@ new Vue({
                 '首次内容绘制时间',
                 '首像素时间',
                 '可感知加载时间'
-            ]
-            let xAxisData   = []
-            let seriesData  = []
+            ];
+            let xAxisData   = [];
+            let seriesData  = [];
             legendData.forEach((item, index)=>{
                 let data = {
                     name:item,
                     type: 'line',
                     data:[],
-                }
+                };
                 datas.forEach(proItem=>{
                     switch(index){
                         case 0:
@@ -289,12 +334,13 @@ new Vue({
                             data.data.push(proItem.perceivedLoadTime);
                             break;
                     }
-                })
-                seriesData.push(data)
-            })
+                });
+                seriesData.push(data);
+            });
+
             datas.forEach(item=>{
                 xAxisData.push( new Date(item.dateTime).format('MM/dd'));
-            })
+            });
 
             var myChart=  echarts.init(document.getElementById('charts-pages'));
             let option=  {
@@ -352,11 +398,10 @@ new Vue({
             };
         },
         gotoAjaxDetail(item){
-            location.href="/ajax/detail?name="+encodeURIComponent(item.name)
+            location.href=`/ajax/detail?name=${encodeURIComponent(item.name)}`;
         },
         gotoSourcesDetail(item){
-            location.href="/slowresources/detail?name="+encodeURIComponent(item.name)
+            location.href=`/slowresources/detail?name=${encodeURIComponent(item.name)}`;
         },
-       
     }
 })

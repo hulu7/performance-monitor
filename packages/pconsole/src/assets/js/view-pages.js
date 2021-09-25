@@ -1,3 +1,4 @@
+
 new Vue({
     el: '#pages',
     data: function(){
@@ -32,7 +33,33 @@ new Vue({
         goHome() {
             window.location.href = '/';
         },
-        getinit(){
+        getDetail(pages) {
+            util.ajax({
+                url: `${config.baseApi}api/system/getItemSystem`,
+                data: {
+                    systemId: this.systemId
+                },
+                success: data => {
+                    this.systemInfo = data.data || {};
+                    const { subSystems } = this.systemInfo;
+                    const subs = JSON.parse(subSystems);
+
+                    pages.data.datalist.forEach(page => {
+                        page.url = util.getPageUrl(page.url);
+                        Object.assign(page, { app: '主应用' });
+                        for (let item of subs) {
+                            if (page.url.search(item.rule) !== -1) {
+                                page.app = item.name;
+                                break;
+                            }
+                        }
+                    });
+                    this.listdata = pages.data.datalist;
+                    this.total = pages.data.totalNum;
+                }
+            });
+        },
+        getinit() {
             this.systemId = util.queryParameters('systemId');
             this.isLoading = true;
             let times = util.getSearchTime();
@@ -49,23 +76,19 @@ new Vue({
 
             util.ajax({
                 url: `${config.baseApi}${api}`,
-                data:{
+                data: {
                     systemId: util.queryParameters('systemId'),
                     pageNo: this.pageNo,
                     pageSize: this.pageSize,
                     beginTime: this.beginTime ,
                     endTime: this.endTime ,
                 },
-                success:data => {
+                success: data => {
                     this.isLoading = false;
                     if(!data.data.datalist&&!data.data.datalist.length) {
                         return;
                     }
-                    data.data.datalist.forEach(page => {
-                        page.url = util.getPageUrl(page.url);
-                    });
-                    this.listdata = data.data.datalist;
-                    this.total = data.data.totalNum;
+                    this.getDetail(data);
                 }
             })
         },
@@ -73,7 +96,7 @@ new Vue({
             if(this.slow && this.slow=='slow'){
                 location.href=`/slowpages/detail?systemId=${this.systemId}`;
             } else {
-                location.href=`/pages/detail?systemId=${this.systemId}&pageId=${item.pageId}`;
+                location.href=`/pages/detail?systemId=${this.systemId}&pageId=${item.pageId}&app=${item.app}`;
             }
         }
     }

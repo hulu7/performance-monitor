@@ -437,6 +437,7 @@ class data {
                 restiming,
                 app,
                 appin,
+                user_id,
                 u: url, 
                 v: boomerang_version, 
                 sm: boomerang_snippet_method, 
@@ -562,6 +563,7 @@ class data {
             const decodedUrl = decodeURIComponent(url || '');
             const page_id = util.getPageId(decodedUrl);
             const web_pages_basic_data = {
+                user_id,
                 page_id,
                 url: decodedUrl || '',
                 system_id: systemItem.id,

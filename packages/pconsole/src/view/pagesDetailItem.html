@@ -5,17 +5,17 @@
 <div class="container ajax mb150" id="pagesDetail" v-cloak>
    <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text" @click="goToPages">页面列表</el-button>/
-        <el-button type="text" @click="goToPageHistory">页面性能历史数据</el-button>/
-        <el-button type="text" style="color: black;">页面性能详情</el-button>
+        <el-button type="text" @click="goToPages">子应用列表</el-button>/
+        <el-button type="text" @click="goToPageHistory">性能历史数据</el-button>/
+        <el-button type="text" style="color: black;">性能详情</el-button>
     </div>
     <div class="current-page">
-        <span>页面 {{pagesItemData.url}}</span>
+        <span>应用名称: {{app}}</span>
     </div>
     <!-- 页面平均耗时说明 -->
     <div class="common-margin">
         <div class="common-block fl">
-            <h1 class="h1">页面性能</h1>
+            <h1 class="h1">总体性能</h1>
             <li>
                 <h1>加载时间</h1>
                 <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
@@ -57,7 +57,7 @@
                 <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>页面重定向时间</h1>
+                <h1>重定向时间</h1>
                 <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
             </li>
             <li>
@@ -69,12 +69,16 @@
                 <h2>{{pagesItemData.requestTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>页面准备时间</h1>
+                <h1>准备时间</h1>
                 <h2>{{pagesItemData.readyTime | toFixed}}</h2>
             </li>
         </div>
         <div class="common-block fr">
             <h1 class="h1">访问者信息</h1>
+            <li>
+                <h1>用户PIN</h1>
+                <h2>{{pagesItemData.userId || '--'}}</h2>
+            </li>
             <li>
                 <h1>访问方式</h1>
                 <h2>{{pagesItemData.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</h2>
@@ -116,7 +120,7 @@
     <!-- 资源请求列表 -->
     <div class="sources">
         <div class="common-block">
-            <h1 class="h1">页面资源信息</h1>
+            <h1 class="h1">资源信息</h1>
             <li>
                 <h1>主框架DOM节点数</h1>
                 <h2>{{pagesItemData.domsNumber | toInit}}</h2>

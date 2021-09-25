@@ -3,18 +3,18 @@
 <link rel="stylesheet" href="/css/index.css">
 <div class="container system" id="index" v-cloak>
 	<div class="common-title">
-        <h1>应用列表</h1>
+        <h1>系统列表</h1>
         <commonsearch></commonsearch>
     </div>
     <div class="list">
-        <div class="mt30 tc" v-if="!datalist.length">暂无应用，去添加一个</div>
+        <div class="mt30 tc" v-if="!datalist.length">暂无系统，去添加一个</div>
         <el-table
             v-else
             :data="datalist"
             style="width: 100%">
             <el-table-column
                 prop="systemName"
-                label="应用名称"
+                label="名称"
                 width="300px">
                 <template slot-scope="scope">
                     <el-button type="text" @click="getDetail(scope.row)">{{scope.row.systemName}}</el-button>
@@ -27,7 +27,7 @@
             </el-table-column>
             <el-table-column
                 prop="systemDomain"
-                label="应用地址">
+                label="地址">
             </el-table-column>
             <el-table-column
                 label="操作"

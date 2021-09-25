@@ -4014,6 +4014,27 @@ BOOMR_check_doc_domain();
 
 		/** 
 		 * Config beacon data with:
+		 * 	  pin: user id,
+		*/
+		getCookie(name) {
+			const prefix = name + "="
+			const start = document.cookie.indexOf(prefix)
+		 
+			if (start == -1) {
+				return null;
+			}
+		 
+			let end = document.cookie.indexOf(";", start + prefix.length)
+			if (end == -1) {
+				end = document.cookie.length;
+			}
+
+			const value = document.cookie.substring(start + prefix.length, end)
+			return unescape(value);
+		},
+
+		/** 
+		 * Config beacon data with:
 		 * 	  app: app name,
 		 *    appin: the hard navigation from main or sub app
 		*/
@@ -4031,6 +4052,7 @@ BOOMR_check_doc_domain();
 			varsSent['app_id'] = impl.app_id;
 			varsSent['appin'] = BOOMR.appin;
 			varsSent['restiming'] = BOOMR.formatRestiming(vars['restiming']);
+			varsSent['user_id'] = BOOMR.getCookie('pin');
 
 			Object.assign(varsSent, BOOMR.hardNavigationTiming);
 		},

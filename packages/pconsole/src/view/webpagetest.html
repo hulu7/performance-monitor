@@ -5,7 +5,7 @@
 <div class="container" class="addSystem mb150" id="webpagetest" v-cloak>
     <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text" style="color: black;">页面性能测评</el-button>
+        <el-button type="text" style="color: black;">性能测评</el-button>
     </div>
     <div class="main-content">
         <div class="url">
@@ -43,11 +43,11 @@
             <!-- 页面平均耗时说明 -->
             <div class="block-time">
                 <li class="li1">
-                    <h1>页面总响应耗时</h1>
+                    <h1>总响应耗时</h1>
                     <h2 class="red">{{pageTotalTime|toFixed(true)}}</h2>
                 </li>
                 <li class="li3">
-                    <h1>页面返回大小</h1>
+                    <h1>返回大小</h1>
                     <h2>{{pageTotalsize|toSize(true)}}</h2>
                 </li>
                 <li class="li2">
@@ -61,7 +61,7 @@
             </div>
             <!-- 资源请求列表 -->
             <div class="sources-list">
-                <h1 class="h1">页面资源请求详情信息</h1>
+                <h1 class="h1">资源请求详情信息</h1>
                 <div class="sources-tab">
                     <ul class="clearfix">
                         <li :class="className == 'allData'?'actives':''" @click="setdata('allData')">ALL</li>

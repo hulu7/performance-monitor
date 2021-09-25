@@ -331,11 +331,13 @@ class pages {
     async getPageItemDetail(ctx) {
         try {
             const pagesInstance = new pages();
-            const pageNo      = ctx.request.body.pageNo || 1
-            const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE
-            const beginTime   = ctx.request.body.beginTime || ''
-            const endTime     = ctx.request.body.endTime || ''
-            const pageId      = ctx.request.body.pageId
+            const pageNo      = ctx.request.body.pageNo || 1;
+            const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
+            const beginTime   = ctx.request.body.beginTime || '';
+            const endTime     = ctx.request.body.endTime || '';
+            const pageId      = ctx.request.body.pageId || '';
+            const userId      = ctx.request.body.userId || '';
+            const isSearching = ctx.request.body.isSearching || 'false';
 
             if(!pageId){
                 ctx.body = util.result({
@@ -346,7 +348,7 @@ class pages {
             }
 
             // 请求参数
-            let data = { page_id: pageId };
+            let data = (isSearching === 'true' && userId) ? { page_id: pageId, user_id: userId } : { page_id: pageId };
             if(beginTime && endTime) {
                 data.create_time = {
                     egt: beginTime,
@@ -357,7 +359,7 @@ class pages {
             // 获得总条数
             const sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).select() 
             const total = await mysql(sqlTotal);
-            let totalNum = 0
+            let totalNum = 0;
             if(total.length) {
                 totalNum = total[0].count;
             }
@@ -379,8 +381,18 @@ class pages {
                 })
                 const queryResult = await Promise.all(queryList);
                 result = result.map(item => {
+                    const {
+                        user_id: userId,
+                        id,
+                        page_id: pageId,
+                        system_id: systemId,
+                        url,
+                        create_time: createTime,
+                        app,
+                    } = item;
                     const target = queryResult.find(i => i.monitorId === item.id);
                     Object.assign(item, target);
+                    Object.assign(item, { pageId, systemId, createTime,userId });
                     return item;
                 });
             }
@@ -416,6 +428,7 @@ class pages {
         let result = await mysql(sqlstr);
         if (result.length) {
             const {
+                user_id: userId,
                 id,
                 page_id: pageId,
                 system_id: systemId,
@@ -423,7 +436,7 @@ class pages {
                 create_time: createTime,
                 app,
             } = result[0];
-            Object.assign(valjson, { id, pageId, systemId, url, createTime, app });
+            Object.assign(valjson, { id, pageId, systemId, url, createTime, app, userId });
         }
         return valjson;
     }

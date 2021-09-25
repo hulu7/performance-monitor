@@ -6,19 +6,19 @@
 <div class="container ajax mb150" id="pagesDetail" v-cloak>
    <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text" @click="goToPages">页面列表</el-button>/
-        <el-button type="text" style="color: black;">页面性能历史数据</el-button>
+        <el-button type="text" @click="goToPages">子应用列表</el-button>/
+        <el-button type="text" style="color: black;">性能历史数据</el-button>
     </div>
     <div class="common_table_nav">
         <li :class="{active:table==1}" @click="changeTable(1)">性能概览</li>
     </div>
     <div class="current-page">
-        <span>页面 {{pagesItemData.url}}</span>
+        <span>应用名称: {{app}}</span>
     </div>
     <!-- 页面平均耗时说明 -->
     <div class="block-time" v-show="table==1">
         <div class="item-full div1">
-            <h1 class="h1">页面性能历史平均水平</h1>
+            <h1 class="h1">性能历史平均水平</h1>
             <li>
                 <h1>平均加载时间</h1>
                 <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
@@ -60,7 +60,7 @@
                 <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均页面重定向时间</h1>
+                <h1>平均重定向时间</h1>
                 <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
             </li>
             <li>
@@ -72,7 +72,7 @@
                 <h2>{{pagesItemData.requestTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>平均页面准备时间</h1>
+                <h1>平均准备时间</h1>
                 <h2>{{pagesItemData.readyTime | toFixed}}</h2>
             </li>
             <li>
@@ -81,7 +81,7 @@
             </li>
         </div>
         <div class="item-full div1">
-            <h1 class="h1">页面资源信息平均值</h1>
+            <h1 class="h1">资源信息平均值</h1>
             <li>
                 <h1>主框架DOM节点数</h1>
                 <h2>{{pagesItemData.domsNumber | toInit}}</h2>
@@ -158,15 +158,52 @@
             <div id="ec-screen_orientation" class="echartBorwsers"></div>
         </div>
         <div class="item div3">
-            <h1 class="h1">页面切换类型统计</h1>
+            <h1 class="h1">切换类型统计</h1>
             <div id="ec-http_initiator" class="echartBorwsers"></div>
         </div>
     </div>
 
     <!-- page详情性能列表 -->
     <div class="common-head-title" v-show="table==1">
-        <h1>页面性能历史数据 <button class="button" @click="showCharts">表格/曲线图</button></h1> 
-            <div v-show="listdata.length && !isShowCharts">
+        <h1>性能历史数据</h1>
+            <div style="height: 32px;">
+                <el-switch
+                    style="float: right;"
+                    active-color="#409EFF"
+                    inactive-color="blue"
+                    v-model="chartType"
+                    @change="changeType"
+                    active-text="表格"
+                    inactive-text="曲线图" />
+            </div>
+            <div class="search-form-box">
+                <el-form
+                :model="formData"
+                ref="formRef"
+                :inline="true"
+              >
+                <el-form-item label="日期">
+                    <el-date-picker
+                        v-model="formData.dateRange"
+                        type="datetimerange"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="用户PIN">
+                    <el-input v-model="formData.userId" placeholder="过滤用户PIN"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSearch">搜索</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="danger" @click="onReset">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div v-show="listdata.length && chartType">
                 <el-table
                     :data="listdata"
                     style="width: 100%"
@@ -179,11 +216,18 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                        prop="userId"
+                        label="用户PIN">
+                        <template slot-scope="scope">
+                            <span>{{ scope.row.userId }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         prop="id"
-                        label="页面链接">
+                        label="链接">
                         <template slot-scope="scope">
                             <el-button
-                                @click.native.prevent="gotoDetail(scope.row.id)"
+                                @click.native.prevent="gotoDetail(scope.row.id, app)"
                                 type="text"
                                 size="small">
                                 性能详情
@@ -200,7 +244,7 @@
                     </el-table-column>
                     <el-table-column
                         prop="loadTime"
-                        label="页面加载时间">
+                        label="加载时间">
                         <template slot-scope="scope">
                             <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
                         </template>
@@ -234,8 +278,7 @@
             </div>
             <div v-show="!listdata.length && isLoading" class="loading-block"></div>
             <div v-show="!listdata.length && !isLoading" class="common-no-data">暂无数据!</div>
-        <!-- </div> -->
-        <div id="charts-pages" v-show="isShowCharts" class="charts-pages"></div>
+        <div id="charts-pages" v-show="!chartType" class="charts-pages"></div>
     </div>
 </div>
 <script src="/js/view-page-detail.js"></script>

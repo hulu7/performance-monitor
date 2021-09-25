@@ -8,7 +8,8 @@ new Vue({
             sourceslist: [],
             systemId: '',
             pageId: '',
-            url: ''
+            url: '',
+            app: ''
         }
     },
     filters: {
@@ -33,6 +34,7 @@ new Vue({
         init() {
             this.systemId = util.queryParameters('systemId');
             this.pageId = util.getQueryString('pageId');
+            this.app = util.getQueryString('app');
         },
         goHome() {
             window.location.href = '/';

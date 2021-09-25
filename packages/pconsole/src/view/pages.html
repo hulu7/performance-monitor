@@ -6,7 +6,7 @@
 <div class="container ajax" id="pages" v-cloak>
    <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text" style="color: black;">页面列表</el-button>
+        <el-button type="text" style="color: black;">子应用列表</el-button>
     </div>
     <div class="table-box common-padding mt20">
         <div v-if="listdata.length">
@@ -16,13 +16,20 @@
                 max-height="600px">
                 <el-table-column
                     prop="url"
-                    label="页面链接">
+                    label="应用名称">
                     <template slot-scope="scope">
                         <a
                             @click="gotodetail(scope.row)"
                             class="text-overflow">
-                            {{scope.row.url}}
+                            {{scope.row.app}}
                         </a>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="url"
+                    label="应用地址">
+                    <template slot-scope="scope">
+                        {{scope.row.url}}
                     </template>
                 </el-table-column>
                 <el-table-column width="100px">
@@ -30,7 +37,7 @@
                         <el-tooltip
                         effect="dark"
                         placement="top">
-                        <span slot="content">{{ scope.row.url }}</span>
+                        <span slot="content">{{scope.row.url}}</span>
                         <span>
                             更多
                         </span>
@@ -43,21 +50,21 @@
                 </el-table-column>
                 <el-table-column
                     prop="loadTime"
-                    label="页面加载时间">
+                    label="平均加载时间">
                     <template slot-scope="scope">
                         <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     prop="requestTime"
-                    label="请求时间">
+                    label="平均请求时间">
                     <template slot-scope="scope">
                         <span class="tc">{{scope.row.requestTime|toFixed(true)}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     prop="whiteTime"
-                    label="白屏时间">
+                    label="平均白屏时间">
                     <template slot-scope="scope">
                         <span class="tc">{{scope.row.whiteTime|toFixed(true)}}</span>
                     </template>
