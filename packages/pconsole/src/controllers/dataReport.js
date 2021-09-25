@@ -518,7 +518,7 @@ class data {
                 ln: doms_number,
                 sz: html_size,
                 ck: cookies_size,
-                img: img_number,
+                img: img,
                 script,
                 iframe: iframe_number,
                 link,
@@ -553,6 +553,12 @@ class data {
                 fp: first_paint,
                 fcp: first_contentful_paint
             } = pt ? pt : {};
+            let img_number
+            if (img && (Object.prototype.toString.call(img) === '[object Array]')) {
+                img_number = img[0];
+            } else {
+                img_number = img
+            }
             const decodedUrl = decodeURIComponent(url || '');
             const page_id = util.getPageId(decodedUrl);
             const web_pages_basic_data = {
@@ -655,6 +661,8 @@ class data {
                 used_session_storage_keys: used_session_storage_keys || '0',
                 nocookie: nocookie || '0'
             };
+
+            console.log('++++++++++++', web_pages_resources_data);
     
             const web_pages_client_data = {
                 monitor_id,

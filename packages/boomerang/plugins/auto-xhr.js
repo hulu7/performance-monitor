@@ -363,6 +363,12 @@
 	// Default resources to count as Back-End during a SPA nav
 	var SPA_RESOURCES_BACK_END = ["xmlhttprequest", "script", "fetch"];
 
+	// The number of loading staff for last second
+	var pre_restiming_count = 0;
+
+	// Request start time
+	var requestStart = 0;
+
 	BOOMR = window.BOOMR || {};
 	BOOMR.plugins = BOOMR.plugins || {};
 
@@ -809,7 +815,7 @@
 			    resource.timing.requestStart) {
 				var r = BOOMR.plugins.ResourceTiming.getOriginResourceTiming(
 						resource.timing.requestStart,
-						resource.timing.loadEventEnd
+						BOOMR.now()
 					);
 
 				BOOMR.plugins.ResourceTiming.addToBeacon(r);
@@ -978,6 +984,29 @@
 	};
 
 	/**
+	 * If there is still loading something, wait up to 1,000ms 
+	 * {@link AutoXHR#SPA_TIMEOUT} before cancel.
+	 *
+	 * @param {none}
+	 *
+	 * @method
+	 * @memberof MutationHandler
+	 */
+	 MutationHandler.prototype.hasResourceOnload = function() {
+		const r = BOOMR.plugins.ResourceTiming.getOriginResourceTiming(
+			requestStart,
+			BOOMR.now()
+		);
+		
+		if (r.restiming.length !== pre_restiming_count) {
+			pre_restiming_count = r.restiming.length;
+			return true;
+		}
+	
+		return false;
+	 }
+
+	/**
 	 * Sends a Beacon for the [Resource]{@link AutoXHR#Resource} at `index` with the status
 	 * [XHR_STATUS_TIMEOUT]{@link AutoXHR#XHR_STATUS_TIMEOUT} code, If there are multiple resources attached to the
 	 * `pending_events` array at `index`.
@@ -996,7 +1025,7 @@
 		if (ev) {
 			// SPA page loads
 
-			if (BOOMR.utils.inArray(ev.type, BOOMR.constants.BEACON_TYPE_SPAS) && !BOOMR.hasBrowserOnloadFired()) {
+			if (BOOMR.utils.inArray(ev.type, BOOMR.constants.BEACON_TYPE_SPAS) && !BOOMR.hasBrowserOnloadFired() || this.hasResourceOnload()) {
 				// browser onload hasn't fired yet, lets wait because there might be more interesting
 				// things on the way
 				this.setTimeout(SPA_TIMEOUT, index);
@@ -1605,6 +1634,7 @@
 			}
 
 			resource.timing.requestStart = BOOMR.now();
+			requestStart = resource.timing.requestStart;
 			handler.addEvent(resource);
 		});
 	}
@@ -1752,6 +1782,8 @@
 
 			try {
 				resource.timing.requestStart = BOOMR.now();
+				requestStart = resource.timing.requestStart;
+
 				var promise = BOOMR.orig_fetch.apply(this, arguments);
 
 				/**
@@ -2230,6 +2262,7 @@
 				handler.addEvent(resource);
 
 				resource.timing.requestStart = BOOMR.now();
+				requestStart = resource.timing.requestStart;
 				// call the original send method unless there was an error
 				// during .open
 				if (typeof resource.status === "undefined" ||
@@ -2418,6 +2451,7 @@
 
 						// use the startTime from ResourceTiming instead
 						resource.timing.requestStart = entryStartTime;
+						requestStart = resource.timing.requestStart;
 
 						// also track it as the fetchStart time
 						resource.timing.fetchStart = entryStartTime;

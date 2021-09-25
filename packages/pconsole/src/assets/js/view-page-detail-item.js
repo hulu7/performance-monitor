@@ -71,8 +71,11 @@ new Vue({
                 util.drawWaterfall('all-data', restimings);
                 const parent = document.getElementById('network-stream');
                 for (let key in apps) {
+                    if (apps[key].app === 'other') {
+                        continue;
+                    }
                     const title = document.createElement('h2');
-                    const oText = document.createTextNode(`${apps[key].app === 'other' ? '其他' : apps[key].app + ' 应用'}`);
+                    const oText = document.createTextNode(`${apps[key].app === 'main' ? '主' : '子'}应用数据`);
                     title.setAttribute('class', 'waterfall-title');
                     title.appendChild(oText);
                     const content = document.createElement('div');
