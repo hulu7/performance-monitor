@@ -251,11 +251,13 @@
 			errorWrap(true,
 				function() {
 					var uniqUrls;
+					var htmlBlob = new Blob([d.documentElement.innerHTML]);
+					var cookieBlob = new Blob([d.cookie]);
 
 					BOOMR.addVar({
 						"dom.ln": nodeCount("*"),
-						"dom.sz": d.documentElement.innerHTML.length,
-						"dom.ck": d.cookie.length
+						"dom.sz": htmlBlob.size,
+						"dom.ck": cookieBlob.size
 					});
 
 					uniqUrls = {};
