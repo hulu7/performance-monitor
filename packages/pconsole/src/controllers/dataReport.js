@@ -663,8 +663,6 @@ class data {
                 used_session_storage_keys: used_session_storage_keys || '0',
                 nocookie: nocookie || '0'
             };
-
-            console.log('++++++++++++', web_pages_resources_data);
     
             const web_pages_client_data = {
                 monitor_id,

@@ -272,6 +272,24 @@ class util {
         })
     }
 
+    //判断是不是静态资源
+	isStaticSource(url) {
+		if (!url) {
+			return false;
+		}
+		const postfixes = ['js', 'html', 'css', 'json', 'php', 'htm', 'jpg',
+			'png', 'svg', 'jpeg', 'ico', 'avi', 'mp4', 'mp3', 'jsx', 'ts', 'doc',
+			'docs', 'ppt', 'pptx', 'xls', 'xlsx', 'gif', 'woff', 'ttf', 'fon', 'ttc'
+		];
+		let requestStr = url;
+		if (requestStr.indexOf('?') !== -1) {
+			requestStr = url.substring(0, url.indexOf('?'));
+		}
+		const parts = requestStr.split('.');
+		const postfix = parts[parts.length - 1];
+		return postfixes.indexOf(postfix.toLowerCase()) !== -1;
+	}
+
     //获取pageId
     getPageId(url) {
         if (!url) {
@@ -279,6 +297,14 @@ class util {
         }
         const utilInstance = new util();
         return md5(utilInstance.getPageUrl(url));
+    }
+
+    //将值MD5类型hash值
+    convert2Md5(org) {
+        if (!org) {
+            return '';
+        }
+        return md5(org);
     }
 
     getPageUrl(url) {

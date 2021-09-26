@@ -461,6 +461,12 @@ BOOMR_check_doc_domain();
 		// callback function for restiming, this is for the SPA or micro-frontend apps. input: url, output: app name
 		restiming_map_callback: undefined,
 
+		// callback function for get user info
+		get_user_id_callback: undefined,
+
+		//user id
+		user_id: undefined,
+
 		events: {
 			/**
 			 * Boomerang event, subscribe via {@link BOOMR.subscribe}.
@@ -2733,7 +2739,9 @@ BOOMR_check_doc_domain();
 				    "secure_cookie",
 					"app_id",
 					"routers",
-					"restiming_map_callback"
+					"restiming_map_callback",
+					"user_id",
+					"get_user_id_callback"
 			    ];
 
 			/* BEGIN_DEBUG */
@@ -4016,22 +4024,22 @@ BOOMR_check_doc_domain();
 		 * Config beacon data with:
 		 * 	  pin: user id,
 		*/
-		getCookie(name) {
-			const prefix = name + "="
-			const start = document.cookie.indexOf(prefix)
+		// getCookie(name) {
+		// 	const prefix = name + "="
+		// 	const start = document.cookie.indexOf(prefix)
 		 
-			if (start == -1) {
-				return null;
-			}
+		// 	if (start == -1) {
+		// 		return null;
+		// 	}
 		 
-			let end = document.cookie.indexOf(";", start + prefix.length)
-			if (end == -1) {
-				end = document.cookie.length;
-			}
+		// 	let end = document.cookie.indexOf(";", start + prefix.length)
+		// 	if (end == -1) {
+		// 		end = document.cookie.length;
+		// 	}
 
-			const value = document.cookie.substring(start + prefix.length, end)
-			return unescape(value);
-		},
+		// 	const value = document.cookie.substring(start + prefix.length, end)
+		// 	return unescape(value);
+		// },
 
 		/** 
 		 * Config beacon data with:
@@ -4049,10 +4057,15 @@ BOOMR_check_doc_domain();
 				BOOMR.appin = varsSent['app'] === 'main' && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
 			}
 
+			let user_id = '';
+			if (impl.get_user_id_callback && typeof impl.get_user_id_callback === 'function') {
+				user_id = impl.get_user_id_callback.apply();
+			}
+
 			varsSent['app_id'] = impl.app_id;
 			varsSent['appin'] = BOOMR.appin;
 			varsSent['restiming'] = BOOMR.formatRestiming(vars['restiming']);
-			varsSent['user_id'] = BOOMR.getCookie('pin');
+			varsSent['user_id'] = BOOMR.user_id || user_id || BOOMR.utils.getCookie('pin');
 
 			Object.assign(varsSent, BOOMR.hardNavigationTiming);
 		},

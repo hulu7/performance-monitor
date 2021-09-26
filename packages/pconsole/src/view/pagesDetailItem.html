@@ -13,16 +13,44 @@
         <span>应用名称: {{app}}</span>
     </div>
     <!-- 页面平均耗时说明 -->
-    <div class="common-margin">
+    <div class="common-margin" v-if="!isLoading">
         <div class="common-block fl">
             <h1 class="h1">总体性能</h1>
             <li>
-                <h1>加载时间</h1>
+                <h1>页面加载时间
+                    <el-tooltip
+                        class="item"
+                        effect="dark"
+                        placement="top">
+                        <label slot="content">户等待页面可用的时间</label>
+                        <i class="el-icon-question page-icon"></i>
+                    </el-tooltip>
+                </h1>
                 <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
             </li>
             <li>
-                <h1>白屏时间</h1>
+                <h1>白屏时间
+                    <el-tooltip
+                        class="item"
+                        effect="dark"
+                        placement="top">
+                        <label slot="content">从url导航开始到接收到第一个字节的时间</label>
+                        <i class="el-icon-question page-icon"></i>
+                    </el-tooltip>
+                </h1>
                 <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
+            </li>
+            <li>
+                <h1>总请求数</h1>
+                <h2>{{totalRequestCount}}</h2>
+            </li>
+            <li>
+                <h1>总请求时间</h1>
+                <h2>{{totalDuration | toFixed(true)}}</h2>
+            </li>
+            <li>
+                <h1>页面可用请求时间</h1>
+                <h2>{{pagesItemData.requestTime | toFixed}}</h2>
             </li>
             <li>
                 <h1>首像素时间</h1>
@@ -65,33 +93,37 @@
                 <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
             </li>
             <li>
-                <h1>request请求时间</h1>
-                <h2>{{pagesItemData.requestTime | toFixed}}</h2>
-            </li>
-            <li>
                 <h1>准备时间</h1>
                 <h2>{{pagesItemData.readyTime | toFixed}}</h2>
             </li>
         </div>
-        <div class="common-block fr">
-            <h1 class="h1">主应用</h1>
-            <div>
-                <h1>请求持续时间</h1>
-                <h2 class="red">{{mainDuration | toFixed(true)}}</h2>
+        <div class="common-block fr" v-for="(app, index) in pagesItemData.add.apps" :key="index" >
+            <h1 class="h1">{{app.app === 'other' ? '其他资源' : (app.app + ' 应用')}}</h1>
+            <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 8px 0;">
+                <div>
+                    <h1>请求总时间</h1>
+                    <h2 class="red">{{app.duration | toFixed(true)}}</h2>
+                </div>
+                <div>
+                    <h1>请求数</h1>
+                    <h2>{{app.count}}</h2>
+                </div>
+                <div></div>
+                <div></div>
             </div>
             <div>
                 <h1 class="chart-title">静态资源加载耗时排名</h1>
-                <div id="main-static-rank"></div>
+                <div :id="app.key + '-static-rank'"></div>
             </div>
             <div>
                 <h1 class="chart-title">API请求耗时排名</h1>
-                <div id="main-api-rank"></div>
+                <div :id="app.key + '-api-rank'"></div>
             </div>
             <div>
                 <h1 class="chart-title">重复请求</h1>
-                <div id="main-api-duplication">
+                <div v-if="app.dups.length">
                     <el-table
-                        :data="mainDups"
+                        :data="app.dups"
                         style="width: 100%">
                         <el-table-column
                             prop="url"
@@ -103,38 +135,7 @@
                         </el-table-column>
                     </el-table>
                 </div>
-            </div>
-        </div>
-        <div class="common-block fr">
-            <h1 class="h1">子应用</h1>
-            <div>
-                <h1>请求持续时间</h1>
-                <h2 class="red">{{subDuration | toFixed(true)}}</h2>
-            </div>
-            <div>
-                <h1 class="chart-title">静态资源加载耗时排名</h1>
-                <div id="sub-static-rank"></div>
-            </div>
-            <div>
-                <h1 class="chart-title">API请求耗时排名</h1>
-                <div id="sub-api-rank"></div>
-            </div>
-            <div>
-                <h1 class="chart-title">重复请求</h1>
-                <div id="sub-api-duplication">
-                    <el-table
-                        :data="subDups"
-                        style="width: 100%">
-                        <el-table-column
-                            prop="url"
-                            label="请求地址">
-                        </el-table-column>
-                        <el-table-column
-                            prop="count"
-                            label="重复次数">
-                        </el-table-column>
-                    </el-table>
-                </div>
+                <div class="tc" v-else>暂无数据</div>
             </div>
         </div>
         <div class="common-block fl">
@@ -232,7 +233,7 @@
     <div class="sources-list">
         <h1 class="h1">网络请求瀑布流</h1>
         <div id="network-stream"></div>
-        <h2 class="waterfall-title">所有数据</h2>
+        <h2 class="waterfall-title">所有数据 ({{totalRequestCount}})</h2>
         <div id="all-data" class="waterfall-content"></div>
     </div>
 </div>
@@ -243,5 +244,12 @@
 }
 .chart-title {
     padding: 10px;
+}
+.page-icon {
+    color: #bbb6b6;
+    cursor: pointer;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
 }
 </style>

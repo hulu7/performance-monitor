@@ -618,35 +618,19 @@ class utilfn {
         if (r != null) return unescape(r[2]); return null; 
     }
 
-	//判断是不是静态资源
-	isStaticSource(url) {
-		if (!url) {
-			return false;
-		}
-		const postfixes = ['js', 'html', 'css', 'json', 'php', 'htm', 'jpg',
-			'png', 'svg', 'jpeg', 'ico', 'avi', 'mp4', 'mp3', 'jsx', 'ts', 'doc',
-			'docs', 'ppt', 'pptx', 'xls', 'xlsx', 'gif'
-		];
-		let requestStr = url;
-		if (requestStr.indexOf('?') !== -1) {
-			requestStr = url.substring(0, url.indexOf('?'));
-		}
-		const parts = requestStr.split('.');
-		const postfix = parts[parts.length - 1];
-		return postfixes.indexOf(postfix) !== -1;
-	}
-
 	// 画api耗时排名
 	drawApiRank(elementId, categories) {
 		const target = document.getElementById(elementId);
 		if (!target) {
 			return;
 		}
-
+		target.setAttribute('style', `height: 220px; width: 100%; margin-top: 16px; text-align: center`);
 		if (categories.values.length === 0 || categories.names.length === 0) {
+			const label = document.createElement("label");
+            label.innerHTML = '暂无数据';
+            target.appendChild(label);
 			return;
 		}
-		target.setAttribute('style', `height: 220px; width: 100%; margin-top: 16px`);
 		const chartDom = document.getElementById(elementId);
 		const myChart = echarts.init(chartDom);
 		const option = {
@@ -657,9 +641,15 @@ class utilfn {
 			  axisPointer: {
 				type: 'shadow',
 				label: {
-				  show: true
+				  show: false
 				}
-			  }
+			  },
+			  formatter: function (params) {
+				return `<span style="max-width: 200px;">${params[0].name}</span>
+						<div style="width: 100%; text-align: left;">
+							<div>时间：${params[0].value.toFixed(1)} ms</div>
+						</div>`;
+				}
 			},
 			calculable: true,
 			legend: {
@@ -675,7 +665,8 @@ class utilfn {
 			xAxis: [
 			  {
 				type: 'category',
-				data: categories.names
+				data: categories.names,
+				show: false
 			  }
 			],
 			yAxis: [
@@ -844,23 +835,16 @@ class utilfn {
 				confine: true,
 				extraCssText: 'white-space: normal; word-break: break-all;',
 				formatter: function (params) {
-					return `${params.marker} <span style="max-width: 200px;">${params.data.name}</span>
-							<div style="border-bottem: 1px solid"></div>
+					return `<span style="max-width: 200px;">${params.data.name}</span>
+							<div style="border-bottem: 1px solid rgba(0,0,0,.12)"></div>
 							<div style="width: 100%; text-align: left;">
-								<div>类型：${params.data.type}</div>
+								<div>类型：${params.marker} ${params.data.type}</div>
 								<div>请求类型：${params.data.initiatorType}</div>
 								<div>开始时间：${params.data.startTime.toFixed(1)} ms</div>
 								<div>结束时间：${params.data.endTime.toFixed(1)} ms</div>
 								<div>持续时间：${params.data.duration.toFixed(1)} ms</div>
 								<div>数据大小：${(params.data.transferSize / 1000).toFixed(1)} Kb</div>
 							</div>`;
-				},
-				trigger: 'axis',
-				axisPointer: {
-				  type: 'shadow',
-				  label: {
-					show: true
-				  }
 				}
 			},
 			dataZoom: [{

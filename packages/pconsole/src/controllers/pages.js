@@ -7,6 +7,7 @@ import {
     util,
     mysql,
 } from '../tool'
+import { result } from 'underscore';
 
 class pages {
     //初始化对象
@@ -392,7 +393,7 @@ class pages {
                     } = item;
                     const target = queryResult.find(i => i.monitorId === item.id);
                     Object.assign(item, target);
-                    Object.assign(item, { pageId, systemId, createTime,userId });
+                    Object.assign(item, { pageId, systemId, createTime, userId });
                     return item;
                 });
             }
@@ -439,6 +440,104 @@ class pages {
             Object.assign(valjson, { id, pageId, systemId, url, createTime, app, userId });
         }
         return valjson;
+    }
+
+    // 提取主子应用数据
+    extractAppData(restiming) {
+        const result = {
+            totalCount: 0,
+            totalDuration: 0,
+            apps: []
+        };
+        const categories = {};
+        if (restiming && JSON.parse(restiming).length > 0) {
+            const dups = {};
+            const restimings = JSON.parse(restiming);
+            result.totalCount = restimings.length;
+            restimings.forEach((item, index) => {
+                const key = util.convert2Md5(item.app);
+                const dat = {
+                    name: item.name,
+                    value: item.responseEnd - item.startTime
+                };
+                if (!categories[key]) {
+                    Object.assign(categories, {
+                        [key]: {
+                            static: [],
+                            api: [],
+                            dups: [],
+                            app: item.app,
+                            count: 1,
+                            start: undefined,
+                            end: undefined,
+                            duration: 0
+                        }
+                    });
+                    Object.assign(dups, {
+                        [key]: []
+                    });
+                } else {
+                    categories[key].count += 1;
+                }
+
+                if (util.isStaticSource(item.name)) {
+                    categories[key].static.push(dat);
+                } else {
+                    categories[key].api.push(dat);
+                }
+                if (dups[key].indexOf(item.name) !== -1) {
+                    const target = categories[key].dups.find(i => i.url === item.name);
+                    if (target) {
+                        (categories[key].dups[categories[key].dups.indexOf(target)]).count = target.count + 1;
+                    } else {
+                        categories[key].dups.push({
+                            url: item.name,
+                            count: 1
+                        });
+                    }
+                } else {
+                    dups[key].push(item.name);
+                }
+
+                if (!categories[key].start || (categories[key].start > item.startTime)) {
+                    categories[key].start = item.startTime;
+                }
+
+                if (!categories[key].end || (categories[key].end < item.responseEnd)) {
+                    categories[key].end = item.responseEnd;
+                    categories[key].duration = categories[key].end - categories[key].start;
+                    if (result.totalDuration < categories[key].end) {
+                        result.totalDuration = categories[key].end;
+                    }
+                }
+            });
+        }
+        for (let key in  categories) {
+            const sortedApi = categories[key].api.sort((pre, post) => post.value - pre.value);
+            const sortedStatic = categories[key].static.sort((pre, post) => post.value - pre.value);
+            const sortedDups = categories[key].dups.sort((pre, post) => post.count - pre.count);
+            const { count, start, end, duration } = categories[key];
+            const data = {
+                app: categories[key].app,
+                api: {
+                    names: sortedApi.map(i => i.name),
+                    values: sortedApi.map(i => i.value)
+                },
+                static: {
+                    names: sortedStatic.map(i => i.name),
+                    values: sortedStatic.map(i => i.value)
+                },
+                dups: sortedDups,
+                count,
+                start,
+                end,
+                duration,
+                key
+            };
+            result.apps.push(data);
+        }
+
+        return result;
     }
 
     // 页面时间相关性能参数
@@ -622,8 +721,12 @@ class pages {
                 pagesInstance.queryPageClientById(id)
             ]);
 
+            const addInfo = pagesInstance.extractAppData(resultPageRestiming.restiming);
             Object.assign(valjson, resultPageBasic, resultPageTiming,
                 resultPageRestiming, resultPageResources, resultPageClient);
+            Object.assign(valjson, {
+                add: addInfo,
+            });
             ctx.body = util.result({
                 data: valjson
             });
