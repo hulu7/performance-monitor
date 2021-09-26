@@ -618,6 +618,114 @@ class utilfn {
         if (r != null) return unescape(r[2]); return null; 
     }
 
+	//判断是不是静态资源
+	isStaticSource(url) {
+		if (!url) {
+			return false;
+		}
+		const postfixes = ['js', 'html', 'css', 'json', 'php', 'htm', 'jpg',
+			'png', 'svg', 'jpeg', 'ico', 'avi', 'mp4', 'mp3', 'jsx', 'ts', 'doc',
+			'docs', 'ppt', 'pptx', 'xls', 'xlsx', 'gif'
+		];
+		let requestStr = url;
+		if (requestStr.indexOf('?') !== -1) {
+			requestStr = url.substring(0, url.indexOf('?'));
+		}
+		const parts = requestStr.split('.');
+		const postfix = parts[parts.length - 1];
+		return postfixes.indexOf(postfix) !== -1;
+	}
+
+	// 画api耗时排名
+	drawApiRank(elementId, categories) {
+		const target = document.getElementById(elementId);
+		if (!target) {
+			return;
+		}
+
+		if (categories.values.length === 0 || categories.names.length === 0) {
+			return;
+		}
+		target.setAttribute('style', `height: 220px; width: 100%; margin-top: 16px`);
+		const chartDom = document.getElementById(elementId);
+		const myChart = echarts.init(chartDom);
+		const option = {
+			tooltip: {
+			  confine: true,
+			  extraCssText: 'white-space: normal; word-break: break-all;',
+			  trigger: 'axis',
+			  axisPointer: {
+				type: 'shadow',
+				label: {
+				  show: true
+				}
+			  }
+			},
+			calculable: true,
+			legend: {
+			  data: ['Growth', 'APIs'],
+			  itemGap: 5
+			},
+			grid: {
+			  top: '12%',
+			  left: '1%',
+			  right: '10%',
+			  containLabel: true
+			},
+			xAxis: [
+			  {
+				type: 'category',
+				data: categories.names
+			  }
+			],
+			yAxis: [
+			  {
+				type: 'value',
+				name: '时间 (ms)',
+				axisLabel: {
+				  formatter: function (a) {
+					a = +a;
+					return isFinite(a) ? echarts.format.addCommas(+a) : '';
+				  }
+				}
+			  }
+			],
+			dataZoom: [
+			  {
+				show: true,
+				start: 0,
+				end: 100
+			  },
+			  {
+				type: 'inside',
+				start: 94,
+				end: 100
+			  },
+			  {
+				show: true,
+				yAxisIndex: 0,
+				filterMode: 'empty',
+				width: 30,
+				height: '80%',
+				showDataShadow: false,
+				left: '93%'
+			  }
+			],
+			series: [
+			  {
+				name: 'API 耗时',
+				type: 'bar',
+				data: categories.values
+			  }
+			]
+		};
+
+		option && myChart.setOption(option);
+		window.onresize = () => {
+			myChart.resize();
+		};
+	}
+
 	// 画瀑布流数据
 	drawWaterfall(elementId, categories) {
 		const target = document.getElementById(elementId);
@@ -733,6 +841,8 @@ class utilfn {
 
 		const option = {
 			tooltip: {
+				confine: true,
+				extraCssText: 'white-space: normal; word-break: break-all;',
 				formatter: function (params) {
 					return `${params.marker} <span style="max-width: 200px;">${params.data.name}</span>
 							<div style="border-bottem: 1px solid"></div>
@@ -744,6 +854,13 @@ class utilfn {
 								<div>持续时间：${params.data.duration.toFixed(1)} ms</div>
 								<div>数据大小：${(params.data.transferSize / 1000).toFixed(1)} Kb</div>
 							</div>`;
+				},
+				trigger: 'axis',
+				axisPointer: {
+				  type: 'shadow',
+				  label: {
+					show: true
+				  }
 				}
 			},
 			dataZoom: [{

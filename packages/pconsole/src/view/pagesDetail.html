@@ -99,7 +99,7 @@
                 <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
             </li>
             <li>
-                <h1>主框架HTML字节数</h1>
+                <h1>主框架HTML渲染后字节数</h1>
                 <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
             </li>
             <li>
@@ -182,7 +182,7 @@
                 ref="formRef"
                 :inline="true"
               >
-                <el-form-item label="日期">
+                <el-form-item label="时间">
                     <el-date-picker
                         v-model="formData.dateRange"
                         type="datetimerange"
