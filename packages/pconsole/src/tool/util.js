@@ -279,7 +279,8 @@ class util {
 		}
 		const postfixes = ['js', 'html', 'css', 'json', 'php', 'htm', 'jpg',
 			'png', 'svg', 'jpeg', 'ico', 'avi', 'mp4', 'mp3', 'jsx', 'ts', 'doc',
-			'docs', 'ppt', 'pptx', 'xls', 'xlsx', 'gif', 'woff', 'ttf', 'fon', 'ttc', 'map'
+			'docs', 'ppt', 'pptx', 'xls', 'xlsx', 'gif', 'woff', 'ttf', 'fon', 'ttc', 'map',
+            'zip', 'zipx', 'rar'
 		];
 		let requestStr = url;
 		if (requestStr.indexOf('?') !== -1) {
