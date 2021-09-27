@@ -15,8 +15,8 @@ class pages {
 
     };
 
-    // 获得pages页面列表
-    async getPageList(ctx) {
+    // 获得子应用列表
+    async getAppsList(ctx) {
         try {
             let systemId    = ctx.request.body.systemId;
             let pageNo      = ctx.request.body.pageNo || 1;
@@ -31,7 +31,7 @@ class pages {
                 system_id: systemId
             };
 
-            if(isAllAvg === 'false') {
+            if(!isAllAvg) {
                 if(!url) {
                     ctx.body = util.result({
                         code: 1001,
@@ -48,46 +48,50 @@ class pages {
                     elt: endTime
                 };
             }
+
             let totalNum = 0;
-            if (isAllAvg != 'false') {
-                let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('page_id').select(); 
+            if (isAllAvg) {
+                let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('app_id').select(); 
                 let total = await mysql(sqlTotal);
                 if(total.length) {
                     totalNum = total.length;
                 }
             }
 
-            // 请求页面基础信息数据
-            const sqlPageIds = sql.field(`page_id,
-                    count(page_id) as count
-                    `)
+            // 请求应用基础信息数据
+            const sqlAppIds = sql.field(`app_id,
+                    count(app_id) as count
+                    `
+            )
             .table('web_pages_basic')
-            .group('page_id')
+            .group('app_id')
             .order('count desc')
             .page(pageNo, pageSize)
             .where(data)
             .select();
-            const result = await mysql(sqlPageIds);
-            const performanceDataQuery = result.map(async (page) => {
+            const result = await mysql(sqlAppIds);
+            const performanceDataQuery = result.map(async (app) => {
+                const { app_id } = app;
                 const data = {
-                    page_id: page.page_id
+                    app_id
                 };
-                const sqlPageTiming = sql.field(`page_id,
+                const sqlPageTiming = sql.field(`app_id,
                             avg(load_time) as load_time,
                             avg(request_time) as request_time,
                             avg(white_time) as white_time
                             `)
                     .table('web_pages_timing')
-                    .group('page_id')
+                    .group('app_id')
                     .where(data)
                     .select();
                 return mysql(sqlPageTiming);
             });
 
-            const basicQuery = result.map(async (page) => {
+            const basicQuery = result.map(async (app) => {
+                const { app_id } = app;
                 const sqlBasic = sql
                     .table('web_pages_basic')
-                    .where({ page_id: page.page_id })
+                    .where({ app_id })
                     .limit(0, 1)
                     .select()
 
@@ -98,11 +102,11 @@ class pages {
             const basicData = await Promise.all(basicQuery);
 
             result.forEach(item => {
-                const performance = performanceData.find(i => i[0].page_id === item.page_id);
-                const basic = basicData.find(i => i[0].page_id === item.page_id);
-                const { load_time: loadTime, request_time: requestTime, white_time: whiteTime } = performance[0];
-                const { url } = basic[0];
-                Object.assign(item, { loadTime, requestTime, whiteTime, url, pageId: util.getPageId(decodeURIComponent(url)) });
+                const performance = performanceData.find(i => i[0].app_id === item.app_id);
+                const basic = basicData.find(i => i[0].app_id === item.app_id);
+                const { load_time: loadTime, request_time: requestTime, white_time: whiteTime, app_id: appId } = performance[0];
+                const { app_name: appName } = basic[0];
+                Object.assign(item, { loadTime, requestTime, whiteTime, url, appId, appName });
             });
 
             let valjson = {}
@@ -114,7 +118,7 @@ class pages {
                         request_time: requestTime,
                         url
                     } = result;
-                    Object.assign(valjson, { loadTime, whiteTime, requestTime, url });
+                    Object.assign(valjson, { loadTime, whiteTime, requestTime, appId, appName });
                 }
             } else {
                 valjson.totalNum = totalNum;
@@ -134,8 +138,8 @@ class pages {
             return '';
         }
     }
-    // 获得page页面概览
-    async getPageAverage(ctx){
+    // 获得应用概览
+    async getAppAverage(ctx){
         try {
             const pagesInstance = new pages();
             const systemId    = ctx.request.body.systemId;
@@ -144,20 +148,20 @@ class pages {
             const beginTime   = ctx.request.body.beginTime || '';
             const endTime     = ctx.request.body.endTime || '';
             const isAllAvg    = ctx.request.body.isAllAvg || true;
-            const pageId         = ctx.request.body.pageId;
+            const appId         = ctx.request.body.appId;
 
             // 公共参数
             let data = {};
 
             if(isAllAvg === 'false') {
-                if(!pageId) {
+                if(!appId) {
                     ctx.body = util.result({
                         code: 1001,
                         desc: 'url参数有误!'
                     });
                     return
                 }
-                data.page_id = pageId;
+                data.app_id = appId;
             }
 
             if(beginTime && endTime) {
@@ -168,14 +172,14 @@ class pages {
             }
             let totalNum = 0
             if(isAllAvg != 'false'){
-                let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('url').select(); 
+                let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('app_id').select(); 
                 let total = await mysql(sqlTotal);
                 if(total.length) totalNum = total.length
             }
 
 
             // 请求性能表格数据
-            const sqlPagesTiming = sql.field(`page_id,
+            const sqlAppsTiming = sql.field(`app_id,
                         avg(load_time) as load_time,
                         avg(white_time) as white_time,
                         avg(first_paint) as first_paint,
@@ -192,17 +196,17 @@ class pages {
                         avg(ready_time) as ready_time,
                         avg(sum_load_times) as sum_load_times,
                         avg(additional_timers) as additional_timers,
-                        count(page_id) as count
+                        count(app_id) as count
                         `)
                 .table('web_pages_timing')
-                .group('page_id')
+                .group('app_id')
                 .order('count desc')
                 .page(pageNo, pageSize)
                 .where(data)
                 .select();
 
             // 请求资源表格数据
-            const sqlPagesResources = sql.field(`page_id,
+            const sqlAppsResources = sql.field(`app_id,
                         avg(body_size) as body_size,
                         avg(encoded_body_size) as encoded_body_size,
                         avg(redirect_count) as redirect_count,
@@ -217,44 +221,44 @@ class pages {
                         avg(script_number) as script_number,
                         avg(external_script_number) as external_script_number,
                         avg(html_size) as html_size,
-                        count(page_id) as count
+                        count(app_id) as count
                         `)
                 .table('web_pages_resources')
-                .group('page_id')
+                .group('app_id')
                 .order('count desc')
                 .page(pageNo, pageSize)
                 .where(data)
                 .select();
 
             // 请求客户端表格数据
-            const sqlPagesClient = sql.field(`page_id,
+            const sqlAppsClient = sql.field(`app_id,
                         avg(cpu_concurrency) as cpu_concurrency,
                         avg(round_trip_time) as round_trip_time,
                         avg(downlink) as downlink,
-                        count(page_id) as count
+                        count(app_id) as count
                         `)
                 .table('web_pages_client')
-                .group('page_id')
+                .group('app_id')
                 .order('count desc')
                 .page(pageNo, pageSize)
                 .where(data)
                 .select();
 
-            const resultPagesTiming = await mysql(sqlPagesTiming);
-            const resultPagesResources = await mysql(sqlPagesResources);
-            const resultPagesClient = await mysql(sqlPagesClient);
+            const resultAppsTiming = await mysql(sqlAppsTiming);
+            const resultAppsResources = await mysql(sqlAppsResources);
+            const resultAppsClient = await mysql(sqlAppsClient);
 
             let valjson = {}
 
-            const queryPageId = sql
+            const queryAppId = sql
                 .table('web_pages_basic')
-                .where({ page_id: pageId })
+                .where({ app_id: appId })
                 .limit(0, 1)
                 .select()
 
-            const pageIds = await mysql(queryPageId);
+            const appIds = await mysql(queryAppId);
             if(isAllAvg === 'false') {
-                if (resultPagesTiming.length) {
+                if (resultAppsTiming.length) {
                     const {
                         load_time: loadTime,
                         white_time: whiteTime,
@@ -273,7 +277,7 @@ class pages {
                         sum_load_times: sumLoadTimes,
                         additional_timers: additionalTimers,
                         url
-                    } = resultPagesTiming[0];
+                    } = resultAppsTiming[0];
 
                     const {
                         body_size: bodySize,
@@ -291,13 +295,13 @@ class pages {
                         external_script_number: externalScriptNumber,
                         html_size: htmlSize,
                         count
-                    } = resultPagesResources[0];
+                    } = resultAppsResources[0];
 
                     const {
                         cpu_concurrency: cpuConcurrency,
                         round_trip_time: roundTripTime,
                         downlink,
-                    } = resultPagesClient[0];
+                    } = resultAppsClient[0];
 
                     Object.assign(valjson, { loadTime, whiteTime, firstPaint, firstContentfulPaint,     visuallyReadyTime, count,
                         perceivedLoadTime, domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, requestTime,
@@ -311,8 +315,8 @@ class pages {
                 valjson.datalist = result
             }
 
-            if (pageIds && pageIds.length) {
-                Object.assign(valjson, { url: pageIds[0].url });
+            if (appIds && appIds.length) {
+                Object.assign(valjson, { url: appIds[0].url });
             }
 
             ctx.body = util.result({
@@ -336,11 +340,11 @@ class pages {
             const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
             const beginTime   = ctx.request.body.beginTime || '';
             const endTime     = ctx.request.body.endTime || '';
-            const pageId      = ctx.request.body.pageId || '';
+            const appId      = ctx.request.body.appId || '';
             const userId      = ctx.request.body.userId || '';
             const isSearching = ctx.request.body.isSearching || 'false';
 
-            if(!pageId){
+            if(!appId){
                 ctx.body = util.result({
                     code: 1001,
                     desc: 'pageId参数有误!'
@@ -349,7 +353,7 @@ class pages {
             }
 
             // 请求参数
-            let data = (isSearching === 'true' && userId) ? { page_id: pageId, user_id: userId } : { page_id: pageId };
+            let data = (isSearching === 'true' && userId) ? { app_id: appId, user_id: userId } : { app_id: appId };
             if(beginTime && endTime) {
                 data.create_time = {
                     egt: beginTime,

@@ -27,7 +27,6 @@ class user {
                     id,
                     system_domain: systemDomain,
                     system_name: systemName,
-                    sub_systems: subSystems,
                     script,
                     is_use: isUse,
                     create_time: createTime,
@@ -36,16 +35,16 @@ class user {
                     slow_css_time: slowCssTime,
                     slow_img_time: slowImgTime,
                     slow_ajax_time: slowAjaxTime,
-                    app_id: appId,
+                    uuid,
                     is_monitor_pages: isMonitorPages,
                     is_monitor_ajax: isMonitorAjax,
                     is_monitor_resource: isMonitorResource,
                     is_monitor_system: isMonitorSystem
                 } = item;
                 valArr.push({
-                    id, systemDomain, systemName, subSystems, script,
+                    id, systemDomain, systemName, script,
                     isUse, createTime, slowPageTime, slowJsTime, slowCssTime, slowImgTime,
-                    slowAjaxTime, appId, isMonitorPages, isMonitorPages, isMonitorAjax, isMonitorResource,
+                    slowAjaxTime, uuid, isMonitorPages, isMonitorPages, isMonitorAjax, isMonitorResource,
                     isMonitorSystem
                 });
             })
@@ -82,7 +81,6 @@ class user {
                 id,
                 system_domain: systemDomain,
                 system_name: systemName,
-                sub_systems: subSystems,
                 script,
                 is_use: isUse,
                 create_time: createTime,
@@ -91,15 +89,15 @@ class user {
                 slow_css_time: slowCssTime,
                 slow_img_time: slowImgTime,
                 slow_ajax_time: slowAjaxTime,
-                app_id: appId,
+                uuid,
                 is_monitor_pages: isMonitorPages,
                 is_monitor_ajax: isMonitorAjax,
                 is_monitor_resource: isMonitorResource,
                 is_monitor_system: isMonitorSystem
             } = result[0];
-            Object.assign(valjson, { id, systemDomain, systemName, subSystems, script,
+            Object.assign(valjson, { id, systemDomain, systemName, script,
                 isUse, createTime, slowPageTime, slowJsTime, slowCssTime, slowImgTime,
-                slowAjaxTime, appId, isMonitorPages, isMonitorPages, isMonitorAjax, isMonitorResource,
+                slowAjaxTime, uuid, isMonitorPages, isMonitorPages, isMonitorAjax, isMonitorResource,
                 isMonitorSystem
             });
         }
@@ -136,7 +134,6 @@ class user {
                 slowJsTime: slow_js_time,
                 slowCssTime: slow_css_time,
                 slowImgTime: slow_img_time,
-                subSystems: sub_systems
             } = ctx.request.body;
             const create_time = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
             
@@ -190,15 +187,14 @@ class user {
                 <script>
                     BOOMR.init({
                         beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
-                        app_id:"${token}",
+                        uuid:"${token}",
                         autorun: false,
                         History: {
                             enabled: true,
                             auto: true,
                             monitorReplaceState: true
                         },
-                        routers: ${sub_systems},
-                        restiming_map_callback: window.restiming_map_callback
+                        apps_map_callback: window.apps_map_callback
                     });
                 </script>`;
 
@@ -206,9 +202,8 @@ class user {
             const data = {
                 system_name,
                 system_domain,
-                sub_systems,
                 script,
-                app_id: token,
+                uuid: token,
                 create_time
             }
 
@@ -284,10 +279,9 @@ class user {
                 slowJsTime: slow_js_time,
                 slowCssTime: slow_css_time,
                 slowImgTime: slow_img_time,
-                subSystems: sub_systems,
                 slowAjaxTime: slow_ajax_time,
                 isUse: is_use,
-                appId: app_id
+                uuid
             } = ctx.request.body;
 
             if(!system_domain || !system_name){
@@ -305,22 +299,21 @@ class user {
                 <script>
                     BOOMR.init({
                         beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
-                        app_id:"${app_id}",
+                        uuid:"${uuid}",
                         autorun: false,
                         History: {
                             enabled: true,
                             auto: true,
                             monitorReplaceState: true
                         },
-                        routers: ${sub_systems},
-                        restiming_map_callback: window.restiming_map_callback
+                        apps_map_callback: window.apps_map_callback
                     });
                 </script>`;
             const sqlstr = sql
                 .table('web_system')
                 .data({
                     system_name, system_domain, slow_page_time, slow_js_time, slow_css_time,
-                    slow_img_time, sub_systems, slow_ajax_time, is_use, app_id, script
+                    slow_img_time, slow_ajax_time, is_use, uuid, script
                 })
                 .where({ id })
                 .update()

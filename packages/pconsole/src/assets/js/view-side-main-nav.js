@@ -24,7 +24,7 @@ new Vue({
             await this.getDetail();
         },
         goHome() {
-            window.location.href = `/pages?systemId=${this.systemId}`;
+            window.location.href = `/apps?systemId=${this.systemId}`;
         },
         getDetail() {
             util.ajax({
@@ -38,7 +38,7 @@ new Vue({
             })
         },
         goToPagesList() {
-            window.location.href = `/pages?systemId=${this.systemId}`;
+            window.location.href = `/apps?systemId=${this.systemId}`;
         },
         goToSearch() {
             window.location.href = `/search?systemId=${this.systemId}`;

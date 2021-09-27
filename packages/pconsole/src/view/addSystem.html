@@ -11,24 +11,24 @@
         </div>
         <div class="block">
             <div class="item">
-                <div class="left">主应用名称：</div>
+                <div class="left">系统名称：</div>
                 <el-input class="input" v-model.trim="systemName" placeholder="请填写应用名称"></el-input>
             </div>
             <div class="item">
-                <div class="left">应用地址：</div>
-                <el-input class="input" v-model.trim="systemDomain" placeholder="应用地址，例如 http://example.com/"></el-input>
-            </div>
-            <div class="item">
-                <div class="left">子应用：</div>
-                <div class="input">
-                    <div class="pair" v-for="(sys, $index) in subSystems" v-key="$index">
-                        <el-input v-model.trim="sys.name" placeholder="子应用名称"></el-input>
-                        <div class="equal">=</div>
-                        <el-input v-model.trim="sys.rule" placeholder="子应用路径匹配规则，例如 /example/"></el-input>
-                        <el-button class="delete" type="text" @click="deleteSubsystem($index)">删除</el-button>
-                    </div>
-                    <el-button type="text" style="margin-left: 10px;" @click="addNewSubsystem">+ 新增子应用</el-button>
-                </div>
+                <div class="left">系统域名：</div>
+                <el-input class="input" v-model.trim="systemDomain" placeholder="系统域名，例如 example.com"></el-input>
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    placement="top">
+                    <span slot="content">
+                        根域、顶级域、二级、三级...域名构成，
+                        每级域名之间用点分开，
+                        每级域名由字母、数字和减号构成（第一个字母不能是减号），
+                        不区分大小写，长度不超过63
+                    </span>
+                    <i class="el-icon-question page-icon"></i>
+                </el-tooltip>
             </div>
             <div class="item">
                 <div class="save-botton">
@@ -57,4 +57,12 @@
 </div>
 <%- include("./footer.html") %>
 <script src="/js/view-addSystem.js"></script>
-<style>
+<style scoped>
+.page-icon {
+    margin-right: -12px;
+    color: #bbb6b6;
+    cursor: pointer;
+    display: inline-block;
+    transform: translateX(5px);
+}
+</style>

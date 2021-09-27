@@ -934,6 +934,14 @@ class utilfn {
         }
         return url.indexOf('?') == -1 ? url : url.replace(url.substr(url.indexOf('?')), '');
     }
+
+	isValidDomain(domain) {
+		if (!domain) {
+			return false;
+		}
+		const rule = /^(([-\u4E00-\u9FA5a-z0-9]{1,63})\.)+([\u4E00-\u9FA5a-z]{2,63})\.?$/;
+		return rule.test(domain);
+	}
 }
 
 //初始化util对象

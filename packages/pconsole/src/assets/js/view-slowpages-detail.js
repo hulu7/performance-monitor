@@ -7,7 +7,7 @@ new Vue({
             pageSize:config.pageSize,
             totalNum:0,
             isLoadEnd:false,
-            pageId: util.getQueryString('pageId'),
+            appId: util.getQueryString('appId'),
             pagesItemData:{},
             isShowCharts:false,
         }

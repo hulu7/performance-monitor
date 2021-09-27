@@ -99,15 +99,15 @@ class data {
     async getSystemPerformDatas(ctx) {
         try{
             //------------校验token是否存在-----------------------------------------------------   
-            let appId = ctx.query.appId
-            if(!appId){
+            let uuid = ctx.query.uuid
+            if(!uuid){
                 ctx.body=imgsrc;
                 return; 
             }; 
             let sqlstr = sql
                 .table('web_system')
                 .field('is_use,id')
-                .where({ app_id: appId })
+                .where({ uuid })
                 .select()
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
@@ -165,28 +165,28 @@ class data {
         }
     }
 
-    async getPagePerformance(ctx) {
+    async reportPerformance(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
         try {
             const dataInstance = new data();
             const resourceDatas = ctx.request.body || {};
-            const { app_id } = resourceDatas;
-            if(!app_id) {
+            const { uuid } = resourceDatas;
+            if(!uuid) {
                 ctx.body=imgsrc;
                 return;
             }; 
-            let systems = await dataInstance.querySystems(app_id);
+            const systems = await dataInstance.querySystems(uuid);
             if(!systems || !systems.length){
                 ctx.body=imgsrc;
                 return; 
             };
-            let systemItem = systems[0]
+            const systemItem = systems[0]
             if(systemItem.is_use !== 0){
                 ctx.body=imgsrc;
                 return;
             };
             console.log('---start store performance data--');
-            let createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
+            const createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
             //----------------------------------------存储页面page性能----------------------------------------
             await dataInstance.storePagePerformance(createTime, resourceDatas, systemItem);
             ctx.body=imgsrc;
@@ -202,16 +202,25 @@ class data {
         ctx.set('Access-Control-Allow-Origin','*');
         try{
             //------------校验token是否存在----------------------------------------------------- 
-            let resourceDatas = ctx.request.body?JSON.parse(ctx.request.body):{}  
-            let appId = resourceDatas.appId
-            if(!appId){
+            let resourceDatas = ctx.request.body ? JSON.parse(ctx.request.body) : {}  
+            const { uuid } = resourceDatas
+            if(!uuid){
                 ctx.body=imgsrc;
                 return; 
             }; 
             let sqlstr = sql
                 .table('web_system')
-                .field('is_use,id,slow_page_time,isStatisiPages,slow_js_time,slow_css_time,slow_img_time,isStatisiAjax,isStatisiResource')
-                .where({ app_id:appId })
+                .field(`is_use,
+                    id,
+                    slow_page_time,
+                    isStatisiPages,
+                    slow_js_time,
+                    slow_css_time,
+                    slow_img_time,
+                    isStatisiAjax,
+                    isStatisiResource`
+                )
+                .where({ uuid })
                 .select()
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
@@ -336,17 +345,17 @@ class data {
         try{
             //------------校验token是否存在----------------------------------------------------- 
             let resourceDatas = ctx.request.body?JSON.parse(ctx.request.body):{}  
-            let appId = resourceDatas.appId
+            const { uuid } = resourceDatas;
             let reportDataList = resourceDatas.reportDataList
             if(!reportDataList.length) return;
-            if(!appId){
+            if(!uuid){
                 ctx.body=imgsrc;
                 return; 
             }; 
             let sqlstr = sql
                 .table('web_system')
                 .field('is_use,id')
-                .where({ app_id: appId })
+                .where({ uuid })
                 .select()
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
@@ -404,31 +413,30 @@ class data {
         }  
     }
 
-    async querySystems(appId) {
+    async querySystems(uuid) {
         let sqlstr = sql
         .table('web_system')
-        .field('id,'+ 
-               'system_domain,'+
-               'system_name,'+
-               'sub_systems,'+
-               'script,'+
-               'is_use,'+
-               'create_time,'+
-               'slow_page_time,'+
-               'slow_js_time,'+
-               'slow_css_time,'+
-               'slow_img_time,'+
-               'slow_ajax_time,'+
-               'app_id,'+
-               'is_monitor_pages,'+
-               'is_monitor_ajax,'+
-               'is_monitor_resource,'+
-               'is_monitor_system')
-        .where({ app_id: appId })
+        .field(`id,
+               system_domain,
+               system_name,
+               script,
+               is_use,
+               create_time,
+               slow_page_time,
+               slow_js_time,
+               slow_css_time,
+               slow_img_time,
+               slow_ajax_time,
+               uuid,
+               is_monitor_pages,
+               is_monitor_ajax,
+               is_monitor_resource,
+               is_monitor_system`)
+        .where({ uuid })
         .select()
         return mysql(sqlstr);
     }
-    
+
     async storePagePerformance(createTime, resourceDatas, systemItem) {
         if(systemItem.is_monitor_pages === 0){
             const {
@@ -438,6 +446,7 @@ class data {
                 app,
                 appin,
                 user_id,
+                additional_info,
                 u: url, 
                 v: boomerang_version, 
                 sm: boomerang_snippet_method, 
@@ -482,13 +491,11 @@ class data {
                 nt_red_cnt: redirect_count,
                 nt_trn_size: transfer_size,
             } = resourceDatas;
-    
             const {
                 etype: effective_type,
                 dl: downlink,
                 rtt: round_trip_time
             } = mob ? mob : {};
-    
             const {
                 e: continuity_epoch,
                 lb: continuity_last_beacon,
@@ -562,6 +569,7 @@ class data {
             }
             const decodedUrl = decodeURIComponent(url || '');
             const page_id = util.getPageId(decodedUrl);
+            const app_id = app && util.convert2Md5(app) || 'unkown';
             const web_pages_basic_data = {
                 user_id,
                 page_id,
@@ -569,9 +577,11 @@ class data {
                 system_id: systemItem.id,
                 create_time: createTime || '',
                 mark_page: pageMark || '',
-                app: app || ''
+                app_id,
+                app_name: app || 'unkown',
+                additional_info: additional_info || ''
             };
-    
+
             const storePagesBasicSqlStr = sql
                 .table('web_pages_basic')
                 .data(web_pages_basic_data)
@@ -581,6 +591,7 @@ class data {
             const web_pages_timing_data = {
                 monitor_id,
                 page_id,
+                app_id,
                 url: decodedUrl || '',
                 load_time: load_time || '0',
                 white_time: white_time || '0',
@@ -637,6 +648,7 @@ class data {
     
             const web_pages_resources_data = {
                 monitor_id,
+                app_id,
                 page_id,
                 url: decodedUrl || '',
                 body_size: body_size || '0',
@@ -666,6 +678,7 @@ class data {
     
             const web_pages_client_data = {
                 monitor_id,
+                app_id,
                 page_id,
                 url: decodedUrl || '',
                 appin: appin || '',

@@ -7,7 +7,7 @@ import {
 const router = new KoaRouter()
 
 // 统计页面cookie打点标识
-router.post('/reportPerformance', controllers.dataReport.getPagePerformance);
+router.post('/reportPerformance', controllers.dataReport.reportPerformance);
 
 // 统计页面cookie打点标识
 router.get('/reportMark', controllers.dataReport.setMarkCookies);
@@ -37,15 +37,15 @@ router.post('/api/system/getSystemList', controllers.system.getSystemList)
 // 设置系统是否需要统计数据
 router.post('/api/system/isStatisData', controllers.system.isStatisData)
 
-//----------------------------PAGES--------------------------------------
+//----------------------------Apps--------------------------------------
 // 获得page列表
-router.post('/api/pages/getPageList', controllers.pages.getPageList)
+router.post('/api/apps/getAppsList', controllers.pages.getAppsList)
 // 获得page概览
-router.post('/api/pages/getPageAverage', controllers.pages.getPageAverage)
+router.post('/api/apps/getAppAverage', controllers.pages.getAppAverage)
 // 获得page详情性能信息
-router.post('/api/pages/getPageItemDetail', controllers.pages.getPageItemDetail)
+router.post('/api/apps/getPageItemDetail', controllers.pages.getPageItemDetail)
 // 根据ID获得page详情性能信息
-router.post('/api/pages/getPageItemForId', controllers.pages.getPageItemForId)
+router.post('/api/apps/getPageItemForId', controllers.pages.getPageItemForId)
 
 //----------------------------AJAX--------------------------------------
 //获得ajax页面列表

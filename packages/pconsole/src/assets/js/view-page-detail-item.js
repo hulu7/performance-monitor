@@ -7,9 +7,8 @@ new Vue({
             pagesItemData: {},
             sourceslist: [],
             systemId: '',
-            pageId: '',
+            appId: '',
             url: '',
-            app: '',
             totalRequestCount: 0,
             totalDuration: 0,
             isLoading: true
@@ -36,17 +35,16 @@ new Vue({
     methods: {
         init() {
             this.systemId = util.queryParameters('systemId');
-            this.pageId = util.getQueryString('pageId');
-            this.app = util.getQueryString('app');
+            this.appId = util.getQueryString('appId');
         },
         goHome() {
             window.location.href = '/';
         },
         goToPages() {
-            window.location.href = `/pages?systemId=${this.systemId}`;
+            window.location.href = `/apps?systemId=${this.systemId}`;
         },
         goToPageHistory() {
-            window.location.href = `/pages/detail?systemId=${this.systemId}&pageId=${this.pageId}`;
+            window.location.href = `/apps/detail?systemId=${this.systemId}&appId=${this.appId}`;
         },
         emptyHint(id) {
             const e = document.getElementById(id);
@@ -87,7 +85,7 @@ new Vue({
                 util.drawWaterfall('all-data', restimings);
                 const parent = document.getElementById('network-stream');
                 for (let key in apps) {
-                    if (apps[key].app === 'other') {
+                    if (apps[key].app === 'unkown') {
                         continue;
                     }
                     const title = document.createElement('h2');

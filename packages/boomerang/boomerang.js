@@ -452,14 +452,14 @@ BOOMR_check_doc_domain();
 		// Sometimes we would like to be able to set the SameSite=None from a Boomerang plugin
 		forced_same_site_cookie_none: false,
 
-		// app id, this is for the SPA or micro-frontend apps
-		app_id: '',
+		// system unique id, this is for the SPA or micro-frontend apps
+		uuid: '',
 
-		// routers, this is for the SPA or micro-frontend apps, { name: string, rule: string }
-		routers: [],
+		// additional information call_back
+		additional_info_callback: undefined,
 
 		// callback function for restiming, this is for the SPA or micro-frontend apps. input: url, output: app name
-		restiming_map_callback: undefined,
+		apps_map_callback: undefined,
 
 		// callback function for get user info
 		get_user_id_callback: undefined,
@@ -2721,7 +2721,7 @@ BOOMR_check_doc_domain();
 		 * @memberof BOOMR
 		 */
 		init: function(config) {
-			console.log('-- start init probe --', config);
+			console.log('-- start init boomerang --', config);
 			var i, k,
 			    properties = [
 				    "autorun",
@@ -2737,9 +2737,9 @@ BOOMR_check_doc_domain();
 				    "user_ip",
 				    "same_site_cookie",
 				    "secure_cookie",
-					"app_id",
-					"routers",
-					"restiming_map_callback",
+					"uuid",
+					"apps_map_callback",
+					"additional_info_callback",
 					"user_id",
 					"get_user_id_callback"
 			    ];
@@ -4010,9 +4010,9 @@ BOOMR_check_doc_domain();
 				return result;
 			}
 			const formRes = JSON.parse(res);
-			if (impl.restiming_map_callback && typeof impl.restiming_map_callback === 'function') {
+			if (impl.apps_map_callback && typeof impl.apps_map_callback === 'function') {
 				formRes.forEach(item => {
-					const app = impl.restiming_map_callback.apply(this, [item.name]);
+					const app = impl.apps_map_callback.apply(this, [item.name]);
 					Object.assign(item, { app });
 				});
 			}
@@ -4022,50 +4022,36 @@ BOOMR_check_doc_domain();
 
 		/** 
 		 * Config beacon data with:
-		 * 	  pin: user id,
-		*/
-		// getCookie(name) {
-		// 	const prefix = name + "="
-		// 	const start = document.cookie.indexOf(prefix)
-		 
-		// 	if (start == -1) {
-		// 		return null;
-		// 	}
-		 
-		// 	let end = document.cookie.indexOf(";", start + prefix.length)
-		// 	if (end == -1) {
-		// 		end = document.cookie.length;
-		// 	}
-
-		// 	const value = document.cookie.substring(start + prefix.length, end)
-		// 	return unescape(value);
-		// },
-
-		/** 
-		 * Config beacon data with:
 		 * 	  app: app name,
 		 *    appin: the hard navigation from main or sub app
 		*/
 		supportMicroFrontend(vars, varsSent) {
+			let app = 'unknown';
 			if (vars['u']) {
-				var matchedRouter = impl.routers.find(router => {
-					return !!vars['u'].match(router.rule);
-				});
-				varsSent['app'] = matchedRouter ? matchedRouter.name : 'main';
-			}
-			if (varsSent['app'] && vars['http.initiator'] && !BOOMR.appin) {
-				BOOMR.appin = varsSent['app'] === 'main' && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
+				if (impl.apps_map_callback && typeof impl.apps_map_callback === 'function') {
+					app = impl.apps_map_callback.apply(this, [vars['u']]);
+				}
 			}
 
-			let user_id = '';
+			if (vars['http.initiator'] && !BOOMR.appin) {
+				BOOMR.appin = app === 'main' && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
+			}
+
+			let userId = '';
 			if (impl.get_user_id_callback && typeof impl.get_user_id_callback === 'function') {
 				user_id = impl.get_user_id_callback.apply();
 			}
 
-			varsSent['app_id'] = impl.app_id;
+			let addInfo = '';
+			if (impl.additional_info_callback && typeof impl.additional_info_callback === 'function') {
+				addInfo = impl.additional_info_callback.apply();
+			}
+
+			varsSent['app'] = app;
+			varsSent['uuid'] = impl.uuid;
 			varsSent['appin'] = BOOMR.appin;
 			varsSent['restiming'] = BOOMR.formatRestiming(vars['restiming']);
-			varsSent['user_id'] = BOOMR.user_id || user_id || BOOMR.utils.getCookie('pin');
+			varsSent['user_id'] = BOOMR.userId || userId || BOOMR.utils.getCookie('pin');
 
 			Object.assign(varsSent, BOOMR.hardNavigationTiming);
 		},

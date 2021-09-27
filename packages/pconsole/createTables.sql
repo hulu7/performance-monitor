@@ -16,18 +16,45 @@
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- DROP TABLE IF EXISTS `web_system`, `web_pages_basic`, `web_pages_timing`, `web_pages_restiming`, `web_pages_navigation`, `web_pages_resources`, `web_pages_client`, `web_pages_probe`, `web_pages_main_restiming`;
+
+-- --------------------------------------------------------------
+--  Table `web_system`: 系统注册信息
+-- --------------------------------------------------------------
+CREATE TABLE `web_system` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
+  `uuid` char(70) NOT NULL DEFAULT '' COMMENT '系统唯一标识符',
+  `system_domain` char(50) NOT NULL DEFAULT '' COMMENT '系统域名',
+  `system_name` char(20) NOT NULL DEFAULT '' COMMENT '系统名称',
+  `script` varchar(5000) NOT NULL DEFAULT '' COMMENT '获取页面统计脚本',
+  `is_use` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否需要统计  0：是  1：否',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '系统新增时间',
+  `slow_page_time` tinyint(2) NOT NULL DEFAULT '8' COMMENT '页面加载页面阀值  单位：s',
+  `slow_js_time` tinyint(2) NOT NULL DEFAULT '2' COMMENT 'js慢资源阀值  单位：s',
+  `slow_css_time` tinyint(2) NOT NULL DEFAULT '1' COMMENT '慢加载css资源阀值  单位：s',
+  `slow_img_time` tinyint(2) NOT NULL DEFAULT '2' COMMENT '慢图片加载资源阀值  单位：s',
+  `slow_ajax_time` tinyint(2) NOT NULL DEFAULT '2' COMMENT 'AJAX加载阀值',
+  `is_monitor_pages` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面性能信息  0：是   1：否',
+  `is_monitor_ajax` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面Ajax性能资源  0：是  1：否',
+  `is_monitor_resource` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面加载资源性能信息  0：是    1：否',
+  `is_monitor_system` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否存储用户系统信息资源信息',
+  PRIMARY KEY (`id`,`uuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------------
 --  Table `web_pages_basic`: 单次采集数据页面基本信息
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_basic` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
   `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
-  `system_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属系统标识符，对应web_system的id',
+  `system_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属系统标识符，关联web_system的id',
+  `app_id` char(70) NOT NULL DEFAULT '' COMMENT '应用唯一标识符',
+  `user_id` varchar(255) NOT NULL DEFAULT '' COMMENT '用户标识符',
+  `app_name` varchar(255) NOT NULL DEFAULT '' COMMENT '应用名称',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '访问页面时间',
   `mark_page` char(80) NOT NULL DEFAULT '' COMMENT '所有资源页面统一标识',
-  `app` varchar(255) NOT NULL DEFAULT '' COMMENT '子应用的名称或者标识符',
-  `user_id` varchar(255) NOT NULL DEFAULT '' COMMENT '用户标识符',
   `additional_info` varchar(255) NOT NULL DEFAULT '' COMMENT '附加信息',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
@@ -37,7 +64,8 @@ CREATE TABLE `web_pages_basic` (
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_timing` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，关联web_pages_basic的id',
+  `app_id` char(70) NOT NULL DEFAULT '' COMMENT '应用唯一标识符',
   `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `load_time` int(11) NOT NULL DEFAULT '0' COMMENT '页面完全加载时间 单位：ms',
@@ -72,7 +100,7 @@ CREATE TABLE `web_pages_timing` (
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_restiming` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，关联web_pages_basic的id',
   `restiming` varchar(16293) NOT NULL DEFAULT '' COMMENT '瀑布流数据',
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
@@ -82,7 +110,7 @@ CREATE TABLE `web_pages_restiming` (
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_navigation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，关联web_pages_basic的id',
   `connect_end` BigInt(50) NOT NULL DEFAULT '0' COMMENT '完成建立连接时的时间戳',
   `connect_start` BigInt(50) NOT NULL DEFAULT '0' COMMENT '开始建立连接时的时间戳',
   `domain_lookup_end` BigInt(50) NOT NULL DEFAULT '0' COMMENT '域名查询结束的时间戳',
@@ -109,8 +137,9 @@ CREATE TABLE `web_pages_navigation` (
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_resources` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，关联web_pages_basic的id',
   `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
+  `app_id` char(70) NOT NULL DEFAULT '' COMMENT '应用唯一标识符',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `body_size` int(11) NOT NULL DEFAULT '0' COMMENT '解码后Body大小',
   `encoded_body_size` int(11) NOT NULL DEFAULT '0' COMMENT '编码后的body大小',
@@ -143,8 +172,9 @@ CREATE TABLE `web_pages_resources` (
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_client` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，关联web_pages_basic的id',
   `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
+  `app_id` char(70) NOT NULL DEFAULT '' COMMENT '应用唯一标识符',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `appin` char(10) NOT NULL DEFAULT '' COMMENT 'App进入点',
   `navigation_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '导航方式：0 链接；1 重新加载； 2 前进、后退； 255 其他',
@@ -167,7 +197,7 @@ CREATE TABLE `web_pages_client` (
 -- --------------------------------------------------------------
 CREATE TABLE `web_pages_probe` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，对应web_pages_basic的id',
+  `monitor_id` int(11) NOT NULL DEFAULT '0' COMMENT '单次数据采集的标识符，关联web_pages_basic的id',
   `boomerang_snippet_method` char(10) NOT NULL DEFAULT '' COMMENT '探针代码嵌入方式 iframe、src、preload',
   `time_to_interactive_method` char(10) NOT NULL DEFAULT '' COMMENT '可交互性的判定方法',
   `trigger_method` char(20) NOT NULL DEFAULT '' COMMENT '触发方式',
@@ -179,30 +209,6 @@ CREATE TABLE `web_pages_probe` (
   `boomerang_version` char(10) NOT NULL DEFAULT '' COMMENT 'Boomerang版本',
   `page_visibility` char(20) NOT NULL DEFAULT '' COMMENT '返回数据时页面的可见性',
   PRIMARY KEY (`id`,`monitor_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------------
---  Table `web_system`: 系统注册信息
--- --------------------------------------------------------------
-CREATE TABLE `web_system` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
-  `system_domain` char(50) NOT NULL DEFAULT '' COMMENT '系统域名',
-  `system_name` char(20) NOT NULL DEFAULT '' COMMENT '系统名称',
-  `sub_systems` varchar(5000) NOT NULL DEFAULT '' COMMENT '子系统',
-  `script` varchar(5000) NOT NULL DEFAULT '' COMMENT '获取页面统计脚本',
-  `is_use` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否需要统计  0：是  1：否',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '系统新增时间',
-  `slow_page_time` tinyint(2) NOT NULL DEFAULT '8' COMMENT '页面加载页面阀值  单位：s',
-  `slow_js_time` tinyint(2) NOT NULL DEFAULT '2' COMMENT 'js慢资源阀值 单位：s',
-  `slow_css_time` tinyint(2) NOT NULL DEFAULT '1' COMMENT '慢加载css资源阀值  单位：s',
-  `slow_img_time` tinyint(2) NOT NULL DEFAULT '2' COMMENT '慢图片加载资源阀值  单位：s',
-  `slow_ajax_time` tinyint(2) NOT NULL DEFAULT '2' COMMENT 'AJAX加载阀值',
-  `app_id` char(70) NOT NULL DEFAULT '' COMMENT '系统appId标识',
-  `is_monitor_pages` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面性能信息  0：是   1：否',
-  `is_monitor_ajax` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面Ajax性能资源 0：是  1：否',
-  `is_monitor_resource` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否统计页面加载资源性能信息 0：是    1：否',
-  `is_monitor_system` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否存储用户系统信息资源信息',
-  PRIMARY KEY (`id`,`app_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -9,7 +9,7 @@ new Vue({
         this.getDataList()
     },
     methods:{
-        getDataList(){
+        getDataList() {
             let _this = this;
             util.ajax({
                 url: `${config.baseApi}api/system/getSystemList`,
@@ -18,12 +18,10 @@ new Vue({
                 }
             })
         },
-        getDetail(item){
-            util.setStorage('local','systemMsg', JSON.stringify(item))
-            location.href=`/pages?systemId=${item.id}`
+        getDetail(item) {
+            location.href=`/apps?systemId=${item.id}`
         },
-        goToSetting(item){
-            util.setStorage('local','systemMsg', JSON.stringify(item))
+        goToSetting(item) {
             location.href=`/setting?systemId=${item.id}`
         }
     }

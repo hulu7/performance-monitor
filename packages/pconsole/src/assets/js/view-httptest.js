@@ -56,9 +56,9 @@ new Vue({
             util.ajax({
                 url:config.baseApi+'api/system/getItemSystem',
                 data:{
-                    appId:this.appId
+                    uuid: this.uuid
                 },
-                success:data=>{
+                success: data=>{
                     this.systemInfo = data.data||{}
                     this.pagexingneng()
                 }
@@ -116,7 +116,6 @@ new Vue({
                     }
                     $('#viewShowDatas').text(responseData)
                     $('#viewShowHeaders').text(responseHeader)
-                    $('body').append('<script id="script-https" src="https://cdn.bootcss.com/prism/1.9.0/prism.min.js"></script>')
                 },
                 complete:()=>{
                     this.isLoading=false

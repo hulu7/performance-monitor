@@ -10,8 +10,7 @@ new Vue({
                 slowJsTime: '',
                 slowCssTime: '',
                 slowImgTime: '',
-                enable: true,
-                subSystems: []
+                enable: true
             },
             systemInfo: {},
             systemId: '',
@@ -37,14 +36,13 @@ new Vue({
                 success: data => {
                     this.systemInfo = data.data || {};
                     const {
-                        isUse, subSystems, systemName, systemDomain
+                        isUse, systemName, systemDomain
                     } = this.systemInfo;
 
                     Object.assign(this.setting, {
                         systemDomain,
                         systemName,
-                        enable: isUse === 0,
-                        subSystems: JSON.parse(subSystems)
+                        enable: isUse === 0
                     });
                 }
             });
@@ -67,24 +65,22 @@ new Vue({
         },
         updateSystem() {
             if(!this.systemInfo.systemName) {
-                popup.alert({title: '请正确填写应用名称!'}); 
+                popup.alert({title: '请正确填写系统名称!'}); 
                 return false;
             }
-            if(!this.systemInfo.systemDomain) {
-                popup.alert({title: '请正确填写应用地址!'});
+            if(!this.systemInfo.systemDomain || !util.isValidDomain(this.systemInfo.systemDomain)) {
+                popup.alert({title: '请正确填写系统域名!'});
                 return false;
             }
             const {
                 systemDomain,
                 systemName,
-                enable,
-                subSystems
+                enable
             } = this.setting;
             Object.assign(this.systemInfo, {
                 systemDomain,
                 systemName,
-                isUse: enable ? 0 : 1,
-                subSystems: JSON.stringify(subSystems)
+                isUse: enable ? 0 : 1
             });
             util.ajax({
                 url: `${config.baseApi}api/system/updateSystem`,
@@ -155,18 +151,6 @@ new Vue({
                     popup.miss({title:'操作成功!'})
                 }
             }) 
-        },
-        addNewSubsystem() {
-            this.setting.subSystems.push({
-                name: '',
-                rule: ''
-            });
-        },
-        deleteSubsystem(index) {
-            if (this.setting.subSystems.length < 2) {
-                return;
-            }
-            this.setting.subSystems.splice(index, 1);
         },
         copy() {
             if (this.systemInfo.script && util.copy(this.systemInfo.script)) {

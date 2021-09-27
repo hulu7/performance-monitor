@@ -36,8 +36,8 @@ router.get(['/addSystem'], async(ctx, next) => {
 	}); 
 });
 
-//pages性能分析页面
-router.get(['/pages'], async(ctx, next) => {
+//应用性能分析
+router.get(['/apps'], async(ctx, next) => {
 	let datas = {
 		title:'前端性能分析',
 	}
@@ -57,7 +57,7 @@ router.get(['/search'], async(ctx, next) => {
 });
 
 // page详情性能分析
-router.get(['/pages/detail'], async(ctx, next) => {
+router.get(['/apps/detail'], async(ctx, next) => {
 	let datas = {
 		title:'page详情性能分析',
 	}
@@ -66,7 +66,7 @@ router.get(['/pages/detail'], async(ctx, next) => {
 	}); 
 });
 
-router.get(['/pages/detail/item'], async(ctx, next) => {
+router.get(['/apps/detail/item'], async(ctx, next) => {
 	let datas = {
 		title:'单个页面详情性能分析',
 	}

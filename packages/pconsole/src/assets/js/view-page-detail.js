@@ -15,7 +15,8 @@ new Vue({
             pagesItemData: {},
             isShowCharts: false,
             systemId: '',
-            app: '',
+            appId: '',
+            appName: '',
             searchPin: '',
             formData: {
                 dateRange: [],
@@ -39,7 +40,7 @@ new Vue({
     },
     beforeMount(){
         this.init();
-        if(this.pageId){
+        if(this.appId){
             this.getAverageValues()
         }
         this.fetchHistory();
@@ -81,22 +82,21 @@ new Vue({
             window.location.href = '/';
         },
         goToPages() {
-            window.location.href = `/pages?systemId=${this.systemId}`;
+            window.location.href = `/apps?systemId=${this.systemId}`;
         },
         init() {
             this.systemId = util.queryParameters('systemId');
-            this.pageId = util.getQueryString('pageId');
-            this.app = util.getQueryString('app');
+            this.appId = util.getQueryString('appId');
         },
-        gotoDetail(id, app) {
-            window.open(`/pages/detail/item?systemId=${this.systemId}&id=${id}&pageId=${this.pageId}&app=${app}`, `_blank`);
+        gotoDetail(id) {
+            window.open(`/apps/detail/item?systemId=${this.systemId}&id=${id}&appId=${this.appId}`, `_blank`);
         },
         getAverageValues() {
             util.ajax({
-                url: `${config.baseApi}api/pages/getPageAverage`,
+                url: `${config.baseApi}api/apps/getAppAverage`,
                 data: {
                     systemId: this.systemId,
-                    pageId: this.pageId,
+                    appId: this.appId,
                     isAllAvg: false,
                 },
                 success: data => {
@@ -107,11 +107,11 @@ new Vue({
         fetchHistory() {
             this.isLoading  = true;
             util.ajax({
-                url: `${config.baseApi}api/pages/getPageItemDetail`,
+                url: `${config.baseApi}api/apps/getPageItemDetail`,
                 data: {
                     pageNo: this.currentPage,
                     pageSize: this.pageSize,
-                    pageId: this.pageId,
+                    appId: this.appId,
                     beginTime: this.formData.dateRange.length > 1 ? this.formData.dateRange[0] : '',
                     endTime: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : '',
                     userId: this.formData.userId,
@@ -132,7 +132,7 @@ new Vue({
             util.ajax({
                 url: `${config.baseApi}api/environment/getDataForEnvironment`,
                 data:{
-                    pageId: this.pageId,
+                    appId: this.appId,
                     beginTime: '',
                     endTime: '',
                     type

@@ -9,29 +9,23 @@ new Vue({
             slowJsTime: '',
             slowCssTime: '',
             slowImgTime: '',
-            appId: '',
-            subSystems: [{
-                name: 'main',
-                rule: '/'
-            }]
+            uuid: ''
         }
     },
     beforeMount() {
-        this.appId = util.getQueryString('appId')
-        if(this.appId){
+        this.uuid = util.getQueryString('uuid')
+        if(this.uuid){
             this.getDetail()
         }
     },
-    mounted(){
-        
-    },
+    mounted(){},
     methods:{
         getDetail(){
             let _this=this;
             util.ajax({
                 url: `${config.baseApi}api/system/getItemSystem`,
                 data: {
-                    appId:this.appId
+                    uuid: this.uuid
                 },
                 success(data){
                     _this.systemDomain = data.data.systemDomain
@@ -44,15 +38,15 @@ new Vue({
                 }
             })
         },
-        addSystem(){
+        addSystem() {
             let _this=this;
-            if(!this.systemName){ popup.alert({title: '请正确填写应用名称!'});  return false; }
-            if(!this.systemDomain){ popup.alert({title: '请正确填写应用地址!'}); return false; }
-            if (!this.subSystems.length) {
-                this.subSystems = [{
-                    name: 'main',
-                    rule: '/'
-                }];
+            if(!this.systemName){
+                popup.alert({title: '请正确填写系统名称!'});
+                return false;
+            }
+            if(!this.systemDomain || !util.isValidDomain(this.systemDomain)) {
+                popup.alert({title: '请正确填写系统域名!'});
+                return false;
             }
             util.ajax({
                 url: `${config.baseApi}api/system/addSystem`,
@@ -62,26 +56,13 @@ new Vue({
                     slowPageTime: this.slowPageTime,
                     slowJsTime: this.slowJsTime,
                     slowCssTime: this.slowCssTime,
-                    slowImgTime: this.slowImgTime,
-                    subSystems: JSON.stringify(this.subSystems)
+                    slowImgTime: this.slowImgTime
                 },
                 success(data) {
                     _this.scriptstr = data.data.script
                     popup.miss({title:"系统添加成功！"});
                 }
             })
-        },
-        addNewSubsystem() {
-            this.subSystems.push({
-                name: '',
-                rule: ''
-            });
-        },
-        deleteSubsystem(index) {
-            if (this.subSystems.length < 2) {
-                return;
-            }
-            this.subSystems.splice(index, 1);
         },
         copy() {
             if (this.scriptstr && util.copy(this.scriptstr)) {

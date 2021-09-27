@@ -185,11 +185,11 @@ gulp.task('replace:config', gulp.series(() => {
         .pipe(gulp.dest(buildUrl));
 }));
 
-gulp.task('replace:webgetdatas', gulp.series(() => {
-    return gulp.src([`${buildUrl}/assets/js/web_get_datas.js`])
-        .pipe(replace('http://127.0.0.1:18088', originurl))
-        .pipe(gulp.dest(`${buildUrl}/assets/js/`));
-}));
+// gulp.task('replace:webgetdatas', gulp.series(() => {
+//     return gulp.src([`${buildUrl}/assets/js/web_get_datas.js`])
+//         .pipe(replace('http://127.0.0.1:18088', originurl))
+//         .pipe(gulp.dest(`${buildUrl}/assets/js/`));
+// }));
 
 // 压缩html
 gulp.task('html:minify', gulp.series(() => {
@@ -245,7 +245,6 @@ gulp.task('build', gulp.series(
     'babel',
     'concat:js',
     'replace:config',
-    'replace:webgetdatas',
     [
         'js:minify', 
         'css:minify'

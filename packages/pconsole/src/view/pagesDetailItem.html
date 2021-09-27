@@ -98,7 +98,7 @@
             </li>
         </div>
         <div class="common-block fr" v-for="(app, index) in pagesItemData.add.apps" :key="index" >
-            <h1 class="h1">{{app.app === 'other' ? '其他资源' : (app.app + ' 应用')}}</h1>
+            <h1 class="h1">{{app.app === 'unkown' ? '其他资源' : (app.app + ' 应用')}}</h1>
             <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 8px 0;">
                 <div>
                     <h1>请求总时间</h1>

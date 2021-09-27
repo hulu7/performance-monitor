@@ -7,7 +7,9 @@
         <commonsearch></commonsearch>
     </div>
     <div class="list">
-        <div class="mt30 tc" v-if="!datalist.length">暂无系统，去添加一个</div>
+        <div class="mt30 tc" v-if="!datalist.length">
+            暂无系统，去<a href="/addSystem"> 添加 </a>一个
+        </div>
         <el-table
             v-else
             :data="datalist"
@@ -21,13 +23,13 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="appId"
-                label="appId"
+                prop="uuid"
+                label="系统ID"
                 width="400px">
             </el-table-column>
             <el-table-column
                 prop="systemDomain"
-                label="地址">
+                label="域名">
             </el-table-column>
             <el-table-column
                 label="操作"

@@ -13,13 +13,13 @@ class pages {
         try {
             let beginTime   = ctx.request.body.beginTime || ''
             let endTime     = ctx.request.body.endTime || ''
-            let pageId         = ctx.request.body.pageId
+            let appId         = ctx.request.body.appId
             let type        = ctx.request.body.type || 1
 
-            if(!pageId){
+            if(!appId){
                 ctx.body = util.result({
                     code: 1001,
-                    desc: 'pageId参数有误!'
+                    desc: 'appId参数有误!'
                 });
                 return
             }
@@ -29,7 +29,7 @@ class pages {
             let group = type;
 
             // 公共参数
-            let data = { page_id: pageId };
+            let data = { app_id: appId };
             if(beginTime && endTime) {
                 data.create_time = {
                     egt: beginTime,
