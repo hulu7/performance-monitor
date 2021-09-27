@@ -513,9 +513,9 @@ class pages {
             });
         }
         for (let key in  categories) {
-            const sortedApi = categories[key].api.sort((pre, post) => post.value - pre.value);
-            const sortedStatic = categories[key].static.sort((pre, post) => post.value - pre.value);
-            const sortedDups = categories[key].dups.sort((pre, post) => post.count - pre.count);
+            const sortedApi = categories[key].api.sort((pre, post) => pre.value - post.value);
+            const sortedStatic = categories[key].static.sort((pre, post) => pre.value - post.value);
+            const sortedDups = categories[key].dups.sort((pre, post) => pre.count - post.count);
             const { count, start, end, duration } = categories[key];
             const data = {
                 app: categories[key].app,
