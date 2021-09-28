@@ -577,6 +577,7 @@ class utilfn {
 	goBack(){
 		window.history.go(-1);
 	}
+
 	showtime(){
 		$('.times').on('click',() => {
 			$('.select-time').show();
@@ -691,15 +692,6 @@ class utilfn {
 				type: 'inside',
 				start: 94,
 				end: 100
-			  },
-			  {
-				show: true,
-				yAxisIndex: 0,
-				filterMode: 'empty',
-				width: 30,
-				height: '80%',
-				showDataShadow: false,
-				left: '93%'
 			  }
 			],
 			series: [

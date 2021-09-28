@@ -52,6 +52,7 @@ CREATE TABLE `web_pages_basic` (
   `app_id` char(70) NOT NULL DEFAULT '' COMMENT '应用唯一标识符',
   `user_id` varchar(255) NOT NULL DEFAULT '' COMMENT '用户标识符',
   `app_name` varchar(255) NOT NULL DEFAULT '' COMMENT '应用名称',
+  `is_main` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否是主应用  0：是  1：否',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '访问页面时间',
   `mark_page` char(80) NOT NULL DEFAULT '' COMMENT '所有资源页面统一标识',

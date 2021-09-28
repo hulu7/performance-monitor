@@ -4012,8 +4012,8 @@ BOOMR_check_doc_domain();
 			const formRes = JSON.parse(res);
 			if (impl.apps_map_callback && typeof impl.apps_map_callback === 'function') {
 				formRes.forEach(item => {
-					const app = impl.apps_map_callback.apply(this, [item.name]);
-					Object.assign(item, { app });
+					const appInfo = impl.apps_map_callback.apply(this, [item.name]);
+					Object.assign(item, appInfo);
 				});
 			}
 
@@ -4026,15 +4026,18 @@ BOOMR_check_doc_domain();
 		 *    appin: the hard navigation from main or sub app
 		*/
 		supportMicroFrontend(vars, varsSent) {
-			let app = 'unknown';
+			let appInfo = {
+				app: 'unknown',
+				is_main: true
+			};
 			if (vars['u']) {
 				if (impl.apps_map_callback && typeof impl.apps_map_callback === 'function') {
-					app = impl.apps_map_callback.apply(this, [vars['u']]);
+					appInfo = impl.apps_map_callback.apply(this, [vars['u']]);
 				}
 			}
 
 			if (vars['http.initiator'] && !BOOMR.appin) {
-				BOOMR.appin = app === 'main' && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
+				BOOMR.appin = appInfo.is_main && vars['http.initiator'] === 'spa_hard' ? 'from_main' : 'from_sub';
 			}
 
 			let userId = '';
@@ -4047,7 +4050,8 @@ BOOMR_check_doc_domain();
 				addInfo = impl.additional_info_callback.apply();
 			}
 
-			varsSent['app'] = app;
+			varsSent['app'] = appInfo.app;
+			varsSent['is_main'] = appInfo.is_main;
 			varsSent['uuid'] = impl.uuid;
 			varsSent['appin'] = BOOMR.appin;
 			varsSent['restiming'] = BOOMR.formatRestiming(vars['restiming']);

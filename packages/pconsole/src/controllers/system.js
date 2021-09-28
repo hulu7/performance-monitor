@@ -194,7 +194,9 @@ class user {
                             auto: true,
                             monitorReplaceState: true
                         },
-                        apps_map_callback: window.apps_map_callback
+                        apps_map_callback: window.apps_map_callback,
+                        additional_info_callback: window.additional_info_callback,
+                        get_user_id_callback: window.get_user_id_callback
                     });
                 </script>`;
 
@@ -306,7 +308,9 @@ class user {
                             auto: true,
                             monitorReplaceState: true
                         },
-                        apps_map_callback: window.apps_map_callback
+                        apps_map_callback: window.apps_map_callback,
+                        additional_info_callback: window.additional_info_callback,
+                        get_user_id_callback: window.get_user_id_callback
                     });
                 </script>`;
             const sqlstr = sql

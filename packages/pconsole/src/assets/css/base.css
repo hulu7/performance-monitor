@@ -477,15 +477,10 @@ a:hover {
       border-bottom: solid 2px #2077ff; }
 
 .common-head-title {
-  margin: 20px;
-  background: #fff;
-  overflow: hidden;
-  padding: 0 20px; }
+  padding: 10px; }
   .common-head-title h1 {
     font: 300 18px/14px 'Roboto', sans-serif;
-    letter-spacing: 0;
-    line-height: 50px;
-    margin-bottom: 10px; }
+    letter-spacing: 0; }
   .common-head-title .button {
     padding: 6px 10px;
     background: #2077ff;

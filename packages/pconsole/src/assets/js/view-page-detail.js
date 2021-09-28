@@ -11,7 +11,14 @@ new Vue({
             pageSize: config.pageSize,
             total: 0,
             currentPage: 1,
-            isLoading: false,
+            isLoadingHistory: false,
+            isLoadingbrowser: false,
+            isLoadingsystem: false,
+            isLoadingeffective_type: false,
+            isLoadingscreen_orientation: false,
+            isLoadingscreen_size: false,
+            isLoadinghttp_initiator: false,
+            isLoadingAverage: false,
             pagesItemData: {},
             isShowCharts: false,
             systemId: '',
@@ -92,6 +99,7 @@ new Vue({
             window.open(`/apps/detail/item?systemId=${this.systemId}&id=${id}&appId=${this.appId}`, `_blank`);
         },
         getAverageValues() {
+            this.isLoadingAverage = true;
             util.ajax({
                 url: `${config.baseApi}api/apps/getAppAverage`,
                 data: {
@@ -101,11 +109,12 @@ new Vue({
                 },
                 success: data => {
                     this.pagesItemData = data.data;
+                    this.isLoadingAverage = false;
                 }
             })
         },
         fetchHistory() {
-            this.isLoading  = true;
+            this.isLoadingHistory  = true;
             util.ajax({
                 url: `${config.baseApi}api/apps/getPageItemDetail`,
                 data: {
@@ -118,8 +127,9 @@ new Vue({
                     isSearching: this.isSearching
                 },
                 success: data => {
-                    this.isLoading = false;
+                    this.isLoadingHistory = false;
                     this.listdata = data.data.datalist;
+                    this.appName = this.listdata[0].app_name
                     this.total = data.data.totalNum;
                     if (!this.chartType) {
                         this.echartShowPages();
@@ -129,6 +139,7 @@ new Vue({
         },
         // 获得浏览器分类情况
         getDataForEnvironment(type) {
+            this[`isLoading${type}`] = true;
             util.ajax({
                 url: `${config.baseApi}api/environment/getDataForEnvironment`,
                 data:{
@@ -138,8 +149,8 @@ new Vue({
                     type
                 },
                 success: data => {
-                    this.isLoadEnd = true;
-                    this.getData(data.data, `ec-${type}`, type)
+                    this.getData(data.data, `ec-${type}`, type);
+                    this[`isLoading${type}`] = false;
                 }
             })
         },

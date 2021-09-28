@@ -10,28 +10,22 @@
     overflow: hidden; }
 
 .block-time {
-  margin: 15px;
   overflow: hidden;
   background: #fff;
   border-radius: 3px; }
   .block-time .item {
     width: 33.33333%;
     float: left;
-    border-right: solid 1px #eee;
     overflow: hidden;
-    padding: 20px; }
+    padding: 10px; }
   .block-time .h1 {
-    border-radius: 3px;
     font: 300 18px/14px 'Roboto', sans-serif;
-    letter-spacing: 0;
-    background-color: #eee;
-    padding: 10px;
-    margin-bottom: 10px; }
+    letter-spacing: 0; }
   .block-time .item-full {
     width: 100%;
     float: left;
     overflow: hidden;
-    padding: 20px; }
+    padding: 10px; }
     .block-time .item-full:nth-child(:odd) {
       border-right: none; }
     .block-time .item-full li {
@@ -69,13 +63,10 @@
   .common-margin .common-block {
     width: 50%;
     background: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 3px; }
     .common-margin .common-block .h1 {
-      font-size: 18px !important;
-      background-color: #eee;
-      padding: 10px;
-      margin-bottom: 10px; }
+      font-size: 18px !important; }
     .common-margin .common-block li {
       width: 50%;
       float: left;
@@ -116,12 +107,8 @@
       letter-spacing: 0;
       margin: 20px 0; }
 
-
 .sources-list {
-  background: #fff;
-  margin: 15px;
-  border-radius: 3px;
-  padding: 20px; }
+  padding: 25px; }
   .sources-list .waterfall-title {
     font: 300 18px/14px 'Roboto', sans-serif;
     letter-spacing: 0;
@@ -131,12 +118,8 @@
     text-align: center;
   }
   .sources-list .h1 {
-    border-radius: 2px;
     font: 300 18px/14px 'Roboto', sans-serif;
-    letter-spacing: 0;
-    background-color: #eee;
-    padding: 10px;
-    margin-bottom: 10px; }
+    letter-spacing: 0; }
   .sources-list li {
     height: 35px;
     width: 100%;

@@ -10,231 +10,283 @@
         <el-button type="text" style="color: black;">性能详情</el-button>
     </div>
     <div class="current-page">
-        <span>应用名称: {{app}}</span>
+        <div class="app-info">应用名称: 
+            <div class="app-name">{{pagesItemData.appName || '--'}}</div>
+            (<el-tooltip
+                class="item"
+                effect="dark"
+                placement="top">
+                <span slot="content">{{pagesItemData.url}}</span>
+                <span class="page-link">
+                    <a href="javascript:" @click="gotopage">
+                        {{pagesItemData.url}}
+                    </a>
+                </span>
+            </el-tooltip>
+            )
+            <el-button class="copy" type="text" @click="copy">  复制链接</el-button>
+        </div>
     </div>
     <!-- 页面平均耗时说明 -->
     <div class="common-margin" v-if="!isLoading">
         <div class="common-block fl">
-            <h1 class="h1">总体性能</h1>
-            <li>
-                <h1>页面加载时间
-                    <el-tooltip
-                        class="item"
-                        effect="dark"
-                        placement="top">
-                        <label slot="content">户等待页面可用的时间</label>
-                        <i class="el-icon-question page-icon"></i>
-                    </el-tooltip>
-                </h1>
-                <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>白屏时间
-                    <el-tooltip
-                        class="item"
-                        effect="dark"
-                        placement="top">
-                        <label slot="content">从url导航开始到接收到第一个字节的时间</label>
-                        <i class="el-icon-question page-icon"></i>
-                    </el-tooltip>
-                </h1>
-                <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>总请求数</h1>
-                <h2>{{totalRequestCount}}</h2>
-            </li>
-            <li>
-                <h1>总请求时间</h1>
-                <h2>{{totalDuration | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>页面可用请求时间</h1>
-                <h2>{{pagesItemData.requestTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>首像素时间</h1>
-                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>首次内容绘制时间</h1>
-                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>视觉就绪时间</h1>
-                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>可感知加载时间</h1>
-                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>DOM构建时间</h1>
-                <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>解析DOM时间</h1>
-                <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>DNS解析时间</h1>
-                <h2>{{pagesItemData.dnsTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>TCP连接时间</h1>
-                <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>重定向时间</h1>
-                <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>unload时间</h1>
-                <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>准备时间</h1>
-                <h2>{{pagesItemData.readyTime | toFixed}}</h2>
-            </li>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <h1 class="h1">总体性能</h1>
+                </div>
+                <li>
+                    <h1>页面加载时间
+                        <el-tooltip
+                            class="item"
+                            effect="dark"
+                            placement="top">
+                            <label slot="content">户等待页面可用的时间</label>
+                            <i class="el-icon-question page-icon"></i>
+                        </el-tooltip>
+                    </h1>
+                    <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
+                </li>
+                <li>
+                    <h1>白屏时间
+                        <el-tooltip
+                            class="item"
+                            effect="dark"
+                            placement="top">
+                            <label slot="content">从url导航开始到接收到第一个字节的时间</label>
+                            <i class="el-icon-question page-icon"></i>
+                        </el-tooltip>
+                    </h1>
+                    <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>总请求数</h1>
+                    <h2>{{totalRequestCount}}</h2>
+                </li>
+                <li>
+                    <h1>总请求时间</h1>
+                    <h2>{{totalDuration | toFixed(true)}}</h2>
+                </li>
+                <li>
+                    <h1>页面可用请求时间</h1>
+                    <h2>{{pagesItemData.requestTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>首像素时间</h1>
+                    <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>首次内容绘制时间</h1>
+                    <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>视觉就绪时间</h1>
+                    <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>可感知加载时间</h1>
+                    <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>DOM构建时间</h1>
+                    <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
+                </li>
+                <li>
+                    <h1>解析DOM时间</h1>
+                    <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
+                </li>
+                <li>
+                    <h1>DNS解析时间</h1>
+                    <h2>{{pagesItemData.dnsTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>TCP连接时间</h1>
+                    <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>重定向时间</h1>
+                    <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>unload时间</h1>
+                    <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>准备时间</h1>
+                    <h2>{{pagesItemData.readyTime | toFixed}}</h2>
+                </li>
+            </el-card>
         </div>
         <div class="common-block fr" v-for="(app, index) in pagesItemData.add.apps" :key="index" >
-            <h1 class="h1">{{app.app === 'unkown' ? '其他资源' : (app.app + ' 应用')}}</h1>
-            <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 8px 0;">
-                <div>
-                    <h1>请求总时间</h1>
-                    <h2 class="red">{{app.duration | toFixed(true)}}</h2>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <h1 class="h1">{{app.app === 'unkown' ? '其他资源' : (app.app + ' 应用')}}</h1>
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 8px 0;">
+                    <div>
+                        <h1>请求总时间</h1>
+                        <h2 class="red">{{app.duration | toFixed(true)}}</h2>
+                    </div>
+                    <div>
+                        <h1>请求开始时间</h1>
+                        <h2>{{app.start | toFixed(true)}}</h2>
+                    </div>
+                    <div>
+                        <h1>请求结束时间</h1>
+                        <h2>{{app.end | toFixed(true)}}</h2>
+                    </div>
+                    <div>
+                        <h1>请求数</h1>
+                        <h2>{{app.count}}</h2>
+                    </div>
+                    <div></div>
+                    <div></div>
                 </div>
                 <div>
-                    <h1>请求数</h1>
-                    <h2>{{app.count}}</h2>
+                    <h1 class="chart-title">静态资源加载耗时排名</h1>
+                    <div :id="app.key + '-static-rank'"></div>
                 </div>
-                <div></div>
-                <div></div>
-            </div>
-            <div>
-                <h1 class="chart-title">静态资源加载耗时排名</h1>
-                <div :id="app.key + '-static-rank'"></div>
-            </div>
-            <div>
-                <h1 class="chart-title">API请求耗时排名</h1>
-                <div :id="app.key + '-api-rank'"></div>
-            </div>
-            <div>
-                <h1 class="chart-title">重复请求</h1>
-                <div v-if="app.dups.length">
-                    <el-table
-                        :data="app.dups"
-                        style="width: 100%">
-                        <el-table-column
-                            prop="url"
-                            label="请求地址">
-                        </el-table-column>
-                        <el-table-column
-                            prop="count"
-                            label="重复次数">
-                        </el-table-column>
-                    </el-table>
+                <div>
+                    <h1 class="chart-title">API请求耗时排名</h1>
+                    <div :id="app.key + '-api-rank'"></div>
                 </div>
-                <div class="tc" v-else>暂无数据</div>
-            </div>
+                <div>
+                    <h1 class="chart-title">重复请求</h1>
+                    <div v-if="app.dups.length">
+                        <el-table
+                            :data="app.dups"
+                            style="width: 100%">
+                            <el-table-column
+                                prop="url"
+                                label="请求地址">
+                            </el-table-column>
+                            <el-table-column
+                                prop="count"
+                                label="重复次数">
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="tc" v-else>暂无数据</div>
+                </div>
+            </el-card>
+        </div>
+        <div class="common-block fr">
+            <el-card class="box-card" >
+                <div slot="header" class="clearfix">
+                    <h1 class="h1">附加信息</h1>
+                </div>
+                <div>
+                    {{pagesItemData.additionalInfo || '暂无数据'}}
+                </div>
+            </el-card>
         </div>
         <div class="common-block fl">
-            <h1 class="h1">访问者信息</h1>
-            <li>
-                <h1>用户PIN</h1>
-                <h2>{{pagesItemData.userId || '--'}}</h2>
-            </li>
-            <li>
-                <h1>访问方式</h1>
-                <h2>{{pagesItemData.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</h2>
-            </li>
-            <li>
-                <h1>浏览器</h1>
-                <h2>{{pagesItemData.browser || '--'}}</h2>
-            </li>
-            <li>
-                <h1>用户操作系统</h1>
-                <h2>{{pagesItemData.system || '--'}}</h2>
-            </li>
-            <li>
-                <h1>CPU并发数量</h1>
-                <h2>{{pagesItemData.cpuConcurrency | toInit}}</h2>
-            </li>
-            <li>
-                <h1>屏幕尺寸</h1>
-                <h2>{{pagesItemData.screenSize || '--'}}</h2>
-            </li>
-            <li>
-                <h1>屏幕方向</h1>
-                <h2>{{pagesItemData.screenOrientation || '--'}}</h2>
-            </li>
-            <li>
-                <h1>网络类型</h1>
-                <h2>{{pagesItemData.effectiveType || '--'}}</h2>
-            </li>
-            <li>
-                <h1>有效带宽</h1>
-                <h2>{{pagesItemData.downlink | toFloat1}} Mb/s</h2>
-            </li>
-            <li>
-                <h1>访问时间</h1>
-                <h2>{{pagesItemData.createTime|date('/',true)}}</h2>
-            </li>
+            <el-card class="box-card" >
+                <div slot="header" class="clearfix">
+                    <h1 class="h1">访问者信息</h1>
+                </div>
+                <li>
+                    <h1>用户PIN</h1>
+                    <h2>{{pagesItemData.userId || '--'}}</h2>
+                </li>
+                <li>
+                    <h1>访问方式</h1>
+                    <h2>{{pagesItemData.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</h2>
+                </li>
+                <li>
+                    <h1>浏览器</h1>
+                    <h2>{{pagesItemData.browser || '--'}}</h2>
+                </li>
+                <li>
+                    <h1>用户操作系统</h1>
+                    <h2>{{pagesItemData.system || '--'}}</h2>
+                </li>
+                <li>
+                    <h1>CPU并发数量</h1>
+                    <h2>{{pagesItemData.cpuConcurrency | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>屏幕尺寸</h1>
+                    <h2>{{pagesItemData.screenSize || '--'}}</h2>
+                </li>
+                <li>
+                    <h1>屏幕方向</h1>
+                    <h2>{{pagesItemData.screenOrientation || '--'}}</h2>
+                </li>
+                <li>
+                    <h1>网络类型</h1>
+                    <h2>{{pagesItemData.effectiveType || '--'}}</h2>
+                </li>
+                <li>
+                    <h1>有效带宽</h1>
+                    <h2>{{pagesItemData.downlink | toFloat1}} Mb/s</h2>
+                </li>
+                <li>
+                    <h1>访问时间</h1>
+                    <h2>{{pagesItemData.createTime|date('/',true)}}</h2>
+                </li>
+            </el-card>
         </div>
         <div class="common-block fl">
-            <h1 class="h1">资源信息</h1>
-            <li>
-                <h1>主框架DOM节点数</h1>
-                <h2>{{pagesItemData.domsNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架script节点数</h1>
-                <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架外部script节点数</h1>
-                <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架HTML渲染后字节数</h1>
-                <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
-            </li>
-            <li>
-                <h1>主框架资源请求数</h1>
-                <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>iframe个数</h1>
-                <h2>{{pagesItemData.iframeNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>IMG节点个数</h1>
-                <h2>{{pagesItemData.imgNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>LINK节点个数</h1>
-                <h2>{{pagesItemData.linkNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>CSS节点个数</h1>
-                <h2>{{pagesItemData.cssNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主页中唯一域数量</h1>
-                <h2>{{pagesItemData.uniqueDomainsNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>重定向次数</h1>
-                <h2>{{pagesItemData.redirectCount | toInit}}</h2>
-            </li>
+            <el-card class="box-card" >
+                <div slot="header" class="clearfix">
+                    <h1 class="h1">资源信息</h1>
+                </div>
+                <li>
+                    <h1>主框架DOM节点数</h1>
+                    <h2>{{pagesItemData.domsNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>主框架script节点数</h1>
+                    <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>主框架外部script节点数</h1>
+                    <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>主框架HTML渲染后字节数</h1>
+                    <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
+                </li>
+                <li>
+                    <h1>主框架资源请求数</h1>
+                    <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>iframe个数</h1>
+                    <h2>{{pagesItemData.iframeNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>IMG节点个数</h1>
+                    <h2>{{pagesItemData.imgNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>LINK节点个数</h1>
+                    <h2>{{pagesItemData.linkNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>CSS节点个数</h1>
+                    <h2>{{pagesItemData.cssNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>主页中唯一域数量</h1>
+                    <h2>{{pagesItemData.uniqueDomainsNumber | toInit}}</h2>
+                </li>
+                <li>
+                    <h1>重定向次数</h1>
+                    <h2>{{pagesItemData.redirectCount | toInit}}</h2>
+                </li>
+            </el-card>
         </div>
-    </div>  
-    <!-- 资源请求列表 -->
+    </div>
     <div class="sources-list">
-        <h1 class="h1">网络请求瀑布流</h1>
-        <div id="network-stream"></div>
-        <h2 class="waterfall-title">所有数据 ({{totalRequestCount}})</h2>
-        <div id="all-data" class="waterfall-content"></div>
+        <el-card class="box-card" >
+            <div slot="header" class="clearfix">
+                <h1 class="h1">网络请求瀑布流</h1>
+            </div>
+            <div id="network-stream"></div>
+            <h2 class="waterfall-title">所有数据 ({{totalRequestCount}})</h2>
+            <div id="all-data" class="waterfall-content"></div>
+        </el-card>
     </div>
 </div>
 <script src="/js/view-page-detail-item.js"></script>
@@ -243,7 +295,7 @@
     margin-left: 0;
 }
 .chart-title {
-    padding: 10px;
+    padding: 10px 0;
 }
 .page-icon {
     color: #bbb6b6;
@@ -252,4 +304,27 @@
     width: 12px;
     height: 12px;
 }
+.app-info {
+    display: flex;
+    flex-direction: row;
+    line-height: 22px;
+    height: 22px;
+}
+.app-name {
+    font-weight: 400;
+    padding: 0 5px;
+}
+.page-link {
+    max-width: 30%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.copy {
+    padding: 0 5px;
+    font-weight: 400;
+}
+.box-card {
+    width: 100%;
+  }
 </style>

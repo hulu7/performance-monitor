@@ -46,6 +46,16 @@ new Vue({
         goToPageHistory() {
             window.location.href = `/apps/detail?systemId=${this.systemId}&appId=${this.appId}`;
         },
+        copy() {
+            if (this.pagesItemData.url && util.copy(this.pagesItemData.url)) {
+                popup.miss({title:'已拷贝至剪贴板!'})
+            } else {
+                popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
+            }
+        },
+        gotopage() {
+            window.open(`${this.pagesItemData.url}`, `_blank`);
+        },
         emptyHint(id) {
             const e = document.getElementById(id);
             if (!e) {
@@ -89,7 +99,7 @@ new Vue({
                         continue;
                     }
                     const title = document.createElement('h2');
-                    const oText = document.createTextNode(`${apps[key].app === 'main' ? '主' : '子'}应用数据 (${count[key]})`);
+                    const oText = document.createTextNode(`${apps[key].app === 'main' ? '主' : '子'}应用${apps[key].app}数据 (${count[key]})`);
                     title.setAttribute('class', 'waterfall-title');
                     title.appendChild(oText);
                     const content = document.createElement('div');
@@ -104,7 +114,7 @@ new Vue({
         // 获得页面请求性能详情
         getPageItemForId() {
             this.isLoading = true;
-            const api = `api/${this.type && this.type === 'slow' ? 'slowpages/getslowPageItemForId' : 'pages/getPageItemForId'}`;
+            const api = `api/${this.type && this.type === 'slow' ? 'slowpages/getslowPageItemForId' : 'apps/getPageItemForId'}`;
             const { id } = this;
             util.ajax({
                 url: `${config.baseApi}${api}`,
@@ -113,7 +123,6 @@ new Vue({
                 },
                 success: data => {
                     this.isLoading = false;
-                    data.data.add.apps.reverse();
                     this.pagesItemData = data.data;
                     this.url = this.pagesItemData.url;
                     this.drawNetworkStream(this.pagesItemData.restiming);

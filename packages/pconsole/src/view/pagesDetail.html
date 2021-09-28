@@ -13,277 +13,344 @@
         <li :class="{active:table==1}" @click="changeTable(1)">性能概览</li>
     </div>
     <div class="current-page">
-        <span>应用名称: </span>
-    </div>
-    <!-- 页面平均耗时说明 -->
-    <div class="block-time" v-show="table==1">
-        <div class="item-full div1">
-            <h1 class="h1">性能历史平均水平</h1>
-            <li>
-                <h1>平均加载时间</h1>
-                <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>平均白屏时间</h1>
-                <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均首像素时间</h1>
-                <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均首次内容绘制时间</h1>
-                <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均视觉就绪时间</h1>
-                <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均可感知加载时间</h1>
-                <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均DOM构建时间</h1>
-                <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>平均DOM解析时间</h1>
-                <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
-            </li>
-            <li>
-                <h1>平均DNS解析时间</h1>
-                <h2>{{pagesItemData.dnsTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均TCP连接时间</h1>
-                <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均重定向时间</h1>
-                <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均unload时间</h1>
-                <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均request请求时间</h1>
-                <h2>{{pagesItemData.requestTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>平均准备时间</h1>
-                <h2>{{pagesItemData.readyTime | toFixed}}</h2>
-            </li>
-            <li>
-                <h1>访问总次数</h1>
-                <h2>{{pagesItemData.count | toInit}}</h2>
-            </li>
-        </div>
-        <div class="item-full div1">
-            <h1 class="h1">资源信息平均值</h1>
-            <li>
-                <h1>主框架DOM节点数</h1>
-                <h2>{{pagesItemData.domsNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架script节点数</h1>
-                <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架外部script节点数</h1>
-                <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架资源请求数</h1>
-                <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主框架HTML渲染后字节数</h1>
-                <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
-            </li>
-            <li>
-                <h1>IMG节点个数</h1>
-                <h2>{{pagesItemData.imgNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>LINK节点个数</h1>
-                <h2>{{pagesItemData.linkNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>CSS节点个数</h1>
-                <h2>{{pagesItemData.cssNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>iframe个数</h1>
-                <h2>{{pagesItemData.iframeNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>主页中唯一域的数量</h1>
-                <h2>{{pagesItemData.uniqueDomainsNumber | toInit}}</h2>
-            </li>
-            <li>
-                <h1>重定向次数</h1>
-                <h2>{{pagesItemData.redirectCount | toInit}}</h2>
-            </li>
-            <li>
-                <h1>CPU并发数量</h1>
-                <h2>{{pagesItemData.cpuConcurrency | toInit}}</h2>
-            </li>
-            <li>
-                <h1>有效带宽</h1>
-                <h2>{{pagesItemData.downlink | toFloat1}} Mb/s</h2>
-            </li>
+        <div class="app-info">应用名称: 
+            <div class="app-name">{{appName || '--'}}</div>
         </div>
     </div>
-    <div class="block-time" v-show="table==1">
-        <div class="item div2">
-            <h1 class="h1">浏览器统计</h1>
-            <div id="ec-browser" class="echartBorwsers"></div>
+    <div class="common-margin">
+        <!-- 页面平均耗时说明 -->
+        <div class="block-time" v-show="table==1">
+            <div class="item-full div1">
+                <el-card class="box-card" v-loading="isLoadingAverage">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">性能历史平均水平</h1>
+                    </div>
+                    <li>
+                        <h1>平均加载时间</h1>
+                        <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均白屏时间</h1>
+                        <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均首像素时间</h1>
+                        <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均首次内容绘制时间</h1>
+                        <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均视觉就绪时间</h1>
+                        <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均可感知加载时间</h1>
+                        <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均DOM构建时间</h1>
+                        <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均DOM解析时间</h1>
+                        <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均DNS解析时间</h1>
+                        <h2>{{pagesItemData.dnsTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均TCP连接时间</h1>
+                        <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均重定向时间</h1>
+                        <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均unload时间</h1>
+                        <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均request请求时间</h1>
+                        <h2>{{pagesItemData.requestTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>平均准备时间</h1>
+                        <h2>{{pagesItemData.readyTime | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>访问总次数</h1>
+                        <h2>{{pagesItemData.count | toInit}}</h2>
+                    </li>
+                </el-card>
+            </div>
+            <div class="item-full div1">
+                <el-card class="box-card" v-loading="isLoadingAverage">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">资源信息平均值</h1>
+                    </div>
+                    <li>
+                        <h1>主框架DOM节点数</h1>
+                        <h2>{{pagesItemData.domsNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>主框架script节点数</h1>
+                        <h2>{{pagesItemData.scriptNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>主框架外部script节点数</h1>
+                        <h2>{{pagesItemData.externalScriptNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>主框架资源请求数</h1>
+                        <h2>{{pagesItemData.resourcesFetchNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>主框架HTML渲染后字节数</h1>
+                        <h2>{{pagesItemData.htmlSize / 1024 | toInit}} Kb</h2>
+                    </li>
+                    <li>
+                        <h1>IMG节点个数</h1>
+                        <h2>{{pagesItemData.imgNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>LINK节点个数</h1>
+                        <h2>{{pagesItemData.linkNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>CSS节点个数</h1>
+                        <h2>{{pagesItemData.cssNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>iframe个数</h1>
+                        <h2>{{pagesItemData.iframeNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>主页中唯一域的数量</h1>
+                        <h2>{{pagesItemData.uniqueDomainsNumber | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>重定向次数</h1>
+                        <h2>{{pagesItemData.redirectCount | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>CPU并发数量</h1>
+                        <h2>{{pagesItemData.cpuConcurrency | toInit}}</h2>
+                    </li>
+                    <li>
+                        <h1>有效带宽</h1>
+                        <h2>{{pagesItemData.downlink | toFloat1}} Mb/s</h2>
+                    </li>
+                </el-card>
+            </div>
         </div>
-        <div class="item div3">
-            <h1 class="h1">操作系统统计</h1>
-            <div id="ec-system" class="echartBorwsers"></div>
+        <div class="block-time" v-show="table==1">
+            <div class="item div2">
+                <el-card class="box-card" v-loading="isLoadingbrowser">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">浏览器统计</h1>
+                    </div>
+                    <div id="ec-browser" class="echartBorwsers"></div>
+                </el-card>
+            </div>
+            <div class="item div3">
+                <el-card class="box-card" v-loading="isLoadingsystem">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">操作系统统计</h1>
+                    </div>
+                    <div id="ec-system" class="echartBorwsers"></div>
+                </el-card>
+            </div>
+            <div class="item div3">
+                <el-card class="box-card" v-loading="isLoadingeffective_type">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">网络类型统计</h1>
+                    </div>
+                    <div id="ec-effective_type" class="echartBorwsers"></div>
+                </el-card>
+            </div>
+            <div class="item div3">
+                <el-card class="box-card" v-loading="isLoadingscreen_size">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">屏幕尺寸统计</h1>
+                    </div>
+                    <div id="ec-screen_size" class="echartBorwsers"></div>
+                </el-card>
+            </div>
+            <div class="item div3">
+                <el-card class="box-card" v-loading="isLoadingscreen_orientation">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">屏幕方向统计</h1>
+                    </div>
+                    <div id="ec-screen_orientation" class="echartBorwsers"></div>
+                </el-card>
+            </div>
+            <div class="item div3">
+                <el-card class="box-card" v-loading="isLoadinghttp_initiator">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">切换类型统计</h1>
+                    </div>
+                    <div id="ec-http_initiator" class="echartBorwsers"></div>
+                </el-card>
+            </div>
         </div>
-        <div class="item div3">
-            <h1 class="h1">网络类型统计</h1>
-            <div id="ec-effective_type" class="echartBorwsers"></div>
-        </div>
-        <div class="item div3">
-            <h1 class="h1">屏幕尺寸统计</h1>
-            <div id="ec-screen_size" class="echartBorwsers"></div>
-        </div>
-        <div class="item div3">
-            <h1 class="h1">屏幕方向统计</h1>
-            <div id="ec-screen_orientation" class="echartBorwsers"></div>
-        </div>
-        <div class="item div3">
-            <h1 class="h1">切换类型统计</h1>
-            <div id="ec-http_initiator" class="echartBorwsers"></div>
-        </div>
-    </div>
 
-    <!-- page详情性能列表 -->
-    <div class="common-head-title" v-show="table==1">
-        <h1>性能历史数据</h1>
-            <div style="height: 32px;">
-                <el-switch
-                    style="float: right;"
-                    active-color="#409EFF"
-                    inactive-color="blue"
-                    v-model="chartType"
-                    @change="changeType"
-                    active-text="表格"
-                    inactive-text="曲线图" />
-            </div>
-            <div class="search-form-box">
-                <el-form
-                :model="formData"
-                ref="formRef"
-                :inline="true"
-              >
-                <el-form-item label="时间">
-                    <el-date-picker
-                        v-model="formData.dateRange"
-                        type="datetimerange"
-                        format="yyyy-MM-dd HH:mm:ss"
-                        value-format="yyyy-MM-dd HH:mm:ss"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="用户PIN">
-                    <el-input v-model="formData.userId" placeholder="过滤用户PIN"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSearch">搜索</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="danger" @click="onReset">重置</el-button>
-                </el-form-item>
-              </el-form>
-            </div>
-            <div v-show="listdata.length && chartType">
-                <el-table
-                    :data="listdata"
-                    style="width: 100%"
-                    max-height="600px">
-                    <el-table-column
-                        prop="dateTime"
-                        label="时间">
-                        <template slot-scope="scope">
-                            <span>{{ scope.row.dateTime }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="userId"
-                        label="用户PIN">
-                        <template slot-scope="scope">
-                            <span>{{ scope.row.userId }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="id"
-                        label="链接">
-                        <template slot-scope="scope">
-                            <el-button
-                                @click.native.prevent="gotoDetail(scope.row.id, app)"
-                                type="text"
-                                size="small">
-                                性能详情
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="httpInitiator"
-                        label="访问方式">
-                        <template slot-scope="scope">
-                            <span class="tc" :class="scope.row.httpInitiator === 'spa' ? '' : 'red'">
-                                {{scope.row.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="loadTime"
-                        label="加载时间">
-                        <template slot-scope="scope">
-                            <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="requestTime"
-                        label="请求时间">
-                        <template slot-scope="scope">
-                            <span class="tc">{{scope.row.requestTime|toFixed(true)}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                        prop="whiteTime"
-                        label="白屏时间">
-                        <template slot-scope="scope">
-                            <span class="tc">{{scope.row.whiteTime|toFixed(true)}}</span>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <div class="tc common_page_style" v-show="!isLoading && listdata.length">
-                    <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[5, 10, 20, 50, 100]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="total">
-                    </el-pagination>
+        <!-- page详情性能列表 -->
+        <div class="common-head-title" v-show="table==1">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <h1 class="h1">性能历史数据</h1>
                 </div>
-            </div>
-            <div v-show="!listdata.length && isLoading" class="loading-block"></div>
-            <div v-show="!listdata.length && !isLoading" class="common-no-data">暂无数据!</div>
-        <div id="charts-pages" v-show="!chartType" class="charts-pages"></div>
+                <div style="height: 32px;">
+                    <el-switch
+                        style="float: right;"
+                        active-color="#409EFF"
+                        inactive-color="blue"
+                        v-model="chartType"
+                        @change="changeType"
+                        active-text="表格"
+                        inactive-text="曲线图" />
+                </div>
+                <div class="search-form-box">
+                    <el-form
+                    :model="formData"
+                    ref="formRef"
+                    :inline="true"
+                >
+                    <el-form-item label="时间">
+                        <el-date-picker
+                            v-model="formData.dateRange"
+                            type="datetimerange"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="用户PIN">
+                        <el-input v-model="formData.userId" placeholder="过滤用户PIN"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSearch">搜索</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="danger" @click="onReset">重置</el-button>
+                    </el-form-item>
+                </el-form>
+                </div>
+                <div v-show="listdata.length && chartType">
+                    <el-table
+                        v-loading="isLoadingHistory"
+                        :data="listdata"
+                        style="width: 100%"
+                        max-height="600px">
+                        <el-table-column
+                            prop="dateTime"
+                            label="时间"
+                            width="200">
+                            <template slot-scope="scope">
+                                <span>{{ scope.row.dateTime }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="userId"
+                            label="用户PIN"
+                            width="200">
+                            <template slot-scope="scope">
+                                <span>{{ scope.row.userId }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="id"
+                            label="链接">
+                            <template slot-scope="scope">
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    placement="top">
+                                    <div slot="content">{{scope.row.url}}</div>
+                                    <div class="page-link">
+                                        <a href="javascript:" @click="gotoDetail(scope.row.id)">{{scope.row.url}}</a>
+                                    </div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="httpInitiator"
+                            label="访问方式"
+                            width="150">
+                            <template slot-scope="scope">
+                                <span class="tc" :class="scope.row.httpInitiator === 'spa' ? '' : 'red'">
+                                    {{scope.row.httpInitiator === 'spa' ? '应用内跳转' : '通过url访问'}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="loadTime"
+                            label="加载时间"
+                            width="150">
+                            <template slot-scope="scope">
+                                <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="requestTime"
+                            label="请求时间"
+                            width="150">
+                            <template slot-scope="scope">
+                                <span class="tc">{{scope.row.requestTime|toFixed(true)}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="whiteTime"
+                            label="白屏时间"
+                            width="150">
+                            <template slot-scope="scope">
+                                <span class="tc">{{scope.row.whiteTime|toFixed(true)}}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="tc common_page_style" v-show="listdata.length">
+                        <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[5, 10, 20, 50, 100]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total">
+                        </el-pagination>
+                    </div>
+                </div>
+                <div id="charts-pages" v-show="!chartType" class="charts-pages"></div>
+                <div v-show="!listdata.length" class="common-no-data">暂无数据!</div>
+            </el-card>    
+        </div>
     </div>
 </div>
 <script src="/js/view-page-detail.js"></script>
 <style scoped>
 .el-button+.el-button {
     margin-left: 0;
+}
+.app-info {
+    display: flex;
+    flex-direction: row;
+    line-height: 22px;
+    height: 22px;
+}
+.app-name {
+    font-weight: 400;
+    padding: 0 5px;
+}
+.page-link {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.box-card {
+    width: 100%;
 }
 </style>

@@ -12,22 +12,42 @@
                     return '';
                 }
                 const apps = {
-                    main: ['http://dev.performance-monitor.local/js','http://dev.performance-monitor.local/css','http://dev.performance-monitor.local/api/system/getSystemList','http://dev.performance-monitor.local/images','http://dev.performance-monitor.local/reportPerformance'],
-                    pages: ['http://dev.performance-monitor.local/api/apps/getAppsList'],
-                    search: ['http://dev.performance-monitor.local/search'],
-                    httptest: ['http://dev.performance-monitor.local/api/httptest/getHttpResponseData']
+                    pages: {
+                        is_main: false,
+                        rules: ['http://dev.performance-monitor.local/api/apps/getAppsList', 'http://dev.performance-monitor.local/apps']
+                    },
+                    search: {
+                        is_main: false,
+                        rules: ['http://dev.performance-monitor.local/search']
+                    },
+                    setting: {
+                        is_main: false,
+                        rules: ['http://dev.performance-monitor.local/setting']
+                    },
+                    httptest: {
+                        is_main: false,
+                        rules: ['http://dev.performance-monitor.local/api/httptest/getHttpResponseData', 'http://dev.performance-monitor.local/httptest']
+                    },
+                    main: {
+                        is_main: false,
+                        rules: ['http://dev.performance-monitor.local/js','http://dev.performance-monitor.local/css','http://dev.performance-monitor.local/api/system/getSystemList','http://dev.performance-monitor.local/images','http://dev.performance-monitor.local/reportPerformance']
+                    }
                 };
-                let app = 'unkown';
+                let appInfo = {
+                    app: 'unkown',
+                    is_main: false
+                };
                 for (let key in apps) {
-                    const result = apps[key].find(item => url.search(item) !== -1);
-                    if (result) {
-                        app = key;
+                    const matched = apps[key].rules.find(item => url.search(item) !== -1);
+                    if (matched) {
+                        appInfo.app = key;
+                        appInfo.is_main = apps[key].is_main;
                         break
                     }
                 }
-                return app;
+                return appInfo;
             };
-            BOOMR.init({ beacon_url: "http://dev.performance-monitor.local/reportPerformance", uuid:"41EAFB39F30C1438FDB771BEE37CD710", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback });
+            BOOMR.init({ beacon_url: "http://dev.performance-monitor.local/reportPerformance", uuid:"ED46B0D8F785C414C591E3D43C32D45A", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback });
         </script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/base.css">

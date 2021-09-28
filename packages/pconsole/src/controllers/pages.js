@@ -312,7 +312,7 @@ class pages {
                 }
             } else {
                 valjson.totalNum = totalNum;
-                valjson.datalist = result
+                valjson.datalist = result;
             }
 
             if (appIds && appIds.length) {
@@ -332,6 +332,7 @@ class pages {
             return '';
         }
     }
+
     // 页面性能详情
     async getPageItemDetail(ctx) {
         try {
@@ -362,7 +363,7 @@ class pages {
             }
 
             // 获得总条数
-            const sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).select() 
+            const sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).select();
             const total = await mysql(sqlTotal);
             let totalNum = 0;
             if(total.length) {
@@ -394,10 +395,17 @@ class pages {
                         url,
                         create_time: createTime,
                         app,
+                        is_main
                     } = item;
                     const target = queryResult.find(i => i.monitorId === item.id);
                     Object.assign(item, target);
-                    Object.assign(item, { pageId, systemId, createTime, userId });
+                    Object.assign(item, {
+                        pageId,
+                        systemId,
+                        createTime,
+                        userId,
+                        isMain: is_main === '0'
+                    });
                     return item;
                 });
             }
@@ -439,9 +447,23 @@ class pages {
                 system_id: systemId,
                 url,
                 create_time: createTime,
-                app,
+                app_name: appName,
+                app_id: appId,
+                is_main,
+                additional_info: additionalInfo
             } = result[0];
-            Object.assign(valjson, { id, pageId, systemId, url, createTime, app, userId });
+            Object.assign(valjson, {
+                id,
+                pageId,
+                systemId,
+                appId,
+                isMain: is_main === '0',
+                userId,
+                url,
+                createTime,
+                appName,
+                additionalInfo
+            });
         }
         return valjson;
     }
@@ -472,7 +494,7 @@ class pages {
                             dups: [],
                             app: item.app,
                             count: 1,
-                            start: undefined,
+                            start: item.startTime,
                             end: undefined,
                             duration: 0
                         }
@@ -501,10 +523,6 @@ class pages {
                     }
                 } else {
                     dups[key].push(item.name);
-                }
-
-                if (!categories[key].start || (categories[key].start > item.startTime)) {
-                    categories[key].start = item.startTime;
                 }
 
                 if (!categories[key].end || (categories[key].end < item.responseEnd)) {

@@ -447,6 +447,7 @@ class data {
                 appin,
                 user_id,
                 additional_info,
+                is_main,
                 u: url, 
                 v: boomerang_version, 
                 sm: boomerang_snippet_method, 
@@ -573,6 +574,7 @@ class data {
             const web_pages_basic_data = {
                 user_id,
                 page_id,
+                is_main: is_main ? '0' : '1',
                 url: decodedUrl || '',
                 system_id: systemItem.id,
                 create_time: createTime || '',
