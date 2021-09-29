@@ -53,7 +53,7 @@ class Nodermailer {
             }
 
             let mailOptions = {
-                from: `"启明星前端"<${NODEMAILER.USER}>`,
+                from: `"前端性能监控系统"<${NODEMAILER.USER}>`,
                 to: receiveEmail,
                 subject: str,
                 text: `${tystr}发布时间：${time}，发布结果：${successStr}。`,
