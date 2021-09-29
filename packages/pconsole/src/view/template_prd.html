@@ -47,13 +47,7 @@
                 }
                 return appInfo;
             };
-            BOOMR.init({
-                beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance",
-                app_id: "566C7C3ACC05EE23581E95F00916D02F",
-                autorun: true,
-                History: {enabled: true,auto: false,monitorReplaceState: true,},
-                apps_map_callback: window.apps_map_callback
-            });
+            BOOMR.init({ beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance", uuid:"7BDED93854F1A5ABC4EE5344DDA57B84", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback, additional_info_callback: window.additional_info_callback, get_user_id_callback: window.get_user_id_callback });
         </script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/base.css">
