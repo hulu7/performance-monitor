@@ -12,24 +12,44 @@
                     return '';
                 }
                 const apps = {
-                    pages: ['http://performance-monitor-stag.jdcloud.com/api/apps/getAppsList'],
-                    search: ['http://performance-monitor-stag.jdcloud.com/search'],
-                    httptest: ['http://performance-monitor-stag.jdcloud.com/api/httptest/getHttpResponseData'],
-                    main: ['http://performance-monitor-stag.jdcloud.com/js','http://performance-monitor-stag.jdcloud.com/css','http://performance-monitor-stag.jdcloud.com/api/system/getSystemList','http://performance-monitor-stag.jdcloud.com/images','http://performance-monitor-stag.jdcloud.com/reportPerformance','http://performance-monitor-stag.jdcloud.com/']
+                    pages: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/getAppsList', 'http://performance-monitor-stag.jdcloud.com/apps']
+                    },
+                    search: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/search']
+                    },
+                    setting: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/setting']
+                    },
+                    httptest: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/api/httptest/getHttpResponseData', 'http://performance-monitor-stag.jdcloud.com/httptest']
+                    },
+                    main: {
+                        is_main: true,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/js','http://performance-monitor-stag.jdcloud.com/css','http://performance-monitor-stag.jdcloud.com/api/system/getSystemList','http://performance-monitor-stag.jdcloud.com/images','http://performance-monitor-stag.jdcloud.com/reportPerformance']
+                    }
                 };
-                let app = 'unknown';
+                let appInfo = {
+                    app: 'unknown',
+                    is_main: false
+                };
                 for (let key in apps) {
-                    const result = apps[key].find(item => url.search(item) !== -1);
-                    if (result) {
-                        app = key;
+                    const matched = apps[key].rules.find(item => url.search(item) !== -1);
+                    if (matched) {
+                        appInfo.app = key;
+                        appInfo.is_main = apps[key].is_main;
                         break
                     }
                 }
-                return app;
+                return appInfo;
             };
             BOOMR.init({
                 beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance",
-                app_id:"566C7C3ACC05EE23581E95F00916D02F",
+                app_id: "566C7C3ACC05EE23581E95F00916D02F",
                 autorun: true,
                 History: {enabled: true,auto: false,monitorReplaceState: true,},
                 apps_map_callback: window.apps_map_callback
