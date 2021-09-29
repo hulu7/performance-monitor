@@ -42,6 +42,7 @@ function output
     # 复制控制台编译代码(不包含node_modules)、bin至output
     echo "Copy files to output."
     cp -r packages/pconsole/dist/build/* output
+    rm output/config.js
     cp -r packages/pconsole/package* output
     cp -r packages/pconsole/pm2.config.json output
 
@@ -60,8 +61,8 @@ function build
     # 安装依赖
     echo "Start to build pconsole."
     cd packages/pconsole/
-    mv ./src/config_prd.js ./src/config.js
-    mv ./src/view/template_prd.html ./src/view/template.html
+    # mv ./src/config_prd.js ./src/config.js
+    mv ./src/view/template_${1}.html ./src/view/template.html
     npm install
     npm run build
 
