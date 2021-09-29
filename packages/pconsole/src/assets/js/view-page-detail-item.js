@@ -83,7 +83,8 @@ new Vue({
                     if (!apps[key]) {
                         apps[key] = {
                             app: item.app,
-                            restiming: [item]
+                            restiming: [item],
+                            isMain: item.is_main
                         };
                         count[key] = 1;
                     } else {
