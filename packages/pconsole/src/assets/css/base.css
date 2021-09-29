@@ -306,6 +306,17 @@ a:hover {
       color: #999; }
     .header .right li:last-child {
       border-right: none; }
+    .header .version {
+      width: 36px;
+      height: 16px;
+      line-height: 16px !important;
+      transform: translate(-20px, 5px);
+      text-align: center;
+      font-size: 12px !important;
+      color: #ffff !important;
+      background-color: #30c656;
+      border-radius: 2px;
+    }
 
 .side {
   width: 180px;
