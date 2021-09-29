@@ -19,6 +19,7 @@ class user {
             let valArr = [];
             const sqlstr = sql
                 .table('web_system')
+                .order('create_time desc')
                 .select();
             const result = await mysql(sqlstr);
 
