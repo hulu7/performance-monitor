@@ -625,13 +625,14 @@ class utilfn {
 		if (!target) {
 			return;
 		}
-		target.setAttribute('style', `height: 220px; width: 100%; margin-top: 16px; text-align: center`);
 		if (categories.values.length === 0 || categories.names.length === 0) {
+			target.setAttribute('style', `height: 50px; width: 100%; margin-top: 16px; text-align: center`);
 			const label = document.createElement("label");
             label.innerHTML = '暂无数据';
             target.appendChild(label);
 			return;
 		}
+		target.setAttribute('style', `height: 220px; width: 100%; margin-top: 16px; text-align: center`);
 		const chartDom = document.getElementById(elementId);
 		const myChart = echarts.init(chartDom);
 		const option = {

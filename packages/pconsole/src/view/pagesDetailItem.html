@@ -119,9 +119,9 @@
         <div class="common-block fr" v-for="(app, index) in pagesItemData.add.apps" :key="index" >
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                    <h1 class="h1">{{app.app === 'unkown' ? '其他资源' : (app.app + ' 应用')}}</h1>
+                    <h1 class="h1">{{app.isMain ? '主应用' : (app.app === 'unknown' ? '其他资源' : '子应用')}}{{ app.app === 'unknown' ? '' : app.app}}性能</h1>
                 </div>
-                <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 8px 0;">
+                <div class="app-body">
                     <div>
                         <h1>请求总时间</h1>
                         <h2 class="red">{{app.duration | toFixed(true)}}</h2>
@@ -326,5 +326,11 @@
 }
 .box-card {
     width: 100%;
-  }
+}
+.app-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px 0;
+}
 </style>

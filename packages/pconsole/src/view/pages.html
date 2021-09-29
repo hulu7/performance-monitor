@@ -22,7 +22,7 @@
                             @click="gotodetail(scope.row)"
                             class="text-overflow">
                             {{scope.row.appName}}
-                        </a>
+                        </a>{{scope.row.isMain ? '(主)' : ''}}
                     </template>
                 </el-table-column>
                 <el-table-column

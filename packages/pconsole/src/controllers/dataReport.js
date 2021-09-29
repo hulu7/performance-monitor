@@ -570,7 +570,7 @@ class data {
             }
             const decodedUrl = decodeURIComponent(url || '');
             const page_id = util.getPageId(decodedUrl);
-            const app_id = app && util.convert2Md5(app) || 'unkown';
+            const app_id = app && util.convert2Md5(app) || 'unknown';
             const web_pages_basic_data = {
                 user_id,
                 page_id,
@@ -580,7 +580,7 @@ class data {
                 create_time: createTime || '',
                 mark_page: pageMark || '',
                 app_id,
-                app_name: app || 'unkown',
+                app_name: app || 'unknown',
                 additional_info: additional_info || ''
             };
 

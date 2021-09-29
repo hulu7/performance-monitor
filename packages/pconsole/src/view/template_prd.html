@@ -17,7 +17,7 @@
                     httptest: ['http://performance-monitor-stag.jdcloud.com/api/httptest/getHttpResponseData'],
                     main: ['http://performance-monitor-stag.jdcloud.com/js','http://performance-monitor-stag.jdcloud.com/css','http://performance-monitor-stag.jdcloud.com/api/system/getSystemList','http://performance-monitor-stag.jdcloud.com/images','http://performance-monitor-stag.jdcloud.com/reportPerformance','http://performance-monitor-stag.jdcloud.com/']
                 };
-                let app = 'unkown';
+                let app = 'unknown';
                 for (let key in apps) {
                     const result = apps[key].find(item => url.search(item) !== -1);
                     if (result) {

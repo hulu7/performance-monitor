@@ -104,9 +104,25 @@ class pages {
             result.forEach(item => {
                 const performance = performanceData.find(i => i[0].app_id === item.app_id);
                 const basic = basicData.find(i => i[0].app_id === item.app_id);
-                const { load_time: loadTime, request_time: requestTime, white_time: whiteTime, app_id: appId } = performance[0];
-                const { app_name: appName } = basic[0];
-                Object.assign(item, { loadTime, requestTime, whiteTime, url, appId, appName });
+                const {
+                    load_time: loadTime,
+                    request_time: requestTime,
+                    white_time: whiteTime,
+                    app_id: appId
+                } = performance[0];
+                const {
+                    app_name: appName,
+                    is_main
+                } = basic[0];
+                Object.assign(item, {
+                    loadTime,
+                    requestTime,
+                    whiteTime,
+                    url,
+                    appId,
+                    appName,
+                    isMain: is_main === '0'
+                });
             });
 
             let valjson = {}
@@ -493,6 +509,7 @@ class pages {
                             api: [],
                             dups: [],
                             app: item.app,
+                            isMain: item.is_main,
                             count: 1,
                             start: item.startTime,
                             end: undefined,
@@ -541,6 +558,7 @@ class pages {
             const { count, start, end, duration } = categories[key];
             const data = {
                 app: categories[key].app,
+                isMain: categories[key].isMain,
                 api: {
                     names: sortedApi.map(i => i.name),
                     values: sortedApi.map(i => i.value)
