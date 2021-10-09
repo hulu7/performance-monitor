@@ -264,16 +264,26 @@
 						nt_load_end: calcNavTimingTimestamp(offset, pt.loadEventEnd),
 						nt_unload_st: calcNavTimingTimestamp(offset, pt.unloadEventStart),
 						nt_unload_end: calcNavTimingTimestamp(offset, pt.unloadEventEnd),
-						nt_dns: (p.timing.domainLookupEnd - p.timing.domainLookupStart),  // DNS解析时间
-						nt_tcp: (p.timing.connectEnd - p.timing.connectStart),  //TCP建立时间
-						nt_white: (p.timing.responseStart - p.timing.navigationStart), // 白屏时间
-						nt_dom: p.timing.domContentLoadedEventEnd ? (p.timing.domContentLoadedEventEnd - p.timing.navigationStart) : 0,  // dom渲染完成时间
-						nt_load: p.timing.loadEventEnd ? (p.timing.loadEventEnd - p.timing.navigationStart) : 0,  // 页面onload时间
-						nt_ready: (p.timing.fetchStart - p.timing.navigationStart), // 页面准备时间
-						nt_redirect: (p.timing.redirectEnd - p.timing.redirectStart), // 页面重定向时间
-						nt_unload: (p.timing.unloadEventEnd - p.timing.unloadEventStart),   // unload时间
-						nt_request: (p.timing.responseEnd - p.timing.requestStart),  // request请求耗时
-						nt_analysisdom: p.timing.domComplete ? (p.timing.domComplete - p.timing.domInteractive) : 0  //   页面解析dom耗时
+						/**
+						 * known issue:
+						 * Safari 8/9: requestStart and responseStart might be less than navigationStart and fetchStart
+						 * Safari 8/9 and Chrome (as recent as 56): requestStart and responseStart might be less than fetchStart, connect* and domainLookup*
+						 * Chrome (as recent as 56): requestStart is equal to navigationStart but less than fetchStart, connect* and domainLookup*
+						 * Firefox: Reporting 0 for timestamps that should always be filled in, such as domainLookup*, connect* and requestStart.
+						 * Chrome: Some timestamps are double what they should be (e.g. if "now" is 1524102861420, we see timestamps around 3048205722840, year 2066)
+						 * Chrome: When the page has redirects, the responseStart is less than redirectEnd and fetchStart
+						 * Firefox: The NavigationTiming of the iframe (window.frames[0].performance.timing) does not include redirect counts or redirect times, and many other timestamps are 0
+						*/
+						nt_dns: (p.timing.domainLookupEnd - p.timing.domainLookupStart),  // DNS parse time cost.
+						nt_tcp: (p.timing.connectEnd - p.timing.connectStart),  // TCP connected time cost.
+						nt_white: p.timing.responseStart >= p.timing.navigationStart ? (p.timing.responseStart - p.timing.navigationStart) : 0, // white page time cost.
+						nt_dom: p.timing.domContentLoadedEventEnd ? (p.timing.domContentLoadedEventEnd - p.timing.navigationStart) : 0,  // DOM render complete time cost.
+						nt_load: p.timing.loadEventEnd ? (p.timing.loadEventEnd - p.timing.navigationStart) : 0,  // onload time cost.
+						nt_ready: p.timing.fetchStart >= p.timing.navigationStart ? (p.timing.fetchStart - p.timing.navigationStart) : 0, // page ready time cost.
+						nt_redirect: (p.timing.redirectEnd - p.timing.redirectStart), // page redirect time cost.
+						nt_unload: (p.timing.unloadEventEnd - p.timing.unloadEventStart),   // unload time cost.
+						nt_request: (p.timing.responseEnd - p.timing.requestStart),  // request time cost.
+						nt_analysisdom: p.timing.domComplete ? (p.timing.domComplete - p.timing.domInteractive) : 0  // DOM parse time cost.
 					};
 
 					Object.assign(BOOMR.hardNavigationTiming, data);
