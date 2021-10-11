@@ -570,7 +570,7 @@ class data {
             }
             const decodedUrl = decodeURIComponent(url || '');
             const page_id = util.getPageId(decodedUrl);
-            const app_id = app && util.convert2Md5(app) || 'unknown';
+            const app_id = util.convert2Md5(`${systemItem.id}_${app || 'unknown'}`);
             const web_pages_basic_data = {
                 user_id,
                 page_id,
