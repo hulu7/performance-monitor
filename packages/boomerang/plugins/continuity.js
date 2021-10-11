@@ -1738,7 +1738,7 @@
 		externalMetrics.timeToVisuallyReady = function() {
 			if (visuallyReady) {
 				// milliseconds since nav start
-				return visuallyReady - epoch;
+				return visuallyReady >= epoch ? (visuallyReady - epoch) : 0 ;
 			}
 
 			// no data
