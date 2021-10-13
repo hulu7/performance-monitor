@@ -176,9 +176,9 @@ new Vue({
             })
             this.echartBorwsers(id, legendData, seriesData)
         },
-        echartBorwsers(id,legendData,seriesData) {
-            var myChart = echarts.init(document.getElementById(id));
-            var option = {
+        echartBorwsers(id, legendData, seriesData) {
+            const myChart = echarts.init(document.getElementById(id));
+            const option = {
                 tooltip: {
                     formatter: "{b} : {c} ({d}%)"
                 },
@@ -250,6 +250,11 @@ new Vue({
             window.onresize = () => {
                 myChart.resize();
             };
+            const e = document.getElementById(id);
+            const label = document.createElement("label");
+            label.innerHTML = `种类总量：${legendData.length}`;
+            label.setAttribute('class', 'category-statics');
+            e.appendChild(label);
         },
         changeType(){
             setTimeout(()=>{
