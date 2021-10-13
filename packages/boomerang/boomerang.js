@@ -4055,7 +4055,7 @@ BOOMR_check_doc_domain();
 			varsSent['uuid'] = impl.uuid;
 			varsSent['appin'] = BOOMR.appin;
 			varsSent['restiming'] = BOOMR.formatRestiming(vars['restiming']);
-			varsSent['user_id'] = BOOMR.userId || userId || BOOMR.utils.getCookie('pin');
+			varsSent['user_id'] = decodeURI(BOOMR.userId || userId || BOOMR.utils.getCookie('pin') || '');
 
 			Object.assign(varsSent, BOOMR.hardNavigationTiming);
 		},

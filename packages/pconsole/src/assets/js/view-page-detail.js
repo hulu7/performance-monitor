@@ -176,7 +176,7 @@ new Vue({
             })
             this.echartBorwsers(id, legendData, seriesData)
         },
-        echartBorwsers(id,legendData,seriesData){
+        echartBorwsers(id,legendData,seriesData) {
             var myChart = echarts.init(document.getElementById(id));
             var option = {
                 tooltip: {
@@ -208,6 +208,7 @@ new Vue({
                 ],
                 legend: {
                     orient: 'vertical',
+                    type: 'scroll',
                     right: 0,
                     top: 20,
                     bottom: 20,

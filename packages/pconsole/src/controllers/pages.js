@@ -496,6 +496,8 @@ class pages {
             const dups = {};
             const restimings = JSON.parse(restiming);
             result.totalCount = restimings.length;
+            const start = restimings[0].startTime;
+            let end = 0;
             restimings.forEach((item, index) => {
                 const key = util.convert2Md5(item.app);
                 const dat = {
@@ -545,11 +547,12 @@ class pages {
                 if (!categories[key].end || (categories[key].end < item.responseEnd)) {
                     categories[key].end = item.responseEnd;
                     categories[key].duration = categories[key].end - categories[key].start;
-                    if (result.totalDuration < categories[key].end) {
-                        result.totalDuration = categories[key].end;
+                    if (end < categories[key].end) {
+                        end = categories[key].end;
                     }
                 }
             });
+            result.totalDuration = end > start ? (end - start) : 0;
         }
         for (let key in  categories) {
             const sortedApi = categories[key].api.sort((pre, post) => pre.value - post.value);

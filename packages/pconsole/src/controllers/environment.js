@@ -41,7 +41,6 @@ class pages {
                 .table('web_pages_client')
                 .where(data)
                 .group(group)
-                .limit(0,6)
                 .select();
 
             let result = await mysql(sqlstr);
