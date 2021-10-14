@@ -271,9 +271,9 @@
                                     class="item"
                                     effect="dark"
                                     placement="top">
-                                    <div slot="content">{{scope.row.url}}</div>
+                                    <div slot="content">{{ decodeURI(scope.row.url) }}</div>
                                     <div class="page-link">
-                                        <a href="javascript:" @click="gotoDetail(scope.row.id)">{{scope.row.url}}</a>
+                                        <a href="javascript:" @click="gotoDetail(scope.row.id)">{{ decodeURI(scope.row.url) }}</a>
                                     </div>
                                 </el-tooltip>
                             </template>

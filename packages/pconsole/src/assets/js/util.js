@@ -828,7 +828,7 @@ class utilfn {
 				confine: true,
 				extraCssText: 'white-space: normal; word-break: break-all;',
 				formatter: function (params) {
-					return `<span style="max-width: 200px;">${params.data.name}</span>
+					return `<span style="max-width: 200px;">${decodeURI(params.data.name)}</span>
 							<div style="border-bottem: 1px solid rgba(0,0,0,.12)"></div>
 							<div style="width: 100%; text-align: left;">
 								<div>类型：${params.marker} ${params.data.type}</div>
@@ -870,10 +870,11 @@ class utilfn {
 					formatter: function (val) {
 						let valueTxt = '';
 						if (val.length > 22) {
-							valueTxt = `${val.substring(0, 10)}...${val.substring(val.length - 12, val.length)}`;
+							const decodedVal = decodeURI(val);
+							valueTxt = `${decodedVal.substring(0, 10)}...${decodedVal.substring(val.length - 12, val.length)}`;
 						}
 						else {
-							valueTxt = val;
+							valueTxt = decodedVal;
 						}
 						return `${valueTxt}` ;
 					}

@@ -16,10 +16,10 @@
                 class="item"
                 effect="dark"
                 placement="top">
-                <span slot="content">{{pagesItemData.url}}</span>
+                <span slot="content">{{ decodeURI(pagesItemData.url) }}</span>
                 <span class="page-link">
                     <a href="javascript:" @click="gotopage">
-                        {{pagesItemData.url}}
+                        {{ decodeURI(pagesItemData.url) }}
                     </a>
                 </span>
             </el-tooltip>
@@ -158,6 +158,9 @@
                             <el-table-column
                                 prop="url"
                                 label="请求地址">
+                                <template slot-scope="scope">
+                                    <span>{{ decodeURI(scope.row.url) }}</span>
+                                </template>
                             </el-table-column>
                             <el-table-column
                                 prop="count"
