@@ -302,7 +302,7 @@ new Vue({
             let seriesData  = [];
             legendData.forEach((item, index)=>{
                 let data = {
-                    name:item,
+                    name: item,
                     type: 'line',
                     data:[],
                 };
@@ -356,7 +356,7 @@ new Vue({
             });
 
             datas.forEach(item=>{
-                xAxisData.push( new Date(item.dateTime).format('MM/dd'));
+                xAxisData.push( new Date(item.dateTime).format('MM/dd HH:mm:ss'));
             });
 
             var myChart=  echarts.init(document.getElementById('charts-pages'));
