@@ -583,6 +583,7 @@ class data {
                 app_name: app || 'unknown',
                 additional_info: additional_info || ''
             };
+            const time_to_interactive = Object.keys(tti).find(key => tti[key] === true);
 
             const storePagesBasicSqlStr = sql
                 .table('web_pages_basic')
@@ -599,6 +600,7 @@ class data {
                 white_time: white_time || '0',
                 first_paint: first_paint || '0',
                 first_contentful_paint: first_contentful_paint || '0',
+                time_to_interactive: time_to_interactive || '0',
                 visually_ready_time: visually_ready_time || '0',
                 perceived_load_time: perceived_load_time || '0',
                 dom_time: dom_time || '0',

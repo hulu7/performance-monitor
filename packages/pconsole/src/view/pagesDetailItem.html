@@ -40,7 +40,7 @@
                             class="item"
                             effect="dark"
                             placement="top">
-                            <label slot="content">户等待页面可用的时间</label>
+                            <label slot="content">等待页面可用的时间</label>
                             <i class="el-icon-question page-icon"></i>
                         </el-tooltip>
                     </h1>
@@ -77,6 +77,10 @@
                 <li>
                     <h1>首次内容绘制时间</h1>
                     <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
+                </li>
+                <li>
+                    <h1>可交互时间</h1>
+                    <h2>{{pagesItemData.timeToInteractive | toFixed}}</h2>
                 </li>
                 <li>
                     <h1>视觉就绪时间</h1>

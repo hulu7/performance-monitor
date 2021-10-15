@@ -26,59 +26,63 @@
                         <h1 class="h1">性能历史平均水平</h1>
                     </div>
                     <li>
-                        <h1>平均加载时间</h1>
+                        <h1>加载时间</h1>
                         <h2 class="red">{{pagesItemData.loadTime | toFixed(true)}}</h2>
                     </li>
                     <li>
-                        <h1>平均白屏时间</h1>
+                        <h1>白屏时间</h1>
                         <h2 class="red">{{pagesItemData.whiteTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均首像素时间</h1>
+                        <h1>首像素时间</h1>
                         <h2>{{pagesItemData.firstPaint | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均首次内容绘制时间</h1>
+                        <h1>首次内容绘制时间</h1>
                         <h2>{{pagesItemData.firstContentfulPaint | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均视觉就绪时间</h1>
+                        <h1>可交互时间</h1>
+                        <h2>{{pagesItemData.timeToInteractive | toFixed}}</h2>
+                    </li>
+                    <li>
+                        <h1>视觉就绪时间</h1>
                         <h2>{{pagesItemData.visuallyReadyTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均可感知加载时间</h1>
+                        <h1>可感知加载时间</h1>
                         <h2>{{pagesItemData.perceivedLoadTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均DOM构建时间</h1>
+                        <h1>DOM构建时间</h1>
                         <h2>{{pagesItemData.domTime | toFixed(true)}}</h2>
                     </li>
                     <li>
-                        <h1>平均DOM解析时间</h1>
+                        <h1>DOM解析时间</h1>
                         <h2>{{pagesItemData.analysisDomTime | toFixed(true)}}</h2>
                     </li>
                     <li>
-                        <h1>平均DNS解析时间</h1>
+                        <h1>DNS解析时间</h1>
                         <h2>{{pagesItemData.dnsTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均TCP连接时间</h1>
+                        <h1>TCP连接时间</h1>
                         <h2>{{pagesItemData.tcpTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均重定向时间</h1>
+                        <h1>重定向时间</h1>
                         <h2>{{pagesItemData.redirectTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均unload时间</h1>
+                        <h1>unload时间</h1>
                         <h2>{{pagesItemData.unloadTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均request请求时间</h1>
+                        <h1>request请求时间</h1>
                         <h2>{{pagesItemData.requestTime | toFixed}}</h2>
                     </li>
                     <li>
-                        <h1>平均准备时间</h1>
+                        <h1>准备时间</h1>
                         <h2>{{pagesItemData.readyTime | toFixed}}</h2>
                     </li>
                     <li>

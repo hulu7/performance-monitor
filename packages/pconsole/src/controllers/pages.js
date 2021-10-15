@@ -200,6 +200,7 @@ class pages {
                         avg(white_time) as white_time,
                         avg(first_paint) as first_paint,
                         avg(first_contentful_paint) as first_contentful_paint,
+                        avg(time_to_interactive) as time_to_interactive,
                         avg(visually_ready_time) as visually_ready_time,
                         avg(perceived_load_time) as perceived_load_time,
                         avg(dom_time) as dom_time,
@@ -292,6 +293,7 @@ class pages {
                         ready_time: readyTime,
                         sum_load_times: sumLoadTimes,
                         additional_timers: additionalTimers,
+                        time_to_interactive: timeToInteractive,
                         url
                     } = resultAppsTiming[0];
 
@@ -319,11 +321,11 @@ class pages {
                         downlink,
                     } = resultAppsClient[0];
 
-                    Object.assign(valjson, { loadTime, whiteTime, firstPaint, firstContentfulPaint,     visuallyReadyTime, count,
+                    Object.assign(valjson, { loadTime, whiteTime, firstPaint, firstContentfulPaint, visuallyReadyTime, count,
                         perceivedLoadTime, domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, requestTime,
                         readyTime, sumLoadTimes, additionalTimers, bodySize, encodedBodySize, redirectCount, transferSize,
                         uniqueDomainsNumber, iframeNumber, imgNumber, linkNumber, cssNumber, domsNumber, resourcesFetchNumber,
-                        scriptNumber, externalScriptNumber, htmlSize, cpuConcurrency, roundTripTime, downlink, url
+                        scriptNumber, externalScriptNumber, htmlSize, cpuConcurrency, roundTripTime, downlink, url, timeToInteractive
                     });
                 }
             } else {
@@ -555,9 +557,9 @@ class pages {
             result.totalDuration = end > start ? (end - start) : 0;
         }
         for (let key in  categories) {
-            const sortedApi = categories[key].api.sort((pre, post) => pre.value - post.value);
-            const sortedStatic = categories[key].static.sort((pre, post) => pre.value - post.value);
-            const sortedDups = categories[key].dups.sort((pre, post) => pre.count - post.count);
+            const sortedApi = categories[key].api.sort((pre, post) => post.value - pre.value);
+            const sortedStatic = categories[key].static.sort((pre, post) => post.value - pre.value);
+            const sortedDups = categories[key].dups.sort((pre, post) => post.value - pre.value);
             const { count, start, end, duration } = categories[key];
             const data = {
                 app: categories[key].app,
@@ -605,6 +607,7 @@ class pages {
                 white_time: whiteTime,
                 first_paint: firstPaint,
                 first_contentful_paint: firstContentfulPaint,
+                time_to_interactive: timeToInteractive,
                 visually_ready_time: visuallyReadyTime,
                 perceived_load_time: perceivedLoadTime,
                 dom_time: domTime,
@@ -619,7 +622,7 @@ class pages {
             Object.assign(valjson, { monitorId, pageId, url, loadTime, whiteTime,
                 firstPaint, firstContentfulPaint, visuallyReadyTime, perceivedLoadTime,
                 domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, 
-                requestTime, readyTime
+                requestTime, readyTime, timeToInteractive
             });
         }
         return Promise.resolve(valjson);
