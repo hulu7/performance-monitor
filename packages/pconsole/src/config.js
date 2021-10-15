@@ -59,7 +59,7 @@ export let DB = {
 	POOLLIMIT: 1000,
 
 	// 排队限制数量
-	QUEUELIMIT: 1000,
+	QUEUELIMIT: 100000,
 }
 
 export let NODEMAILER = {
