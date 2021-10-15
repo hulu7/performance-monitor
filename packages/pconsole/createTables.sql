@@ -18,7 +18,7 @@ SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- DROP TABLE IF EXISTS `web_system`, `web_pages_basic`, `web_pages_timing`, `web_pages_restiming`, `web_pages_navigation`, `web_pages_resources`, `web_pages_client`, `web_pages_probe`, `web_pages_main_restiming`;
-
+-- ALTER TABLE `web_pages_timing` ADD (`time_to_interactive` int(11) NOT NULL DEFAULT '0' COMMENT '可交互时间');
 -- --------------------------------------------------------------
 --  Table `web_system`: 系统注册信息
 -- --------------------------------------------------------------
@@ -73,6 +73,7 @@ CREATE TABLE `web_pages_timing` (
   `white_time` int(11) NOT NULL DEFAULT '0' COMMENT '白屏时间 单位：ms',
   `first_paint` int(11) NOT NULL DEFAULT '0' COMMENT '首像素时间 (ms)',
   `first_contentful_paint` int(11) NOT NULL DEFAULT '0' COMMENT '首次内容绘制时间 (ms)',
+  `time_to_interactive` int(11) NOT NULL DEFAULT '0' COMMENT '可交互时间',
   `visually_ready_time` int(11) NOT NULL DEFAULT '0' COMMENT '视觉就绪时间 ms',
   `perceived_load_time` int(11) NOT NULL DEFAULT '0' COMMENT '可感知加载时间',
   `dom_time` int(11) NOT NULL DEFAULT '0' COMMENT 'DOM构建时间 单位：ms',
