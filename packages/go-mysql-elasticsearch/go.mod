@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/BurntSushi/toml v0.3.1
+	github.com/huandu/go-sqlbuilder v1.13.0 // indirect
 	github.com/juju/errors v0.0.0-20190207033735-e65537c515d7
 	github.com/pingcap/check v0.0.0-20190102082844-67f458068fc8
 	github.com/prometheus/client_golang v0.9.3

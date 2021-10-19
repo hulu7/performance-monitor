@@ -11,6 +11,7 @@ import (
 	"github.com/siddontang/go-log/log"
 	"github.com/siddontang/go-mysql-elasticsearch/elastic"
 	"github.com/siddontang/go-mysql/canal"
+	"github.com/huandu/go-sqlbuilder"
 )
 
 // ErrRuleNotExist is the error if rule is not defined.
@@ -181,8 +182,13 @@ func (r *River) parseSource() (map[string][]string, error) {
 
 				tables := []string{}
 
-				sql := fmt.Sprintf(`SELECT table_name FROM information_schema.tables WHERE
-					table_name RLIKE "%s" AND table_schema = "%s";`, buildTable(table), s.Schema)
+				sqlStr := sqlbuilder.select("table_name").
+					From("information_schema.tables").
+					Where(sqlbuilder.rlike("table_name", buildTable(table)).
+						sqlbuilder.and().
+						gsb.Equal("table_schema", s.Schema))
+
+				sql := fmt.Sprintf(sqlStr)
 
 				res, err := r.canal.Execute(sql)
 				if err != nil {
