@@ -7,47 +7,47 @@
         <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js"></script>
         <script src="//performance-monitor-stag.jdcloud.com/js/boomerang/history.min.js"></script>
         <script >
-            // window.apps_map_callback = function(url) {
-            //     if (!url) {
-            //         return '';
-            //     }
-            //     const target = url.split('?')[0];
-            //     const apps = {
-            //         pages: {
-            //             is_main: false,
-            //             rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/getAppsList', 'http://performance-monitor-stag.jdcloud.com/apps']
-            //         },
-            //         search: {
-            //             is_main: false,
-            //             rules: ['http://performance-monitor-stag.jdcloud.com/search']
-            //         },
-            //         setting: {
-            //             is_main: false,
-            //             rules: ['http://performance-monitor-stag.jdcloud.com/setting']
-            //         },
-            //         httptest: {
-            //             is_main: false,
-            //             rules: ['http://performance-monitor-stag.jdcloud.com/api/httptest/getHttpResponseData', 'http://performance-monitor-stag.jdcloud.com/httptest']
-            //         },
-            //         main: {
-            //             is_main: true,
-            //             rules: ['http://performance-monitor-stag.jdcloud.com/js', 'http://performance-monitor-stag.jdcloud.com/css', 'http://performance-monitor-stag.jdcloud.com/api/system/getSystemList', 'http://performance-monitor-stag.jdcloud.com/images', 'http://performance-monitor-stag.jdcloud.com/reportPerformance', 'http://performance-monitor-stag.jdcloud.com/']
-            //         }
-            //     };
-            //     let appInfo = {
-            //         app: 'unknown',
-            //         is_main: false
-            //     };
-            //     for (let key in apps) {
-            //         const matched = apps[key].rules.find(item => target.search(item) !== -1);
-            //         if (matched) {
-            //             appInfo.app = key;
-            //             appInfo.is_main = apps[key].is_main;
-            //             break
-            //         }
-            //     }
-            //     return appInfo;
-            // };
+            window.apps_map_callback = function(url) {
+                if (!url) {
+                    return '';
+                }
+                const target = url.split('?')[0];
+                const apps = {
+                    pages: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/getAppsList', 'http://performance-monitor-stag.jdcloud.com/apps']
+                    },
+                    search: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/search']
+                    },
+                    setting: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/setting']
+                    },
+                    httptest: {
+                        is_main: false,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/api/httptest/getHttpResponseData', 'http://performance-monitor-stag.jdcloud.com/httptest']
+                    },
+                    main: {
+                        is_main: true,
+                        rules: ['http://performance-monitor-stag.jdcloud.com/js', 'http://performance-monitor-stag.jdcloud.com/css', 'http://performance-monitor-stag.jdcloud.com/api/system/getSystemList', 'http://performance-monitor-stag.jdcloud.com/images', 'http://performance-monitor-stag.jdcloud.com/reportPerformance', 'http://performance-monitor-stag.jdcloud.com/']
+                    }
+                };
+                let appInfo = {
+                    app: 'unknown',
+                    is_main: false
+                };
+                for (let key in apps) {
+                    const matched = apps[key].rules.find(item => target.search(item) !== -1);
+                    if (matched) {
+                        appInfo.app = key;
+                        appInfo.is_main = apps[key].is_main;
+                        break
+                    }
+                }
+                return appInfo;
+            };
             BOOMR.init({ beacon_url: "http://performance-monitor-stag.jdcloud.com/reportPerformance", uuid:"7BDED93854F1A5ABC4EE5344DDA57B84", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback, additional_info_callback: window.additional_info_callback, get_user_id_callback: window.get_user_id_callback });
         </script>
         <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
