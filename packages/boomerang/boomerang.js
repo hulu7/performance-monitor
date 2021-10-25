@@ -4010,12 +4010,12 @@ BOOMR_check_doc_domain();
 				return result;
 			}
 			const formRes = JSON.parse(res);
-			if (impl.apps_map_callback && typeof impl.apps_map_callback === 'function') {
-				formRes.forEach(item => {
-					const appInfo = impl.apps_map_callback.apply(this, [item.name]);
-					Object.assign(item, appInfo);
-				});
-			}
+			const isAppMapAvailable = impl.apps_map_callback && typeof impl.apps_map_callback === 'function';
+			formRes.forEach(item => {
+				const appInfo = isAppMapAvailable ? impl.apps_map_callback.apply(this, [item.name])
+					: { app: 'unknown', is_main: false };
+				Object.assign(item, appInfo);
+			});
 
 			return JSON.stringify(formRes);
 		},
