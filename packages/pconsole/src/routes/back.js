@@ -80,7 +80,7 @@ router.post('/api/sources/getSourcesForMarkPage', controllers.sources.getSources
 router.post('/api/environment/getDataForEnvironment', controllers.environment.getDataForEnvironment)
 
 //----------------------------httptest--------------------------------------
-router.post('/api/httptest/getHttpResponseData', controllers.httptest.getHttpResponseData)
+// router.post('/api/httptest/getHttpResponseData', controllers.httptest.getHttpResponseData)
 
 //----------------------------webpagetest--------------------------------------
 router.post('/api/webpagetest/getWebHttpResponseData', controllers.webpagetest.getWebHttpResponseData)
