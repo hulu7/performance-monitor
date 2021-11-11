@@ -131,28 +131,29 @@ class user {
     async addSystem(ctx){
         try {
             const {
-                system_name,
-                system_domain,
-                slow_page_time,
-                slow_js_time,
-                slow_css_time,
-                slow_img_time,
+                systemName,
+                systemDomain,
+                slowPageTime,
+                slowJsTime,
+                slowCssTime,
+                slowImgTime,
             } = ctx.request.body;
-            const create_time = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
-            const safeSystemName = SqlString.escape(system_name);
-            const safeSystemDomain = SqlString.escape(system_domain);
-            const safeSlowPageTime = SqlString.escape(slow_page_time);
-            const safeSlowJsTime = SqlString.escape(slow_js_time);
-            const safeSlowCssTime = SqlString.escape(slow_css_time);
-            const safeSlowImgTime = SqlString.escape(slow_img_time);
-
-            if(!safeSystemName || !safeSystemDomain){
+            if(!systemName || !systemDomain){
                 ctx.body = util.result({
                     code: 1001,
                     desc: '参数错误!'
                 });
                 return
             }
+
+            const create_time = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
+            const safeSystemName = SqlString.escape(systemName);
+            const safeSystemDomain = SqlString.escape(systemDomain);
+            const safeSlowPageTime = SqlString.escape(slowPageTime || 0);
+            const safeSlowJsTime = SqlString.escape(slowJsTime || 0);
+            const safeSlowCssTime = SqlString.escape(slowCssTime || 0);
+            const safeSlowImgTime = SqlString.escape(slowImgTime || 0);
+
             // 判断应用是否存在
             let sqlstr1 = sql
                 .table('web_system')
@@ -224,10 +225,17 @@ class user {
             if(safeSlowCssTime) data.slow_css_time = safeSlowCssTime;
             if(safeSlowImgTime) data.slow_img_time = safeSlowImgTime;
             
-            const sqlstr3 = sql
+            let sqlstr3 = sql
                 .table('web_system')
                 .data(data)
-                .insert()
+                .insert();
+            sqlstr3 = util.formatSqlstr(sqlstr3, safeSystemName);
+            sqlstr3 = util.formatSqlstr(sqlstr3, safeSystemDomain);
+            sqlstr3 = util.formatSqlstr(sqlstr3, safeSlowPageTime);
+            sqlstr3 = util.formatSqlstr(sqlstr3, safeSlowJsTime);
+            sqlstr3 = util.formatSqlstr(sqlstr3, safeSlowCssTime);
+            sqlstr3 = util.formatSqlstr(sqlstr3, safeSlowImgTime);
+
             await mysql(sqlstr3);
 
             ctx.body = util.result({
@@ -285,35 +293,35 @@ class user {
         try {
             const {
                 id,
-                system_name,
-                system_domain,
-                slow_page_time,
-                slow_js_time,
-                slow_css_time,
-                slow_img_time,
-                slow_ajax_time,
-                is_use,
+                systemName,
+                systemDomain,
+                slowPageTime,
+                slowJsTime,
+                slowCssTime,
+                slowImgTime,
+                slowAjaxTime,
+                isUse,
                 uuid
             } = ctx.request.body;
 
-            const safeSystemName = SqlString.escape(system_name);
-            const safeSystemDomain = SqlString.escape(system_domain);
-            const safeSlowPageTime = SqlString.escape(slow_page_time);
-            const safeSlowJsTime = SqlString.escape(slow_js_time);
-            const safeSlowCssTime = SqlString.escape(slow_css_time);
-            const safeSlowImgTime = SqlString.escape(slow_img_time);
-            const safeSlowAjaxTime = SqlString.escape(slow_ajax_time);
-            const safeId = SqlString.escape(id);
-            const safeuuid = SqlString.escape(uuid);
-            const safeIsUse = SqlString.escape(isUse);
-
-            if(!safeSystemDomain || !safeSystemName){
+            if(!systemDomain || !systemName){
                 ctx.body = util.result({
                     code: 1001,
                     desc: '参数错误!'
                 });
                 return
             }
+
+            const safeSystemName = SqlString.escape(systemName);
+            const safeSystemDomain = SqlString.escape(systemDomain);
+            const safeSlowPageTime = SqlString.escape(slowPageTime || 0);
+            const safeSlowJsTime = SqlString.escape(slowJsTime || 0);
+            const safeSlowCssTime = SqlString.escape(slowCssTime || 0);
+            const safeSlowImgTime = SqlString.escape(slowImgTime || 0);
+            const safeSlowAjaxTime = SqlString.escape(slowAjaxTime || 0);
+            const safeId = SqlString.escape(id);
+            const safeIsUse = SqlString.escape(isUse);
+            const safeuuid = SqlString.escape(uuid);
 
             const protocol = `http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}`;
             const script =
@@ -322,7 +330,7 @@ class user {
                 <script>
                     BOOMR.init({
                         beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
-                        uuid:${safeuuid},
+                        uuid:"${uuid}",
                         autorun: false,
                         History: {
                             enabled: true,
@@ -359,6 +367,7 @@ class user {
             sqlstr = util.formatSqlstr(sqlstr, safeSlowAjaxTime);
             sqlstr = util.formatSqlstr(sqlstr, safeIsUse);
             sqlstr = util.formatSqlstr(sqlstr, safeuuid);
+            sqlstr = util.formatSqlstr(sqlstr, safeId);
             const result = await mysql(sqlstr);
 
             ctx.body = util.result({

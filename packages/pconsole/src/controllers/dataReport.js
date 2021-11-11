@@ -1,5 +1,6 @@
 import moment from 'moment';
 import sql from 'node-transform-mysql';
+import SqlString from 'sqlstring'
 import UAParser from 'ua-parser-js';
 import url from 'url';
 import querystring from 'querystring';
@@ -99,16 +100,18 @@ class data {
     async getSystemPerformDatas(ctx) {
         try{
             //------------校验token是否存在-----------------------------------------------------   
-            let uuid = ctx.query.uuid
-            if(!uuid){
+            if(!ctx.query.uuid){
                 ctx.body=imgsrc;
                 return; 
-            }; 
+            };
+            const safeuuid = SqlString.escape(ctx.query.uuid);
             let sqlstr = sql
                 .table('web_system')
                 .field('is_use,id')
-                .where({ uuid })
-                .select()
+                .where({ uuid: safeuuid })
+                .select();
+
+            sqlstr = util.formatSqlstr(sqlstr, safeuuid);
             let systemMsg = await mysql(sqlstr); 
             if(!systemMsg || !systemMsg.length){
                 ctx.body=imgsrc;
@@ -136,7 +139,7 @@ class data {
             let result = parser.getResult();
 
             // environment表数据
-            let environment={
+            const environment = {
                 systemId: systemItem.id,
                 IP: ctx.query.IP||'',
                 isp: ctx.query.isp||'',
@@ -157,11 +160,11 @@ class data {
                 .table('web_environment')
                 .data(environment)
                 .insert()
-            let result1 = await mysql(sqlstr1);  
+            await mysql(sqlstr1);  
 
-            ctx.body=imgsrc 
+            ctx.body = imgsrc 
         }catch(err){
-            ctx.body=imgsrc
+            ctx.body = imgsrc
         }
     }
 
@@ -174,7 +177,8 @@ class data {
             if(!uuid) {
                 ctx.body=imgsrc;
                 return;
-            }; 
+            };
+
             const systems = await dataInstance.querySystems(uuid);
             if(!systems || !systems.length){
                 ctx.body=imgsrc;
