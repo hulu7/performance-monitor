@@ -552,6 +552,10 @@ class util {
             return String.fromCharCode(parseInt(w.substring(3, 7), 16));
         });
     }
+
+    formatSqlstr(sqlstr, safepara) {
+        return sqlstr.replace(`'${safepara}'`, safepara)
+    }
 }
 
 module.exports = new util();

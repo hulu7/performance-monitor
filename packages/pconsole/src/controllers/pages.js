@@ -1,12 +1,12 @@
 import sql from 'node-transform-mysql'
+import SqlString from 'sqlstring'
 import moment from 'moment'
 import {
     SYSTEM
 } from '../config'
 import {
     util,
-    mysql,
-    getsqlmodel,
+    mysql
 } from '../tool'
 import { result } from 'underscore';
 
@@ -19,13 +19,13 @@ class pages {
     // 获得子应用列表
     async getAppsList(ctx) {
         try {
-            const systemId    = ctx.request.body.systemId;
-            const pageNo      = ctx.request.body.pageNo || 1;
-            const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
-            const beginTime   = ctx.request.body.beginTime || '';
-            const endTime     = ctx.request.body.endTime || '';
-            const isAllAvg    = ctx.request.body.isAllAvg || true;
-            const url         = ctx.request.body.url;
+            const systemId    = SqlString.escape(tx.request.body.systemId);
+            const pageNo      = SqlString.escape(ctx.request.body.pageNo) || 1;
+            const pageSize    = SqlString.escape(ctx.request.body.pageSize) || SYSTEM.PAGESIZE;
+            const beginTime   = SqlString.escape(ctx.request.body.beginTime) || '';
+            const endTime     = SqlString.escape(ctx.request.body.endTime) || '';
+            const isAllAvg    = SqlString.escape(ctx.request.body.isAllAvg) || true;
+            const url         = SqlString.escape(ctx.request.body.url);
 
             // 公共参数
             const data = {
@@ -49,25 +49,18 @@ class pages {
                     elt: endTime
                 };
             }
-            const sqlModel = getsqlmodel.basic();
+
             let totalNum = 0;
             if (isAllAvg) {
-                const sqlstr = sqlModel
-                    .select(sqlModel.app_id.count())
-                    .where(`system_id = '${systemId}'`)
-                    .group(sqlModel.app_id)
-                    .toQuery();
-    
-
                 let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('app_id').select(); 
-                const total = await mysql(sqlstr.text);
+                const total = await mysql(sqlTotal);
                 if(total.length) {
                     totalNum = total.length;
                 }
             }
 
             // 请求应用基础信息数据
-            const sqlAppIds = sql.field(`app_id,
+            let sqlAppIds = sql.field(`app_id,
                     count(app_id) as count
                     `
             )

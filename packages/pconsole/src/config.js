@@ -56,10 +56,10 @@ export let DB = {
 	WAITFORCONNECTIONS: true,
 
 	// 连接池数量
-	POOLLIMIT: 2,
+	POOLLIMIT: 10,
 
 	// 排队限制数量
-	QUEUELIMIT: 2,
+	QUEUELIMIT: 10,
 }
 
 export let NODEMAILER = {

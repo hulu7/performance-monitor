@@ -1,5 +1,6 @@
 import moment from 'moment'
 import sql from 'node-transform-mysql'
+import SqlString from 'sqlstring'
 import { Client } from 'elasticsearch'
 import {
     SYSTEM
@@ -64,19 +65,20 @@ class user {
         }
     }
 
-    // 页面主应用流水线
+    // 根据系统ID查应用
     async querySystemById(id) {
         let valjson = {};
         if (!id) {
             return valjson
         }
         // 获得列表
-        const sqlstr = sql
+        const safeId = SqlString.escape(id)
+        let sqlstr = sql
             .table('web_system')
-            .where({ id })
+            .where({ id: safeId })
             .select()
-        
-        let result = await mysql(sqlstr);
+        sqlstr = util.formatSqlstr(sqlstr, safeId);
+        const result = await mysql(sqlstr);
         if (result.length) {
             const {
                 id,
@@ -129,29 +131,35 @@ class user {
     async addSystem(ctx){
         try {
             const {
-                systemName: system_name,
-                systemDomain: system_domain,
-                slowPageTime: slow_page_time,
-                slowJsTime: slow_js_time,
-                slowCssTime: slow_css_time,
-                slowImgTime: slow_img_time,
+                system_name,
+                system_domain,
+                slow_page_time,
+                slow_js_time,
+                slow_css_time,
+                slow_img_time,
             } = ctx.request.body;
             const create_time = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
-            
-            if(!system_name || !system_domain){
+            const safeSystemName = SqlString.escape(system_name);
+            const safeSystemDomain = SqlString.escape(system_domain);
+            const safeSlowPageTime = SqlString.escape(slow_page_time);
+            const safeSlowJsTime = SqlString.escape(slow_js_time);
+            const safeSlowCssTime = SqlString.escape(slow_css_time);
+            const safeSlowImgTime = SqlString.escape(slow_img_time);
+
+            if(!safeSystemName || !safeSystemDomain){
                 ctx.body = util.result({
                     code: 1001,
                     desc: '参数错误!'
                 });
                 return
             }
-
             // 判断应用是否存在
-            const sqlstr1 = sql
+            let sqlstr1 = sql
                 .table('web_system')
-                .where({ system_name })
+                .where({ system_name: safeSystemName })
                 .select()
-                const systemNameMsg = await mysql(sqlstr1);
+            sqlstr1 = util.formatSqlstr(sqlstr1, safeSystemName);
+            const systemNameMsg = await mysql(sqlstr1);
             if(systemNameMsg.length){
                 ctx.body = util.result({
                     code: 1001,
@@ -161,10 +169,11 @@ class user {
             }
 
             // 判断域名是否存在
-            const sqlstr2 = sql
+            let sqlstr2 = sql
                 .table('web_system')
-                .where({ system_domain })
+                .where({ system_domain: safeSystemDomain })
                 .select()
+            sqlstr2 = util.formatSqlstr(sqlstr2, safeSystemDomain);
             const systemDomainMsg = await mysql(sqlstr2);
             if(systemDomainMsg.length){
                 ctx.body = util.result({
@@ -176,8 +185,8 @@ class user {
 
             const timestamp = new Date().getTime();
             const token = util.signwx({
-                system_name,
-                system_domain,
+                system_name: safeSystemName,
+                system_domain: safeSystemDomain,
                 timestamp,
                 random: util.randomString()
             }).paySign;
@@ -203,17 +212,17 @@ class user {
 
             // 插入数据
             const data = {
-                system_name,
-                system_domain,
+                system_name: safeSystemName,
+                system_domain: safeSystemDomain,
                 script,
                 uuid: token,
                 create_time
             }
 
-            if(slow_page_time) data.slow_page_time = slow_page_time;
-            if(slow_js_time) data.slow_js_time = slow_js_time;
-            if(slow_css_time) data.slow_css_time = slow_css_time;
-            if(slow_img_time) data.slow_img_time = slow_img_time;
+            if(safeSlowPageTime) data.slow_page_time = safeSlowPageTime;
+            if(safeSlowJsTime) data.slow_js_time = safeSlowJsTime;
+            if(safeSlowCssTime) data.slow_css_time = safeSlowCssTime;
+            if(safeSlowImgTime) data.slow_img_time = safeSlowImgTime;
             
             const sqlstr3 = sql
                 .table('web_system')
@@ -242,19 +251,19 @@ class user {
     // 设置系统是否需要统计数据
     async isStatisData(ctx){
         try {
-            const id    = ctx.request.body.systemId
-            const key   = ctx.request.body.key
-            const value = ctx.request.body.value
+            const id    = SqlString.escape(ctx.request.body.systemId);
+            const key   = SqlString.escape(ctx.request.body.key);
+            const value = SqlString.escape(ctx.request.body.value);
 
             let data = {};
             data[key] = value;
 
-            const sqlstr = sql
+            let sqlstr = sql
                 .table('web_system')
                 .data(data)
                 .where({ id })
                 .update();
-
+            sqlstr = util.formatSqlstr(sqlstr, id);
             const result = await mysql(sqlstr);
 
             ctx.body = util.result({
@@ -276,18 +285,29 @@ class user {
         try {
             const {
                 id,
-                systemName: system_name,
-                systemDomain: system_domain,
-                slowPageTime: slow_page_time,
-                slowJsTime: slow_js_time,
-                slowCssTime: slow_css_time,
-                slowImgTime: slow_img_time,
-                slowAjaxTime: slow_ajax_time,
-                isUse: is_use,
+                system_name,
+                system_domain,
+                slow_page_time,
+                slow_js_time,
+                slow_css_time,
+                slow_img_time,
+                slow_ajax_time,
+                is_use,
                 uuid
             } = ctx.request.body;
 
-            if(!system_domain || !system_name){
+            const safeSystemName = SqlString.escape(system_name);
+            const safeSystemDomain = SqlString.escape(system_domain);
+            const safeSlowPageTime = SqlString.escape(slow_page_time);
+            const safeSlowJsTime = SqlString.escape(slow_js_time);
+            const safeSlowCssTime = SqlString.escape(slow_css_time);
+            const safeSlowImgTime = SqlString.escape(slow_img_time);
+            const safeSlowAjaxTime = SqlString.escape(slow_ajax_time);
+            const safeId = SqlString.escape(id);
+            const safeuuid = SqlString.escape(uuid);
+            const safeIsUse = SqlString.escape(isUse);
+
+            if(!safeSystemDomain || !safeSystemName){
                 ctx.body = util.result({
                     code: 1001,
                     desc: '参数错误!'
@@ -302,7 +322,7 @@ class user {
                 <script>
                     BOOMR.init({
                         beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
-                        uuid:"${uuid}",
+                        uuid:${safeuuid},
                         autorun: false,
                         History: {
                             enabled: true,
@@ -314,15 +334,31 @@ class user {
                         get_user_id_callback: window.get_user_id_callback
                     });
                 </script>`;
-            const sqlstr = sql
+            let sqlstr = sql
                 .table('web_system')
                 .data({
-                    system_name, system_domain, slow_page_time, slow_js_time, slow_css_time,
-                    slow_img_time, slow_ajax_time, is_use, uuid, script
+                    system_name: safeSystemName,
+                    system_domain: safeSystemDomain,
+                    slow_page_time: safeSlowPageTime,
+                    slow_js_time: safeSlowJsTime,
+                    slow_css_time: safeSlowCssTime,
+                    slow_img_time: safeSlowImgTime,
+                    slow_ajax_time: safeSlowAjaxTime,
+                    is_use: safeIsUse,
+                    uuid: safeuuid,
+                    script
                 })
-                .where({ id })
+                .where({ id: safeId })
                 .update()
-
+            sqlstr = util.formatSqlstr(sqlstr, safeSystemName);
+            sqlstr = util.formatSqlstr(sqlstr, safeSystemDomain);
+            sqlstr = util.formatSqlstr(sqlstr, safeSlowPageTime);
+            sqlstr = util.formatSqlstr(sqlstr, safeSlowJsTime);
+            sqlstr = util.formatSqlstr(sqlstr, safeSlowCssTime);
+            sqlstr = util.formatSqlstr(sqlstr, safeSlowImgTime);
+            sqlstr = util.formatSqlstr(sqlstr, safeSlowAjaxTime);
+            sqlstr = util.formatSqlstr(sqlstr, safeIsUse);
+            sqlstr = util.formatSqlstr(sqlstr, safeuuid);
             const result = await mysql(sqlstr);
 
             ctx.body = util.result({
@@ -340,6 +376,7 @@ class user {
     }
 
     async search(ctx) {
+        return
         const { keys, from, size } = ctx.request.body;
         try {
             const client = new Client({
