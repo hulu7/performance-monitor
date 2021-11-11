@@ -5,7 +5,6 @@ import {
 import {
     util,
     mysql,
-    getsql,
 } from '../tool'
 
 class ajax {

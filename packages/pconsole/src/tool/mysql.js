@@ -15,22 +15,9 @@ const pool = mysql2.createPool({
 });
 const promisePool = pool.promise();
 
-
-// let mysql = require('mysql2/promise');
-// let connection = await mysql.createConnection({
-//     host: DB.HOST,
-//     user: DB.USER,
-//     password: DB.PASSWORD,
-//     database: DB.DATABASE,
-//     port: DB.PROT
-// });
-
 async function mysql(opt1, opt2) {
-    // let [result, fields] = await connection.execute(opt1, opt2);
-    // await connection.end();
-    // return result
 
-    const [rows,fields] = await promisePool.query(opt1);
+    const [rows, fields] = await promisePool.query(opt1);
 
     return rows;
 }

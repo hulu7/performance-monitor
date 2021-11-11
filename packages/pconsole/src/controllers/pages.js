@@ -6,6 +6,7 @@ import {
 import {
     util,
     mysql,
+    getsqlmodel,
 } from '../tool'
 import { result } from 'underscore';
 
@@ -18,16 +19,16 @@ class pages {
     // 获得子应用列表
     async getAppsList(ctx) {
         try {
-            let systemId    = ctx.request.body.systemId;
-            let pageNo      = ctx.request.body.pageNo || 1;
-            let pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
-            let beginTime   = ctx.request.body.beginTime || '';
-            let endTime     = ctx.request.body.endTime || '';
-            let isAllAvg    = ctx.request.body.isAllAvg || true;
-            let url         = ctx.request.body.url;
+            const systemId    = ctx.request.body.systemId;
+            const pageNo      = ctx.request.body.pageNo || 1;
+            const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
+            const beginTime   = ctx.request.body.beginTime || '';
+            const endTime     = ctx.request.body.endTime || '';
+            const isAllAvg    = ctx.request.body.isAllAvg || true;
+            const url         = ctx.request.body.url;
 
             // 公共参数
-            let data = {
+            const data = {
                 system_id: systemId
             };
 
@@ -48,11 +49,18 @@ class pages {
                     elt: endTime
                 };
             }
-
+            const sqlModel = getsqlmodel.basic();
             let totalNum = 0;
             if (isAllAvg) {
+                const sqlstr = sqlModel
+                    .select(sqlModel.app_id.count())
+                    .where(`system_id = '${systemId}'`)
+                    .group(sqlModel.app_id)
+                    .toQuery();
+    
+
                 let sqlTotal = sql.field('count(1) as count').table('web_pages_basic').where(data).group('app_id').select(); 
-                let total = await mysql(sqlTotal);
+                const total = await mysql(sqlstr.text);
                 if(total.length) {
                     totalNum = total.length;
                 }

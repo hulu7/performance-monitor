@@ -1,12 +1,8 @@
 import moment from 'moment'
 import sql from 'node-transform-mysql'
 import {
-    SYSTEM
-} from '../config'
-import {
     util,
     mysql,
-    getsql,
     transaction,
 } from '../tool'
 
