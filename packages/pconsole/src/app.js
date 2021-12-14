@@ -85,7 +85,6 @@ app
 if(IS_HTTPS == 'FALSE') http.createServer(app.callback()).listen(SYSTEM.PROT);
 if(IS_HTTPS == 'TRUE')  https.createServer(options, app.callback()).listen(SYSTEM.PROT);
 
-
-console.log(`服务启动了：路径为：127.0.0.1:${SYSTEM.PROT}`,`orgin:${SYSTEM.ORIGIN}`)
+console.log(`服务启动了：路径为：127.0.0.1:${SYSTEM.PROT}`,`orgin:${SYSTEM.ORIGIN}`);
 
 export default app
