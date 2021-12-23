@@ -63,7 +63,7 @@ new Vue({
             this.systemId = util.queryParameters('systemId');
         },
         gotoDetail(item) {
-            window.open(`/apps/detail/item?systemId=${this.systemId}&&id=${item.id}`, `_blank`);
+            window.open(`/app/detail/item?systemId=${this.systemId}&&id=${item.id}`, `_blank`);
         }
     }
 })

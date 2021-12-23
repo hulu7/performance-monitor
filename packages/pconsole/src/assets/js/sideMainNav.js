@@ -28,7 +28,7 @@ new Vue({
         },
         getDetail() {
             util.ajax({
-                url: `${config.baseApi}api/system/getItemSystem`,
+                url: `${config.baseApi}api/system/detail`,
                 data:{
                     systemId: this.systemId
                 },

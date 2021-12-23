@@ -1,6 +1,6 @@
 
 new Vue({
-    el: '#pages',
+    el: '#app',
     data: function(){
         return{
             listdata: [],
@@ -8,14 +8,9 @@ new Vue({
             pageSize: config.pageSize,
             total: 0,
             currentPage: 1,
-            beginTime: '',
-            endTime: '',
             isLoading: false,
             systemId: ''
         }
-    },
-    filters:{
-        toFixed:window.Filter.toFixed
     },
     mounted(){
         this.getinit();
@@ -34,14 +29,14 @@ new Vue({
         },
         getDetail(pages) {
             util.ajax({
-                url: `${config.baseApi}api/system/getItemSystem`,
+                url: `${config.baseApi}api/system/detail`,
                 data: {
                     systemId: this.systemId
                 },
                 success: data => {
                     this.systemInfo = data.data || {};
-                    this.listdata = pages.data.datalist;
-                    this.total = pages.data.totalNum;
+                    this.listdata = pages.data.data;
+                    this.total = pages.data.total;
                 }
             });
         },
@@ -51,27 +46,24 @@ new Vue({
             let times = util.getSearchTime();
             this.beginTime = times.beginTime;
             this.endTime = times.endTime;
-
             util.ajax({
-                url: `${config.baseApi}api/apps/getAppsList`,
+                url: `${config.baseApi}api/apps/list`,
                 data: {
                     systemId: util.queryParameters('systemId'),
                     pageNo: this.pageNo,
-                    pageSize: this.pageSize,
-                    beginTime: this.beginTime,
-                    endTime: this.endTime
+                    pageSize: this.pageSize
                 },
-                success: data => {
+                success: resps => {
                     this.isLoading = false;
-                    if(!data.data.datalist && !data.data.datalist.length) {
+                    if(!resps.data.data && !resps.data.data.length) {
                         return;
                     }
-                    this.getDetail(data);
+                    this.getDetail(resps);
                 }
             })
         },
         gotodetail(item){
-            location.href=`/apps/detail?systemId=${this.systemId}&appId=${item.appId}`;
+            location.href=`/app/overview?systemId=${this.systemId}&appId=${item.appId}`;
         }
     }
 })

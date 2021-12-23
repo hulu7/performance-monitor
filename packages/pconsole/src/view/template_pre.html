@@ -15,7 +15,7 @@
                 const apps = {
                     pages: {
                         is_main: false,
-                        rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/getAppsList', 'http://performance-monitor-stag.jdcloud.com/apps']
+                        rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/appsList', 'http://performance-monitor-stag.jdcloud.com/apps']
                     },
                     search: {
                         is_main: false,
@@ -31,7 +31,7 @@
                     },
                     main: {
                         is_main: true,
-                        rules: ['http://performance-monitor-stag.jdcloud.com/js', 'http://performance-monitor-stag.jdcloud.com/css', 'http://performance-monitor-stag.jdcloud.com/api/system/getSystemList', 'http://performance-monitor-stag.jdcloud.com/images', 'http://performance-monitor-stag.jdcloud.com/reportPerformance', 'http://performance-monitor-stag.jdcloud.com/']
+                        rules: ['http://performance-monitor-stag.jdcloud.com/js', 'http://performance-monitor-stag.jdcloud.com/css', 'http://performance-monitor-stag.jdcloud.com/api/system/list', 'http://performance-monitor-stag.jdcloud.com/images', 'http://performance-monitor-stag.jdcloud.com/reportPerformance', 'http://performance-monitor-stag.jdcloud.com/']
                     }
                 };
                 let appInfo = {
@@ -59,12 +59,11 @@
         <script src="/js/vue.min.js"></script>
         <script src="/js/echarts.min.js"></script>
         <script src="/js/element-ui.min.js"></script>
+        <script src="/js/vue-filters.js"></script>
         <script src="/js/PopLayer.js"></script>
         <script src="/js/config.js"></script>
         <script src="/js/util.js"></script>
         <script src="/js/md5.js"></script>
-        <script src="/js/vue-filters.js"></script>
-        <script src="/js/vue-components.js"></script>
     </head>
     <body id="body">
         <%- body %>

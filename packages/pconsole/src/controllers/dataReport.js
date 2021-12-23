@@ -1,172 +1,14 @@
 import moment from 'moment';
-import sql from 'node-transform-mysql';
-import SqlString from 'sqlstring'
-import UAParser from 'ua-parser-js';
-import url from 'url';
-import querystring from 'querystring';
 import {
     util,
-    mysql
 } from '../tool';
-const imgsrc = 'console.log(0)';
+const imgsrc = 'success';
+import ReportService from '../services/reportService';
+import SystemService from '../services/systemService';
 
 class data {
     //初始化对象
     constructor() {};
-    // 页面打cookie
-    async setMarkCookies(ctx) {
-        try {
-            const cookies = ctx.cookie;
-            let timestamp = new Date().getTime();
-            let markUser,mark_page,IP;
-            let maxAge = 864000000;  //cookie超时时间
-
-            if(cookies && cookies.markUser){}else{
-                // 第一次访问
-                markUser = util.signwx({
-                    mark:'markUser',
-                    timestamp:timestamp,
-                    random:util.randomString()
-                }).paySign;
-                ctx.cookies.set('markUser',markUser)
-            }
-
-            // 每次页面标识
-            mark_page = util.signwx({
-                mark:'mark_page',
-                timestamp:timestamp,
-                random:util.randomString()
-            }).paySign;
-            ctx.cookies.set('mark_page',mark_page)
-
-            // 用户IP标识
-            let userSystemInfo = {}
-            // if(cookies && cookies.IP){}else{
-            //     function getUserIpMsg(){
-            //         return new Promise(function(resolve, reject) {
-            //             let ip = ctx.get("X-Real-IP") || ctx.get("X-Forwarded-For") || ctx.ip;
-            //             userSystemInfo.ip = ip;
-            //             axios.get(`http://ip.taobao.com/service/getIpInfo.php?ip=${ip}`).then(function (response) {
-            //                 resolve(response.data)
-            //             }).catch(function (error) {
-            //                 console.log(error)
-            //                 resolve(null)
-            //             });
-            //         })
-            //     }
-            //     let datas = await getUserIpMsg();
-            //     if(datas.code == 0) userSystemInfo = datas.data;
-            //     IP = userSystemInfo.ip
-            //     // 设置页面cookie
-            //     ctx.cookies.set('IP',userSystemInfo.ip,{maxAge:maxAge})
-            //     ctx.cookies.set('isp',encodeURIComponent(userSystemInfo.isp),{maxAge:maxAge})
-            //     ctx.cookies.set('country',encodeURIComponent(userSystemInfo.country),{maxAge:maxAge})
-            //     ctx.cookies.set('region',encodeURIComponent(userSystemInfo.region),{maxAge:maxAge})
-            //     ctx.cookies.set('city',encodeURIComponent(userSystemInfo.city),{maxAge:maxAge})
-            // }
-            
-            // 获得markUser值
-            if(!markUser&&cookies&&cookies.markUser){
-                markUser = cookies.markUser
-            }
-            // 获得用户IP等信息
-            if(!IP && cookies && cookies.IP){
-                userSystemInfo.ip = decodeURIComponent(cookies.IP)
-                userSystemInfo.isp = decodeURIComponent(cookies.isp)
-                userSystemInfo.country = decodeURIComponent(cookies.country)
-                userSystemInfo.region = decodeURIComponent(cookies.region)
-                userSystemInfo.city = decodeURIComponent(cookies.city)
-            }
-
-            let script = `if(window.getCookies){
-                getCookies({
-                    mark_page:'${mark_page}',
-                    mark_user:'${markUser}',
-                    IP:'${userSystemInfo.ip}',
-                    isp:'${userSystemInfo.isp}',
-                    county:'${userSystemInfo.country}',
-                    province:'${userSystemInfo.region}',
-                    city:'${userSystemInfo.city}',
-                });}`
-
-            ctx.body=script
-
-        }catch(err){
-            console.log(err)
-            ctx.body=imgsrc
-        }
-    }
-    // 用户系统信息上报
-    async getSystemPerformDatas(ctx) {
-        try{
-            //------------校验token是否存在-----------------------------------------------------   
-            if(!ctx.query.uuid){
-                ctx.body=imgsrc;
-                return; 
-            };
-            const safeuuid = SqlString.escape(ctx.query.uuid);
-            let sqlstr = sql
-                .table('web_system')
-                .field('is_use,id')
-                .where({ uuid: safeuuid })
-                .select();
-
-            sqlstr = util.formatSqlstr(sqlstr, safeuuid);
-            let systemMsg = await mysql(sqlstr); 
-            if(!systemMsg || !systemMsg.length){
-                ctx.body=imgsrc;
-                return; 
-            };
-            let systemItem = systemMsg[0]
-            if(systemItem.is_use !== 0 || systemItem.isStatisiSystem!==0){
-                ctx.body=imgsrc;
-                return; 
-            };
-
-            // 获取userAgent
-            let userAgent   = ctx.request.header['user-agent']
-
-            // var address = require('address');
-            // console.log(address.ip());   // '192.168.0.2'
-            // console.log(address.ipv6()); // 'fe80::7aca:39ff:feb0:e67d'
-            // address.mac(function (err, addr) {
-            //   console.log(addr); // '78:ca:39:b0:e6:7d'
-            // });
-
-            // 检测用户UA相关信息
-            let parser = new UAParser();
-            parser.setUA(userAgent);
-            let result = parser.getResult();
-
-            // environment表数据
-            const environment = {
-                systemId: systemItem.id,
-                IP: ctx.query.IP||'',
-                isp: ctx.query.isp||'',
-                county: ctx.query.county||'',
-                province: ctx.query.province||'',
-                city: ctx.query.city||'',
-                browser: result.browser.name||'',
-                borwserVersion: result.browser.version||'',
-                system: result.os.name||'',
-                systemVersion: result.os.version||'',
-                markUser: ctx.query.markUser||'',
-                mark_page: ctx.query.markPage||'',
-                url: decodeURIComponent(ctx.query.url)||'',
-                create_time: moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
-            }
-
-            let sqlstr1 = sql
-                .table('web_environment')
-                .data(environment)
-                .insert()
-            await mysql(sqlstr1);  
-
-            ctx.body = imgsrc 
-        }catch(err){
-            ctx.body = imgsrc
-        }
-    }
 
     async reportPerformance(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
@@ -179,7 +21,8 @@ class data {
                 return;
             };
 
-            const systems = await dataInstance.querySystems(uuid);
+            const systems = await SystemService.getSystemByUUID(uuid);
+        
             if(!systems || !systems.length){
                 ctx.body=imgsrc;
                 return; 
@@ -191,254 +34,15 @@ class data {
             };
             console.log('---start store performance data--');
             const createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
-            //----------------------------------------存储页面page性能----------------------------------------
+
+            //存储页面page性能
             await dataInstance.storePagePerformance(createTime, resourceDatas, systemItem);
             ctx.body=imgsrc;
             return;
-        }catch(err){
+        } catch(err) {
             console.log(err)
             ctx.body=imgsrc
         }  
-    }
-
-    // 页面性能及其资源上报
-    async getPageResources(ctx) {
-        ctx.set('Access-Control-Allow-Origin','*');
-        try{
-            //------------校验token是否存在----------------------------------------------------- 
-            let resourceDatas = ctx.request.body ? JSON.parse(ctx.request.body) : {}  
-            const { uuid } = resourceDatas
-            if(!uuid){
-                ctx.body=imgsrc;
-                return; 
-            }; 
-            let sqlstr = sql
-                .table('web_system')
-                .field(`is_use,
-                    id,
-                    slow_page_time,
-                    isStatisiPages,
-                    slow_js_time,
-                    slow_css_time,
-                    slow_img_time,
-                    isStatisiAjax,
-                    isStatisiResource`
-                )
-                .where({ uuid })
-                .select()
-            let systemMsg = await mysql(sqlstr); 
-            if(!systemMsg || !systemMsg.length){
-                ctx.body=imgsrc;
-                return; 
-            };
-            let systemItem = systemMsg[0]
-            if(systemItem.is_use !== 0){
-                ctx.body=imgsrc;
-                return; 
-            };
-            
-            let createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
-
-            //----------------------------------------存储页面page性能----------------------------------------
-            if(systemItem.isStatisiPages === 0) {
-                let pageTimes = resourceDatas.pageTimes || {}
-                let datas={
-                    load_time: pageTimes.loadTime,
-                    dns_time: pageTimes.dnsTime,
-                    tcp_time: pageTimes.tcpTime,
-                    dom_time: pageTimes.domTime,
-                    white_time: pageTimes.whiteTime,
-                    redirect_time: pageTimes.redirectTime,
-                    unload_time: pageTimes.unloadTime,
-                    request_time: pageTimes.requestTime,
-                    analysis_dom_time: pageTimes.analysisDomTime,
-                    ready_time: pageTimes.readyTime,
-                    resourceTime: pageTimes.resourceTime,
-                    preUrl: pageTimes.preUrl,
-                    url: decodeURIComponent(resourceDatas.url),
-                    markUser: resourceDatas.markUser,
-                    mark_page: resourceDatas.markPage,
-                    create_time: createTime,
-                    systemId: systemItem.id
-                }
-
-                let table = 'web_pages';
-                // 判断是否存入慢表
-                if((pageTimes.loadTime+pageTimes.resourceTime) >= systemItem.slow_page_time*1000) table = 'web_slowpages';
-
-                const sqlstr1 = sql
-                    .table(table)
-                    .data(datas)
-                    .insert()
-                await mysql(sqlstr1);  
-            }
-
-            //----------------------------------------存储页面资源性能----------------------------------------
-
-            let datas = {
-                systemId:systemItem.id,
-                mark_page:resourceDatas.markPage,
-                markUser:resourceDatas.markUser,
-                callUrl:decodeURIComponent(resourceDatas.url),
-                create_time:createTime,
-            }
-            resourceDatas.list.forEach(async item=>{
-                let duration = 0;
-                let table = ''
-                let items = JSON.parse(JSON.stringify(datas));
-                items.name=item.name
-                items.duration=item.duration
-                items.decodedBodySize=item.decodedBodySize
-                items.method = item.method
-
-                if(item.type === 'script'){
-                    duration = systemItem.slow_js_time
-                }else if(item.type === 'link'||item.type === 'css'){
-                    duration = systemItem.slow_css_time
-                }else if(item.type === 'xmlhttprequest'){
-                    let newurl      = url.parse(item.name)
-                    let newName     = newurl.protocol+'//'+newurl.host+newurl.pathname
-                    let querydata   = newurl.query?querystring.parse(newurl.query):{}
-
-                    items.querydata = JSON.stringify(querydata)
-                    items.name      = newName
-                    item.querydata  = querydata
-                    item.name       = newName
-
-                    duration = systemItem.slowAajxTime
-                    table = 'web_ajax' 
-
-                }else if(item.type === 'img'){
-                    duration = systemItem.slow_img_time
-                }
-                if(parseInt(item.duration) >= duration*1000){
-                    table = 'web_slowresources'
-                }
-
-
-                // 判断是否存储 ajax 和 慢资源
-                if(table&&table==='web_ajax'&&systemItem.isStatisiAjax===0){
-                    let sqlstr2 = sql.table(table).data(items).insert()
-                    await mysql(sqlstr2)
-                }else if(table&&table==='web_slowresources'&&systemItem.isStatisiResource===0){
-                    let sqlstr2 = sql.table(table).data(items).insert()
-                    await mysql(sqlstr2)
-                }
-            })
-
-            // 存储页面所有资源
-            if(systemItem.isStatisiResource !== 0){
-                ctx.body=imgsrc;
-                return;
-            };
-
-            datas.resourceDatas = JSON.stringify(resourceDatas.list)
-            let sqlstr3 = sql.table('web_sources').data(datas).insert()
-            await mysql(sqlstr3)
-
-            ctx.body=imgsrc;
-            return;
-        }catch(err){
-            console.log(err)
-            ctx.body=imgsrc
-        }  
-    }
-    // 页面错误上报收集
-    async getErrorMsg(ctx) {
-        ctx.set('Access-Control-Allow-Origin','*');
-        try{
-            //------------校验token是否存在----------------------------------------------------- 
-            let resourceDatas = ctx.request.body?JSON.parse(ctx.request.body):{}  
-            const { uuid } = resourceDatas;
-            let reportDataList = resourceDatas.reportDataList
-            if(!reportDataList.length) return;
-            if(!uuid){
-                ctx.body=imgsrc;
-                return; 
-            }; 
-            let sqlstr = sql
-                .table('web_system')
-                .field('is_use,id')
-                .where({ uuid })
-                .select()
-            let systemMsg = await mysql(sqlstr); 
-            if(!systemMsg || !systemMsg.length){
-                ctx.body=imgsrc;
-                return; 
-            };
-            let systemItem = systemMsg[0]
-            if(systemItem.is_use !== 0){
-                ctx.body=imgsrc;
-                return; 
-            };
-
-            if(systemItem.isStatisiError === 0){
-                reportDataList.forEach(async item=>{
-                    let newurl      = url.parse(item.data.resourceUrl)
-                    let newName     = ''
-                    if(newurl.protocol) newName=newurl.protocol+'//'
-                    if(newurl.host) newName=newName+newurl.host
-                    if(newurl.pathname) newName=newName+newurl.pathname
-                    let querydata   = newurl.query?querystring.parse(newurl.query):{}
-
-                    let datas={
-                        useragent:item.a||'',
-                        msg:item.msg||'',
-                        category:item.data.category||'',
-                        pageUrl:item.data.pageUrl||'',
-                        resourceUrl:newName,
-                        querydata:JSON.stringify(querydata),
-                        target:item.data.target||'',
-                        type:item.data.type||'',
-                        status:item.data.status||'',
-                        text:item.data.text||'',
-                        col:item.data.col||'',
-                        line:item.data.line||'',
-                        method:item.method,
-                        fullurl:item.data.resourceUrl,
-                        create_time:moment(new Date(item.t)).format('YYYY-MM-DD HH:mm:ss'),
-                        systemId:systemItem.id
-                    }
-
-                    console.log(datas)
-
-                    let sqlstr1 = sql
-                        .table('web_error')
-                        .data(datas)
-                        .insert()
-                    let result1 = await mysql(sqlstr1);  
-                })
-            }
-
-            ctx.body=imgsrc
-        }catch(err){
-            console.log(err)
-            ctx.body=imgsrc
-        }  
-    }
-
-    async querySystems(uuid) {
-        let sqlstr = sql
-        .table('web_system')
-        .field(`id,
-               system_domain,
-               system_name,
-               script,
-               is_use,
-               create_time,
-               slow_page_time,
-               slow_js_time,
-               slow_css_time,
-               slow_img_time,
-               slow_ajax_time,
-               uuid,
-               is_monitor_pages,
-               is_monitor_ajax,
-               is_monitor_resource,
-               is_monitor_system`)
-        .where({ uuid })
-        .select()
-        return mysql(sqlstr);
     }
 
     async storePagePerformance(createTime, resourceDatas, systemItem) {
@@ -575,8 +179,10 @@ class data {
             const decodedUrl = decodeURIComponent(url || '');
             const page_id = util.getPageId(decodedUrl);
             const app_id = util.convert2Md5(`${systemItem.id}_${app || 'unknown'}`);
-            const web_pages_basic_data = {
-                user_id,
+
+            //基本信息
+            const basicData = {
+                user_id: user_id || '',
                 page_id,
                 is_main: is_main ? '0' : '1',
                 url: decodedUrl || '',
@@ -587,16 +193,10 @@ class data {
                 app_name: app || 'unknown',
                 additional_info: additional_info || ''
             };
-            const time_to_interactive = Object.keys(tti).find(key => tti[key] === true);
 
-            const storePagesBasicSqlStr = sql
-                .table('web_pages_basic')
-                .data(web_pages_basic_data)
-                .insert();
-            const operationResult = await mysql(storePagesBasicSqlStr);
-            const { insertId: monitor_id } = operationResult;
-            const web_pages_timing_data = {
-                monitor_id,
+            // 性能信息
+            const time_to_interactive = Object.keys(tti).find(key => tti[key] === true);
+            const timingData = {
                 page_id,
                 app_id,
                 url: decodedUrl || '',
@@ -626,14 +226,14 @@ class data {
                 front_time: front_time || '0',
                 back_time: back_time || '0'
             };
-    
-            const web_pages_restiming_data = {
-                monitor_id,
+            
+            // 瀑布流数据
+            const restimingData = {
                 restiming: util.compress(restiming) || ''
             };
 
-            const web_pages_navigation_data = {
-                monitor_id,
+            // 基本性能数据
+            const navigationData = {
                 connect_end: connect_end || '0',
                 connect_start: connect_start || '0',
                 domain_lookup_end: domain_lookup_end || '0',
@@ -654,8 +254,8 @@ class data {
                 unload_event_start: unload_event_start || '0'
             };
     
-            const web_pages_resources_data = {
-                monitor_id,
+            // 资源数据
+            const resourcesData = {
                 app_id,
                 page_id,
                 url: decodedUrl || '',
@@ -684,8 +284,8 @@ class data {
                 nocookie: nocookie || '0'
             };
     
-            const web_pages_client_data = {
-                monitor_id,
+            // 客户端信息
+            const clientData = {
                 app_id,
                 page_id,
                 url: decodedUrl || '',
@@ -704,8 +304,8 @@ class data {
                 round_trip_time: round_trip_time || '0'
             };
     
-            const web_pages_probe_data = {
-                monitor_id,
+            // 探针信息
+            const probeData = {
                 boomerang_snippet_method: boomerang_snippet_method || '',
                 time_to_interactive_method: time_to_interactive_method || '',
                 trigger_method: trigger_method || '',
@@ -718,34 +318,14 @@ class data {
                 page_visibility: page_visibility || ''
             };
 
-            const dataMap = {
-                web_pages_timing_data,
-                web_pages_restiming_data,
-                web_pages_navigation_data,
-                web_pages_resources_data,
-                web_pages_client_data,
-                web_pages_probe_data
+            const param = {
+                basicData, timingData, restimingData, navigationData,
+                resourcesData, clientData, probeData
             };
 
-            const tables = [
-                'web_pages_timing',
-                'web_pages_restiming',
-                'web_pages_navigation',
-                'web_pages_resources',
-                'web_pages_client',
-                'web_pages_probe'
-            ]
-
-            const storePerformanceData = tables.map(table => {
-                    const sqlStr = sql
-                        .table(table)
-                        .data(dataMap[`${table}_data`])
-                        .insert();
-                    return mysql(sqlStr);
-                });
-            return Promise.all(storePerformanceData);
+            await ReportService.storePerformanceData(param);
         }
-    }    
+    }
 }
 
 module.exports = new data();

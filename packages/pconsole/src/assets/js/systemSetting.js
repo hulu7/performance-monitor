@@ -29,7 +29,7 @@ new Vue({
         getDetail() {
             this.systemId = util.queryParameters('systemId');
             util.ajax({
-                url: `${config.baseApi}api/system/getItemSystem`,
+                url: `${config.baseApi}api/system/detail`,
                 data: {
                     systemId: this.systemId
                 },
@@ -51,7 +51,7 @@ new Vue({
         settingIsUse() {
             const { systemId } = this;
             util.ajax({
-                url: `${config.baseApi}api/system/isStatisData`,
+                url: `${config.baseApi}api/system/required`,
                 data: {
                     systemId,
                     key:'isUse',
@@ -83,7 +83,7 @@ new Vue({
                 isUse: enable ? 0 : 1
             });
             util.ajax({
-                url: `${config.baseApi}api/system/updateSystem`,
+                url: `${config.baseApi}api/system/update`,
                 data: this.systemInfo,
                 success: data => {
                     popup.miss({title:"操作成功！"});
@@ -141,7 +141,7 @@ new Vue({
         },
         setDatas(key, value) {
             util.ajax({
-                url: `${config.baseApi}api/system/isStatisData`,
+                url: `${config.baseApi}api/system/required`,
                 data: {
                     key,
                     value

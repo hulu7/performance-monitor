@@ -3,10 +3,10 @@
 <!-- 样式 -->
 <link rel="stylesheet" href="/css/page.css">
 <link rel="stylesheet" href="/css/ajax.css">
-<div class="container ajax" id="pages" v-cloak>
+<div class="container ajax" id="app" v-cloak>
    <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text" style="color: black;">子应用列表</el-button>
+        <el-button type="text" style="color: black;">应用列表</el-button>
     </div>
     <div class="table-box common-padding mt20">
         <div v-if="listdata.length">
@@ -22,33 +22,19 @@
                             @click="gotodetail(scope.row)"
                             class="text-overflow">
                             {{scope.row.appName}}
-                        </a>{{scope.row.isMain ? '(主)' : ''}}
+                        </a>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="isMain"
+                    label="应用分类">
+                    <template slot-scope="scope">
+                        {{scope.row.isMain ? '主' : '子'}}应用
                     </template>
                 </el-table-column>
                 <el-table-column
                     prop="count"
                     label="访问次数">
-                </el-table-column>
-                <el-table-column
-                    prop="loadTime"
-                    label="平均加载时间">
-                    <template slot-scope="scope">
-                        <span class="tc">{{scope.row.loadTime|toFixed(true)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="requestTime"
-                    label="平均请求时间">
-                    <template slot-scope="scope">
-                        <span class="tc">{{scope.row.requestTime|toFixed(true)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="whiteTime"
-                    label="平均白屏时间">
-                    <template slot-scope="scope">
-                        <span class="tc">{{scope.row.whiteTime|toFixed(true)}}</span>
-                    </template>
                 </el-table-column>
             </el-table>
             <div class="tr common_page_style" v-show="!isLoading && listdata.length">
@@ -68,7 +54,7 @@
     <!-- 暂无数据 -->
     <div class="tc" v-if="!listdata.length">暂无数据!</div>
 </div>
-<script src="/js/view-pages.js"></script>
+<script src="/js/appList.js"></script>
 <style scoped>
 .el-button+.el-button {
     margin-left: 0;

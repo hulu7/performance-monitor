@@ -12,8 +12,7 @@ itemsParas = {
     "appId": "",
     "beginTime": "",
     "endTime": "",
-    "userId": "",
-    "isSearching": "true"
+    "userId": ""
 }
 detailsParas = {
     "id": 1

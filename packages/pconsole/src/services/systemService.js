@@ -1,9 +1,6 @@
 const {
     WebSystem
   } = require('../models/index')
-  const {
-    sequelize
-  } = require('../database/connect')
   
   class SystemService {
     // 获取系统列表
@@ -18,6 +15,15 @@ const {
       return WebSystem.findAll({
         where: {
           id,
+        },
+      })
+    }
+
+    // 根据系统UUID获取系统详情
+    async getSystemByUUID(uuid) {
+      return WebSystem.findAll({
+        where: {
+          uuid,
         },
       })
     }

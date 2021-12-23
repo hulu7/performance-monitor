@@ -3,10 +3,10 @@
 <!-- 样式 -->
 <link rel="stylesheet" href="/css/page.css">
 <link rel="stylesheet" href="/css/page-detail.css">
-<div class="container ajax mb150" id="pagesDetail" v-cloak>
+<div class="container ajax mb150" id="appsOverview" v-cloak>
    <div class="common-title">
         <el-button type="text" @click="goHome">首页</el-button>/
-        <el-button type="text" @click="goToPages">子应用列表</el-button>/
+        <el-button type="text" @click="goToPages">应用列表</el-button>/
         <el-button type="text" style="color: black;">性能历史数据</el-button>
     </div>
     <div class="common_table_nav">
@@ -14,7 +14,7 @@
     </div>
     <div class="current-page">
         <div class="app-info">应用名称: 
-            <div class="app-name">{{appName || '--'}}</div>
+            <div class="app-name">{{pagesItemData.appName || '--'}}</div>
         </div>
     </div>
     <div class="common-margin">
@@ -325,7 +325,7 @@
         </div>
     </div>
 </div>
-<script src="/js/view-page-detail.js"></script>
+<script src="/js/appsOverview.js"></script>
 <style scoped>
 .el-button+.el-button {
     margin-left: 0;

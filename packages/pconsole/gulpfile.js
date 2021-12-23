@@ -211,13 +211,12 @@ gulp.task('replace:template', gulp.series(() => {
 // 恢复不需要压缩的js文件
 gulp.task('vue:back', gulp.series(() => {
     return gulp.src([
-        './src/assets/js/vue-components.js',
-        './src/assets/js/vue-filters.js',
         './src/assets/js/element-ui.min.js',
         './src/assets/js/echarts.min.js',
         './src/assets/js/vue.min.js',
         './src/assets/js/jquery.min.js',
-        './src/assets/js/polyfill.min.js'
+        './src/assets/js/polyfill.min.js',
+        './src/assets/js/vue-filters.js'
     ])
         .pipe(gulp.dest(`${buildUrl}/assets/js/`));
 }));

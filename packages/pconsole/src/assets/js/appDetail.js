@@ -1,5 +1,5 @@
 new Vue({
-    el: '#pagesDetail',
+    el: '#appDetail',
     data(){
         return{
             id: util.getQueryString('id'),
@@ -28,10 +28,9 @@ new Vue({
     },
     beforeMount(){
         this.init();
-        this.getPageItemForId();
+        this.getAppDetail();
     },
-    mounted(){
-    },
+    mounted(){},
     methods: {
         init() {
             this.systemId = util.queryParameters('systemId');
@@ -44,10 +43,10 @@ new Vue({
             window.location.href = `/apps?systemId=${this.systemId}`;
         },
         goToPageHistory() {
-            window.location.href = `/apps/detail?systemId=${this.systemId}&appId=${this.appId}`;
+            window.location.href = `/app/overview?systemId=${this.systemId}&appId=${this.appId}`;
         },
         copy() {
-            if (this.pagesItemData.url && util.copy(this.pagesItemData.url)) {
+            if (this.pagesItemData.basic.url && util.copy(this.pagesItemData.basic.url)) {
                 popup.miss({title:'已拷贝至剪贴板!'})
             } else {
                 popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
@@ -94,6 +93,7 @@ new Vue({
                 });
                 
                 util.drawWaterfall('all-data', restimings);
+
                 const parent = document.getElementById('network-stream');
                 for (let key in apps) {
                     const title = document.createElement('h2');
@@ -111,22 +111,21 @@ new Vue({
             }
         },
         // 获得页面请求性能详情
-        getPageItemForId() {
+        getAppDetail() {
             this.isLoading = true;
-            const api = `api/${this.type && this.type === 'slow' ? 'slowpages/getslowPageItemForId' : 'apps/getPageItemForId'}`;
             const { id } = this;
             util.ajax({
-                url: `${config.baseApi}${api}`,
+                url: `${config.baseApi}api/apps/detail`,
                 data: {
                     id
                 },
-                success: data => {
+                success: resps => {
                     this.isLoading = false;
-                    this.pagesItemData = data.data;
-                    this.url = this.pagesItemData.url;
-                    this.drawNetworkStream(this.pagesItemData.restiming);
+                    this.pagesItemData = resps.data;
+                    this.url = this.pagesItemData.basic.url;
+                    this.drawNetworkStream(this.pagesItemData.restiming.restiming);
                     setTimeout(() => {
-                        this.drawAddInfo(this.pagesItemData.add);
+                        this.drawAddInfo(this.pagesItemData.restiming.add);
                     }, 100);
                 }
             })

@@ -12,7 +12,7 @@ new Vue({
         getDataList() {
             let _this = this;
             util.ajax({
-                url: `${config.baseApi}api/system/getSystemList`,
+                url: `${config.baseApi}api/system/list`,
                 success(data){
                     _this.datalist=data.data
                 }

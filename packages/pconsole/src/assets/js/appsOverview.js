@@ -1,6 +1,6 @@
 
 new Vue({
-    el: '#pagesDetail',
+    el: '#appsOverview',
     data() {
         return {
             table: 1,
@@ -23,14 +23,12 @@ new Vue({
             isShowCharts: false,
             systemId: '',
             appId: '',
-            appName: '',
             searchPin: '',
             formData: {
                 dateRange: [],
                 userId: ''
             },
             chartType: true,
-            isSearching: false
         }
     },
     filters: {
@@ -45,7 +43,7 @@ new Vue({
         date: window.Filter.date,
         limitTo: window.Filter.limitTo,
     },
-    beforeMount(){
+    mounted(){
         this.init();
         if(this.appId){
             this.getAverageValues()
@@ -61,17 +59,11 @@ new Vue({
         ];
         statics.map((type) => this.getDataForEnvironment(type));
     },
-    mounted(){},
     methods:{
         onSearch() {
-            if (!this.isSearching) {
-                this.currentPage = 1;
-            }
-            this.isSearching = true;
             this.fetchHistory();
         },
         onReset() {
-            this.isSearching = false;
             this.formData.dateRange = [];
             this.formData.userId = '';
             this.currentPage = 1;
@@ -96,16 +88,15 @@ new Vue({
             this.appId = util.getQueryString('appId');
         },
         gotoDetail(id) {
-            window.open(`/apps/detail/item?systemId=${this.systemId}&id=${id}&appId=${this.appId}`, `_blank`);
+            window.open(`/app/detail?systemId=${this.systemId}&id=${id}&appId=${this.appId}`, `_blank`);
         },
         getAverageValues() {
             this.isLoadingAverage = true;
             util.ajax({
-                url: `${config.baseApi}api/apps/getAppAverage`,
+                url: `${config.baseApi}api/apps/average`,
                 data: {
                     systemId: this.systemId,
-                    appId: this.appId,
-                    isAllAvg: false,
+                    appId: this.appId
                 },
                 success: data => {
                     this.pagesItemData = data.data;
@@ -116,21 +107,19 @@ new Vue({
         fetchHistory() {
             this.isLoadingHistory  = true;
             util.ajax({
-                url: `${config.baseApi}api/apps/getPageItemDetail`,
+                url: `${config.baseApi}api/apps/history`,
                 data: {
                     pageNo: this.currentPage,
                     pageSize: this.pageSize,
                     appId: this.appId,
                     beginTime: this.formData.dateRange.length > 1 ? this.formData.dateRange[0] : '',
                     endTime: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : '',
-                    userId: this.formData.userId,
-                    isSearching: this.isSearching
+                    userId: this.formData.userId
                 },
-                success: data => {
+                success: resps => {
                     this.isLoadingHistory = false;
-                    this.listdata = data.data.datalist;
-                    this.appName = this.listdata[0].app_name
-                    this.total = data.data.totalNum;
+                    this.listdata = resps.data.data;
+                    this.total = resps.data.total;
                     if (!this.chartType) {
                         this.echartShowPages();
                     }
@@ -141,7 +130,7 @@ new Vue({
         getDataForEnvironment(type) {
             this[`isLoading${type}`] = true;
             util.ajax({
-                url: `${config.baseApi}api/environment/getDataForEnvironment`,
+                url: `${config.baseApi}api/environment/detail`,
                 data:{
                     appId: this.appId,
                     beginTime: '',
@@ -154,7 +143,7 @@ new Vue({
                 }
             })
         },
-        getData(datas, id, tyle) {
+        getData(datas, id, type) {
             let seriesData=[];
             let legendData=[];
             let totalcount=0;
@@ -163,7 +152,7 @@ new Vue({
                 totalcount += item.count
             })
             datas.forEach(item => {
-                let name = item[tyle]
+                let name = item[type]
                 legendData.push({
                     name: name || '未知',
                     icon: 'circle',

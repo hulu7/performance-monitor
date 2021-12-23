@@ -23,7 +23,7 @@ new Vue({
         getDetail(){
             let _this=this;
             util.ajax({
-                url: `${config.baseApi}api/system/getItemSystem`,
+                url: `${config.baseApi}api/system/detail`,
                 data: {
                     uuid: this.uuid
                 },
@@ -49,7 +49,7 @@ new Vue({
                 return false;
             }
             util.ajax({
-                url: `${config.baseApi}api/system/addSystem`,
+                url: `${config.baseApi}api/system/add`,
                 data:{
                     systemName: this.systemName,
                     systemDomain: this.systemDomain,
