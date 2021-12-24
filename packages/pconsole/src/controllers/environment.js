@@ -1,7 +1,5 @@
-import sql from 'node-transform-mysql'
 import {
     util,
-    mysql,
 } from '../tool'
 import EnvironmentService from '../services/environmentService'
 

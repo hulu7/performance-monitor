@@ -1,6 +1,5 @@
 import md5 from 'md5'
 import fs from 'fs'
-import path from 'path'
 import {
     SYSTEM
 } from '../config'

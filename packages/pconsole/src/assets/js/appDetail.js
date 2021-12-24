@@ -123,8 +123,8 @@ new Vue({
                     this.isLoading = false;
                     this.pagesItemData = resps.data;
                     this.url = this.pagesItemData.basic.url;
-                    this.drawNetworkStream(this.pagesItemData.restiming.restiming);
                     setTimeout(() => {
+                        this.drawNetworkStream(this.pagesItemData.restiming.restiming);
                         this.drawAddInfo(this.pagesItemData.restiming.add);
                     }, 100);
                 }

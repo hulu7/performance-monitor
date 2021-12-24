@@ -2,9 +2,6 @@ import {
     util,
     qiniu,
 } from '../tool'
-import {
-    SYSTEM
-} from '../config'
 
 class common {
 
