@@ -61,12 +61,3 @@ export let DB = {
 	// 排队限制数量
 	QUEUELIMIT: 1000,
 }
-
-export let NODEMAILER = {
-	// SMTP服务提供商域名
-	HOST: '163',
-	// 用户名/用户邮箱
-	USER: 'xxx@163.com',
-	// 邮箱密码
-	PASSWORD: '132456',
-}

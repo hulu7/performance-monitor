@@ -37,22 +37,6 @@ gulp.task('nodemon', gulp.series(() => {
     });
 }))
 
-// 自动刷新页面太慢
-// gulp.task('server', ["nodemon"], function() {
-//     var files = [
-//         'src/**/*.html',
-//     ];
-//     browserSync.init(files, {
-//         proxy: 'http://localhost:18080',
-//         browser: 'chrome',
-//         notify: true,
-//         port: 8080
-//     });
-
-//     gulp.watch(files).on("change", browserSync.reload); 
-// });
-
-
 gulp.task('sass', gulp.series(() => {
     return gulp.src(['./src/assets/sass/*.scss'])
         .pipe(sass().on('error', sass.logError))
@@ -117,6 +101,33 @@ gulp.task('babel:server:con:back', gulp.series(() => {
             "plugins": ["transform-runtime"]
         }))
         .pipe(gulp.dest(`${buildUrl}/controllers/back`));
+}));
+
+gulp.task('babel:server:database', gulp.series(() => {
+    return gulp.src(`${buildUrl}/database/*.js`)
+        .pipe(babel({
+            "presets": ["es2015", "stage-2"],
+            "plugins": ["transform-runtime"]
+        }))
+        .pipe(gulp.dest(`${buildUrl}/database`));
+}));
+
+gulp.task('babel:server:models', gulp.series(() => {
+    return gulp.src(`${buildUrl}/models/*.js`)
+        .pipe(babel({
+            "presets": ["es2015", "stage-2"],
+            "plugins": ["transform-runtime"]
+        }))
+        .pipe(gulp.dest(`${buildUrl}/models`));
+}));
+
+gulp.task('babel:server:services', gulp.series(() => {
+    return gulp.src(`${buildUrl}/services/*.js`)
+        .pipe(babel({
+            "presets": ["es2015", "stage-2"],
+            "plugins": ["transform-runtime"]
+        }))
+        .pipe(gulp.dest(`${buildUrl}/services`));
 }));
 
 gulp.task('babel:server:con:front', gulp.series(() => {
@@ -185,12 +196,6 @@ gulp.task('replace:config', gulp.series(() => {
         .pipe(gulp.dest(buildUrl));
 }));
 
-// gulp.task('replace:webgetdatas', gulp.series(() => {
-//     return gulp.src([`${buildUrl}/assets/js/web_get_datas.js`])
-//         .pipe(replace('http://127.0.0.1:18088', originurl))
-//         .pipe(gulp.dest(`${buildUrl}/assets/js/`));
-// }));
-
 // 压缩html
 gulp.task('html:minify', gulp.series(() => {
     return gulp.src(`${buildUrl}/view/*.html`)
@@ -254,6 +259,9 @@ gulp.task('build', gulp.series(
         'babel:server:routers',
         'babel:server:tool',
         'babel:server:con:back',
+        'babel:server:database',
+        'babel:server:models',
+        'babel:server:services',
         'babel:server:con:front'
     ],
     'vue:back',
