@@ -4011,7 +4011,7 @@ BOOMR_check_doc_domain();
 			}
 			const formRes = JSON.parse(res);
 			const isAppMapAvailable = impl.apps_map_callback && typeof impl.apps_map_callback === 'function';
-			formRes.forEach(item => {
+			formRes.forEach(function(item) {
 				const appInfo = isAppMapAvailable ? impl.apps_map_callback.apply(this, [item.name])
 					: { app: 'unknown', is_main: false };
 				Object.assign(item, appInfo);
@@ -4025,7 +4025,7 @@ BOOMR_check_doc_domain();
 		 * 	  app: app name,
 		 *    appin: the hard navigation from main or sub app
 		*/
-		supportMicroFrontend(vars, varsSent) {
+		supportMicroFrontend: function(vars, varsSent) {
 			let appInfo = {
 				app: 'unknown',
 				is_main: true
@@ -4132,27 +4132,34 @@ BOOMR_check_doc_domain();
 			let regStr_ff = /firefox\/[\d.]+/gi
 			let regStr_chrome = /chrome\/[\d.]+/gi ;
 			let regStr_saf = /safari\/[\d.]+/gi ;
-			//IE
+			let browser = [];
+
+			//IE 6-8
 			if (agent.indexOf("msie") > 0) {
-				brower = agent.match(regStr_ie);
+				browser = agent.match(regStr_ie);
+			}
+
+			//IE 11
+			if (agent.indexOf('trident') !== -1 && agent.indexOf('rv') !== -1) {
+				browser = ['IE 11']
 			}
 	
 			//firefox
 			if (agent.indexOf("firefox") > 0) {
-				brower = agent.match(regStr_ff);
+				browser = agent.match(regStr_ff);
 			}
 
 			//Safari
 			if (agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0) {
-				brower = agent.match(regStr_saf);
+				browser = agent.match(regStr_saf);
 			}
 
 			//Chrome
 			if (agent.indexOf("chrome") > 0) {
-				brower = agent.match(regStr_chrome);
+				browser = agent.match(regStr_chrome);
 			}
-			
-			return brower.length ? brower[0] : 'unknown';
+
+			return browser.length ? browser[0] : 'unknown';
 		},
 
 		/**

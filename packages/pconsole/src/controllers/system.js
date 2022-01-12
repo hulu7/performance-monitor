@@ -156,8 +156,8 @@ class user {
             }).paySign;
             const protocol = `http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}`;
             const script =
-                `<script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
-                <script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
+                `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
+                <script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
                 <script>
                     BOOMR.init({
                         beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",
@@ -262,8 +262,8 @@ class user {
 
             const protocol = `http${SYSTEM.IS_HTTPS === 'TRUE' ? 's' : ''}`;
             const script =
-                `<script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
-                <script src="${protocol}://${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
+                `<script src="//${SYSTEM.PRODORIGIN}/js/boomerang/boomerang-1.0.0.min.js"><\/script>
+                <script src="//${SYSTEM.PRODORIGIN}/js/boomerang/history.min.js"><\/script>
                 <script>
                     BOOMR.init({
                         beacon_url: "${protocol}://${SYSTEM.PRODORIGIN}/reportPerformance",

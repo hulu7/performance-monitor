@@ -11,6 +11,7 @@
                 if (!url) {
                     return '';
                 }
+                const target = url.split('?')[0];
                 const apps = {
                     pages: {
                         is_main: false,
@@ -34,7 +35,7 @@
                     is_main: false
                 };
                 for (let key in apps) {
-                    const matched = apps[key].rules.find(item => url.search(item) !== -1);
+                    const matched = apps[key].rules.find(function(item){ return target.search(item) !== -1});
                     if (matched) {
                         appInfo.app = key;
                         appInfo.is_main = apps[key].is_main;

@@ -35,7 +35,7 @@
                     is_main: false
                 };
                 for (let key in apps) {
-                    const matched = apps[key].rules.find(item => target.search(item) !== -1);
+                    const matched = apps[key].rules.find(function(item){ return target.search(item) !== -1});
                     if (matched) {
                         appInfo.app = key;
                         appInfo.is_main = apps[key].is_main;

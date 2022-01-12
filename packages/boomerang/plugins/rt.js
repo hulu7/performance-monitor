@@ -640,7 +640,7 @@
 							}
 
 							res = res[0];
-							const { duration } = res;
+							const duration = res.duration;
 
 							BOOMR.addVar(url, duration, true);
 						}
