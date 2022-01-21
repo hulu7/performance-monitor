@@ -4,8 +4,8 @@
         <title><%= render.title %></title>
         <meta name="baidu-site-verification" content="MHHnqSmeTw" />
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <script src=<%= run.probe.boomerang %>></script>
-        <script src=<%= run.probe.history %>></script>
+        <script src=<%= run[run.env].boomerang %>></script>
+        <script src=<%= run[run.env].history %>></script>
         <script>
             window.apps_map_callback = function(url) {
                 if (!url) {
@@ -84,7 +84,7 @@
                 }
                 return appInfo;
             };
-            BOOMR.init({ beacon_url:"<%= run.probe.reportApi %>", uuid:"<%= run.probe.appid %>", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback });
+            BOOMR.init({ beacon_url:"<%= run[run.env].reportApi %>", uuid:"<%= run[run.env].appid %>", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback });
         </script>
          <% for(var i=0; i < run.links.length; i++){ %>
             <% if(run.links[i].type){ %>

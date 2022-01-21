@@ -111,11 +111,23 @@ export const RENDER = {
 // 运行时
 export const RUN = {
 	env: 'dev',
-	probe: {
+	dev: {
 		boomerang: '//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js',
 		history: '//dev.performance-monitor.local/js/boomerang/history.min.js',
 		reportApi: 'http://dev.performance-monitor.local/reportPerformance',
 		appid: 'ED0B3A18CDABE3E3CF22D5DE868E0CC2'
+	},
+	pre: {
+		boomerang: '//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//performance-monitor-stag.jdcloud.com/js/boomerang/history.min.js',
+		reportApi: 'http://performance-monitor-stag.jdcloud.com/reportPerformance',
+		appid: '7BDED93854F1A5ABC4EE5344DDA57B84'
+	},
+	prd: {
+		boomerang: '//performance-monitor.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//performance-monitor.jdcloud.com/js/boomerang/history.min.js',
+		reportApi: 'https://performance-monitor.jdcloud.com/reportPerformance',
+		appid: '65194598DE4C11ACAB5366B9E2DB0ECF'
 	},
 	links: [{
 		src: '/images/common/favicon.ico',

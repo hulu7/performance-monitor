@@ -61,7 +61,6 @@ function build
     # 安装依赖
     echo "Start to build pconsole."
     cd packages/pconsole/
-    mv ./src/view/template_${1}.html ./src/view/template.html
     npm install
     npm run build
 
