@@ -186,7 +186,7 @@ CREATE TABLE `web_pages_client` (
   `cpu_concurrency` int(11) NOT NULL DEFAULT '0' COMMENT 'CPU并发量',
   `screen_color_depth` char(20) NOT NULL DEFAULT '' COMMENT '屏幕色深',
   `screen_orientation` char(20) NOT NULL DEFAULT '' COMMENT '屏幕方向',
-  `screen_size` char(20) NOT NULL DEFAULT '' COMMENT '屏幕尺寸',
+  `screen_size` char(20) NOT NULL DEFAULT '' COMMENT '屏幕分辨率',
   `http_initiator` char(20) NOT NULL DEFAULT '' COMMENT '页面切换类型',
   `effective_type` char(20) NOT NULL DEFAULT '' COMMENT '带宽类型',
   `downlink` char(20) NOT NULL DEFAULT '0' COMMENT '有效带宽',

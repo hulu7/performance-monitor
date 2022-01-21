@@ -14,8 +14,6 @@ const browserSync = require("browser-sync").create();
 
 const buildUrl = './dist/build';
 
-const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
-
 /*---------------------------------------------dev------------------------------------------------------------------*/
 gulp.task('nodemon', gulp.series(() => {
     return nodemon({
@@ -162,6 +160,7 @@ gulp.task("concat:js", gulp.series(() => {
     return gulp.src([
             `${buildUrl}/assets/js/PopLayer.js`,
             `${buildUrl}/assets/js/config.js`,
+            `${buildUrl}/assets/js/http.js`,
             `${buildUrl}/assets/js/util.js`,
             `${buildUrl}/assets/js/md5.js`,
             `${buildUrl}/assets/js/common.js`
@@ -185,8 +184,7 @@ gulp.task('css:minify', gulp.series(() => {
 }));
 
 //replace
-let originurl = 'http://dev.performance-monitor.com'
-if(IS_HTTPS=='TRUE') originurl = 'https://dev.performance-monitor.com'
+const originurl = 'http://dev.performance-monitor.com'
 
 gulp.task('replace:config', gulp.series(() => {
     return gulp.src([`${buildUrl}/config.js`])

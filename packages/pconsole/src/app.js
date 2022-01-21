@@ -17,12 +17,12 @@ import {
 } from './config'
 import { 
     front,
-    back
+    back,
+    login
 } from './routes'
 
 const app = new Koa()
 const env = process.env.BABEL_ENV || 'development'
-const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
 
 // 打印日志
 app.on('error', (err, ctx) => {
@@ -39,15 +39,6 @@ render(app, {
  
 // 生产环境启用https
 let options = null;
-if(IS_HTTPS == 'TRUE'){
-    // Force HTTPS on all page 
-    app.use(enforceHttps())
-
-    options = {
-      key: fs.readFileSync(path.resolve(__dirname, './assets/cert/214545337340023.key')),
-      cert: fs.readFileSync(path.resolve(__dirname, './assets/cert/214545337340023.pem'))
-    }
-}
 
 app
     .use(cookie())
@@ -68,6 +59,7 @@ app
         methods: ['GET', 'PUT', 'POST'],
         credentials: true,
     }))
+    // .use(login())
     .use(front.routes())
     .use(front.allowedMethods())
     .use(back.routes())
@@ -82,8 +74,7 @@ app
 
 // app.listen(SYSTEM.PROT);
 
-if(IS_HTTPS == 'FALSE') http.createServer(app.callback()).listen(SYSTEM.PROT);
-if(IS_HTTPS == 'TRUE')  https.createServer(options, app.callback()).listen(SYSTEM.PROT);
+http.createServer(app.callback()).listen(SYSTEM.PROT);
 
 console.log(`服务启动了：路径为：127.0.0.1:${SYSTEM.PROT}`,`orgin:${SYSTEM.ORIGIN}`);
 

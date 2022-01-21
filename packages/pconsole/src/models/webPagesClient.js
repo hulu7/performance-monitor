@@ -87,7 +87,7 @@ const WebPagesClient = sequelize.define(
       type: DataTypes.CHAR(20),
       allowNull: false,
       defaultValue: '',
-      comment:'屏幕尺寸'
+      comment:'屏幕分辨率'
     },
     http_initiator: {
       type: DataTypes.CHAR(20),

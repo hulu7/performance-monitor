@@ -1,4 +1,4 @@
-#web-performance-monitoring-system 前端性能监控系统
+#performance-monitor 前端性能监控系统
 
 
 ### 项目采用 koa2+gulp+mysql 搭建的一套后台前端集成模板
@@ -17,15 +17,6 @@
 ```html
 项目使用babel编译   
 项目通过gulp-nodemon 实时编译刷新node服务
-```
-
-### 新增https部署方式 
-https秘钥部署方式参考：[云服务器HTTPS实践，node.js + nginx https实践](https://blog.seosiwei.com/detail/29)
-
-```js
-如果项目不需要https部署，package.json中需要做如下操作
-build命令 ：IS_HTTPS=FALSE
-server命令：IS_HTTPS=FALSE
 ```
 
 ### 使用pm2启动项目方式(推荐第二或第三种方式启动)
@@ -117,12 +108,3 @@ location / {
 
 pm2启动方式：npm run pm2
 ```
-
-### DEMO图片
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/01.png "")
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/02.png "")
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/03.png "")
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/04.png "")
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/05.png "")
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/06.png "")
-![](https://github.com/wangweianger/web-performance-monitoring-system/blob/master/demo/07.png "")

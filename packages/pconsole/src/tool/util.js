@@ -58,7 +58,7 @@ class util {
         return begin;
     }
 
-    // 验证域名来源、
+    // 验证域名来源
     verSource(ctx) {
         return true;
         // let referer = this.checkReferer(ctx);

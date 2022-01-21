@@ -1,39 +1,23 @@
-let PROT = 18088;
-
-// ORIGIN参数匹配是否是https
-const IS_HTTPS = process.env.IS_HTTPS || 'FALSE'
-let ORIGIN = `http://127.0.0.1:${PROT}`
-const PRODORIGIN = 'dev.performance-monitor.local'
-if(IS_HTTPS == 'TRUE') {
-	ORIGIN = `https://127.0.0.1:${PROT}`
-}
-
 // 系统配置
-export let SYSTEM = {
-	//端口协议
-	IS_HTTPS,
+export const SYSTEM = {
 
 	//允许调用接口的域名，用来检测防盗链
-	ORIGIN,
+	ORIGIN: 'http://127.0.0.1:18088',
 
-	PRODORIGIN,
+	PRODORIGIN: 'dev.performance-monitor.local',
 
 	// HTTP服务器端口号
-	PROT: PROT,
-	
+	PROT: 18088,
+
 	// 分页条数
 	PAGESIZE: 50,
 
 	DEBUG: false,
 
-	// 后台登录账号和密码  （可替换为数据库用户密码登录方式）
-	USERMSG:{
-		USERNAME:'admin',
-		PASSWORD:'123456789'
-	},
+	PROTOCOL: 'http'
 }
 
-export let DB = {
+export const DB = {
 	// 服务器地址
 	HOST: 'localhost',
 
@@ -60,4 +44,107 @@ export let DB = {
 
 	// 排队限制数量
 	QUEUELIMIT: 1000,
+}
+
+// 系统配置
+export const RENDER = {
+	system: {
+		title: '前端性能监控系统'
+	},
+
+	add: {
+		title: '新增应用'
+	},
+
+	apps: {
+		title: '应用列表'
+	},
+
+	search: {
+		title: '历史搜索'
+	},
+
+	appsOverview: {
+		title: '应用概览'
+	},
+
+	appDetail: {
+		title: '应用详情'
+	},
+
+	setting: {
+		title: '系统设置',
+	},
+
+	help: {
+		title: '帮助文档'
+	},
+
+	routers: [{
+		name: 'system',
+		paths: ['/']  //首页页面
+	}, {
+		name: 'addSystem',
+		paths: ['/addSystem']  //新增应用
+	}, {
+		name: 'apps',
+		paths: ['/apps'] //应用性能分析
+	}, {
+		name: 'search',
+		paths: ['/search']  //搜索页面
+	}, {
+		name: 'appsOverview',
+		paths: ['/app/overview'] // 应用概览
+	}, {
+		name: 'appDetail',
+		paths: ['/app/detail'] // 应用详情
+	}, {
+		name: 'setting',
+		paths: ['/setting'] // 系统设置
+	}, {
+		name: 'help',
+		paths: ['/help'] // 帮助文档
+	}]
+
+}
+
+// 运行时
+export const RUN = {
+	env: 'dev',
+	probe: {
+		boomerang: '//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//dev.performance-monitor.local/js/boomerang/history.min.js',
+		reportApi: 'http://dev.performance-monitor.local/reportPerformance',
+		appid: 'ED0B3A18CDABE3E3CF22D5DE868E0CC2'
+	},
+	links: [{
+		src: '/images/common/favicon.ico',
+		type: 'image/x-icon',
+		rel: 'icon'
+	}, {
+		src: '/css/base.css',
+		type: '',
+		rel: 'stylesheet'
+	}, {
+		src: '/css/PopLayer.css',
+		type: '',
+		rel: 'stylesheet'
+	}, {
+		src: '/css/element-ui.css',
+		type: '',
+		rel: 'stylesheet'
+	}],
+	scripts: [
+		'/js/polyfill.min.js',
+		'/js/jquery.min.js',
+		'/js/vue.min.js',
+		'/js/echarts.min.js',
+		'/js/element-ui.min.js',
+		'/js/vue-filters.js',
+		'/js/PopLayer.js',
+		'/js/config.js',
+		'/js/util.js',
+		'/js/md5.js',
+		'/js/http.js'
+	]
 }

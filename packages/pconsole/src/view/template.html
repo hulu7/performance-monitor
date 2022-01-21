@@ -1,35 +1,75 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><%= datas.title %></title>
+        <title><%= render.title %></title>
         <meta name="baidu-site-verification" content="MHHnqSmeTw" />
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <script src="//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js"></script>
-        <script src="//dev.performance-monitor.local/js/boomerang/history.min.js"></script>
-        <script >
+        <script src=<%= run.probe.boomerang %>></script>
+        <script src=<%= run.probe.history %>></script>
+        <script>
             window.apps_map_callback = function(url) {
                 if (!url) {
                     return '';
                 }
                 const target = url.split('?')[0];
-                const apps = {
-                    pages: {
-                        is_main: false,
-                        rules: ['http://dev.performance-monitor.local/api/apps/list', 'http://dev.performance-monitor.local/apps']
-                    },
-                    search: {
-                        is_main: false,
-                        rules: ['http://dev.performance-monitor.local/search']
-                    },
-                    setting: {
-                        is_main: false,
-                        rules: ['http://dev.performance-monitor.local/setting']
-                    },
-                    main: {
-                        is_main: true,
-                        rules: ['http://dev.performance-monitor.local/js','http://dev.performance-monitor.local/css','http://dev.performance-monitor.local/api/system/list','http://dev.performance-monitor.local/images','http://dev.performance-monitor.local/reportPerformance', 'http://dev.performance-monitor.local/']
-                    }
-                };
+                <% if (run.env === 'prd'){ %>
+                    const apps = {
+                        pages: {
+                            is_main: false,
+                            rules: ['https://performance-monitor.jdcloud.com/api/apps/list', 'https://performance-monitor.jdcloud.com/apps']
+                        },
+                        search: {
+                            is_main: false,
+                            rules: ['https://performance-monitor.jdcloud.com/search']
+                        },
+                        setting: {
+                            is_main: false,
+                            rules: ['https://performance-monitor.jdcloud.com/setting']
+                        },
+                        main: {
+                            is_main: true,
+                            rules: ['https://performance-monitor.jdcloud.com/js', 'https://performance-monitor.jdcloud.com/css', 'https://performance-monitor.jdcloud.com/api/system/list', 'https://performance-monitor.jdcloud.com/images', 'https://performance-monitor.jdcloud.com/reportPerformance', 'https://performance-monitor.jdcloud.com/']
+                        }
+                    };
+                <%} else if (run.env === 'pre') { %>
+                    const apps = {
+                        pages: {
+                            is_main: false,
+                            rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/list', 'http://performance-monitor-stag.jdcloud.com/apps']
+                        },
+                        search: {
+                            is_main: false,
+                            rules: ['http://performance-monitor-stag.jdcloud.com/search']
+                        },
+                        setting: {
+                            is_main: false,
+                            rules: ['http://performance-monitor-stag.jdcloud.com/setting']
+                        },
+                        main: {
+                            is_main: true,
+                            rules: ['http://performance-monitor-stag.jdcloud.com/js', 'http://performance-monitor-stag.jdcloud.com/css', 'http://performance-monitor-stag.jdcloud.com/api/system/list', 'http://performance-monitor-stag.jdcloud.com/images', 'http://performance-monitor-stag.jdcloud.com/reportPerformance', 'http://performance-monitor-stag.jdcloud.com/']
+                        }
+                    };
+                <%} else { %>
+                    const apps = {
+                        pages: {
+                            is_main: false,
+                            rules: ['http://dev.performance-monitor.local/api/apps/list', 'http://dev.performance-monitor.local/apps']
+                        },
+                        search: {
+                            is_main: false,
+                            rules: ['http://dev.performance-monitor.local/search']
+                        },
+                        setting: {
+                            is_main: false,
+                            rules: ['http://dev.performance-monitor.local/setting']
+                        },
+                        main: {
+                            is_main: true,
+                            rules: ['http://dev.performance-monitor.local/js','http://dev.performance-monitor.local/css','http://dev.performance-monitor.local/api/system/list','http://dev.performance-monitor.local/images','http://dev.performance-monitor.local/reportPerformance', 'http://dev.performance-monitor.local/']
+                        }
+                    };
+                <%} %>
                 let appInfo = {
                     app: 'unknown',
                     is_main: false
@@ -44,22 +84,19 @@
                 }
                 return appInfo;
             };
-            BOOMR.init({ beacon_url: "http://dev.performance-monitor.local/reportPerformance", uuid:"ED0B3A18CDABE3E3CF22D5DE868E0CC2", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback });
+            BOOMR.init({ beacon_url:"<%= run.probe.reportApi %>", uuid:"<%= run.probe.appid %>", autorun: false, History: { enabled: true, auto: true, monitorReplaceState: true }, apps_map_callback: window.apps_map_callback });
         </script>
-        <link rel="icon" href="/images/common/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="/css/base.css">
-        <link rel="stylesheet" href="/css/PopLayer.css">
-        <link rel="stylesheet" href="/css/element-ui.css">
-        <script src="/js/polyfill.min.js"></script>
-        <script src="/js/jquery.min.js"></script>
-        <script src="/js/vue.min.js"></script>
-        <script src="/js/echarts.min.js"></script>
-        <script src="/js/element-ui.min.js"></script>
-        <script src="/js/vue-filters.js"></script>
-        <script src="/js/PopLayer.js"></script>
-        <script src="/js/config.js"></script>
-        <script src="/js/util.js"></script>
-        <script src="/js/md5.js"></script>
+         <% for(var i=0; i < run.links.length; i++){ %>
+            <% if(run.links[i].type){ %>
+                <link rel=<%= run.links[i].rel %> href=<%= run.links[i].src %> type=<%= run.links[i].type %>>
+            <%} else{ %>
+                <link rel=<%= run.links[i].rel %> href=<%= run.links[i].src %>>
+            <%} %>
+        <%}%>
+
+        <% for(var i=0; i < run.scripts.length; i++) { %>
+            <script src=<%= run.scripts[i] %>></script>
+        <%}%>
     </head>
     <body id="body">
         <%- body %>

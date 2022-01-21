@@ -8,7 +8,6 @@ var u = require('underscore');
 var request = require('request');
 var log = require('log-util');
 var chalk = require('chalk');
-var Promise = require('bluebird')
 var targz = require('tar.gz');
 var exec = require('child_process').exec;
 

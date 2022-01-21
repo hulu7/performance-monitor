@@ -54,7 +54,7 @@ new Vue({
             'system', //操作系统
             'effective_type', //带宽类型
             'screen_orientation', //屏幕方向
-            'screen_size', //屏幕尺寸
+            'screen_size', //屏幕分辨率
             'http_initiator', //页面切换类型
         ];
         statics.map((type) => this.getDataForEnvironment(type));
