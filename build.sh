@@ -42,7 +42,6 @@ function output
     # 复制控制台编译代码(不包含node_modules)、bin至output
     echo "Copy files to output."
     cp -r packages/pconsole/dist/build/* output
-    rm output/config.js
     cp -r packages/pconsole/package* output
     cp -r packages/pconsole/pm2.config.json output
 
