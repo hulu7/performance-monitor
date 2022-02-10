@@ -184,7 +184,7 @@ gulp.task('css:minify', gulp.series(() => {
 }));
 
 //replace
-const originurl = 'http://dev.performance-monitor.com'
+const originurl = 'http://local.dev.jdcloud.com'
 
 gulp.task('replace:config', gulp.series(() => {
     return gulp.src([`${buildUrl}/config.js`])

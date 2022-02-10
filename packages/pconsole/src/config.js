@@ -4,7 +4,16 @@ export const SYSTEM = {
 	//允许调用接口的域名，用来检测防盗链
 	ORIGIN: 'http://127.0.0.1:18088',
 
-	PRODORIGIN: 'dev.performance-monitor.local',
+	PRODORIGIN: 'local.dev.jdcloud.com',
+
+	// 单点登录入口
+	SSODOMAIN: 'http://test.ssa.jd.com',
+
+	// 单点登录appKey
+	APPKEY: 'test3',
+
+	// 单点登录appToken
+	APPTOKEN: '347c6161e79f4b6a8873202dd5fe7e8f',
 
 	// HTTP服务器端口号
 	PROT: 18088,
@@ -112,9 +121,9 @@ export const RENDER = {
 export const RUN = {
 	env: 'dev',
 	dev: {
-		boomerang: '//dev.performance-monitor.local/js/boomerang/boomerang-1.0.0.min.js',
-		history: '//dev.performance-monitor.local/js/boomerang/history.min.js',
-		reportApi: 'http://dev.performance-monitor.local/reportPerformance',
+		boomerang: '//local.dev.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//local.dev.jdcloud.com/js/boomerang/history.min.js',
+		reportApi: 'http://local.dev.jdcloud.com/reportPerformance',
 		appid: 'ED0B3A18CDABE3E3CF22D5DE868E0CC2'
 	},
 	pre: {

@@ -49,7 +49,7 @@ app
             uploadDir: path.join(__dirname, '/upload')
         }
     }))
-    .use(serve(__dirname + "/assets",{
+    .use(serve(__dirname + "/assets", {
         maxage: 365 * 24 * 60 * 60 
     }))
     .use(koa2Common())
@@ -59,7 +59,7 @@ app
         methods: ['GET', 'PUT', 'POST'],
         credentials: true,
     }))
-    // .use(login())
+    .use(login())
     .use(front.routes())
     .use(front.allowedMethods())
     .use(back.routes())
@@ -72,10 +72,8 @@ app
         })
     })
 
-// app.listen(SYSTEM.PROT);
-
 http.createServer(app.callback()).listen(SYSTEM.PROT);
 
-console.log(`服务启动了：路径为：127.0.0.1:${SYSTEM.PROT}`,`orgin:${SYSTEM.ORIGIN}`);
+console.log(`服务启动了：路径为：${SYSTEM.ORIGIN}`);
 
 export default app
