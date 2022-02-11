@@ -10,6 +10,7 @@ const WebPagesResources = require('./webPagesResources');
 const WebPagesRestiming = require('./webPagesRestiming');
 const WebPagesTiming = require('./webPagesTiming');
 const WebSystem = require('./webSystem');
+const WebUser = require('./WebUser');
 
 // 一（WebSystem）对多（WebPagesBasic）
 WebSystem.hasMany(WebPagesBasic, { foreignKey: 'system_id' })
@@ -54,5 +55,6 @@ module.exports = {
   WebPagesResources,
   WebPagesRestiming,
   WebPagesTiming,
-  WebSystem
+  WebSystem,
+  WebUser
 }

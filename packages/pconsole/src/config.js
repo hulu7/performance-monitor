@@ -7,13 +7,13 @@ export const SYSTEM = {
 	PRODORIGIN: 'local.dev.jdcloud.com',
 
 	// 单点登录入口
-	SSODOMAIN: 'http://test.ssa.jd.com',
+	SSODOMAIN: '',
 
 	// 单点登录appKey
-	APPKEY: 'test3',
+	APPKEY: '',
 
 	// 单点登录appToken
-	APPTOKEN: '347c6161e79f4b6a8873202dd5fe7e8f',
+	APPTOKEN: '',
 
 	// HTTP服务器端口号
 	PROT: 18088,
@@ -57,6 +57,9 @@ export const DB = {
 
 // 系统配置
 export const RENDER = {
+	login: {
+		title: '登录'
+	},
 	system: {
 		title: '前端性能监控系统'
 	},
@@ -92,6 +95,9 @@ export const RENDER = {
 	routers: [{
 		name: 'system',
 		paths: ['/']  //首页页面
+	}, {
+		name: 'login',
+		paths: ['/login']  //登录页面
 	}, {
 		name: 'addSystem',
 		paths: ['/addSystem']  //新增应用
@@ -165,7 +171,6 @@ export const RUN = {
 		'/js/PopLayer.js',
 		'/js/config.js',
 		'/js/util.js',
-		'/js/md5.js',
-		'/js/http.js'
+		'/js/md5.js'
 	]
 }

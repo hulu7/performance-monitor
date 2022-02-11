@@ -1,14 +1,10 @@
 //前端路由
 import KoaRouter from 'koa-router'
-import controllers from '../controllers'
 import {
     RENDER,
 	RUN
 } from '../config.js'
 const router = new KoaRouter()
-
-// 请求接口校验中间件
-const checkfn = controllers.common.checkRequestUrl;
 
 RENDER.routers.forEach(route => {
 	router.get(route.paths, async(ctx, next) => {

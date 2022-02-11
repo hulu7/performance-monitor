@@ -59,17 +59,20 @@ new Vue({
                 },
                 success: data => {
                     this.getDetail();
-                    popup.miss({title:'操作成功!'})
+                    this.$message({
+                        message: '操作成功!',
+                        type: 'success'
+                      });
                 }
             });
         },
         updateSystem() {
             if(!this.systemInfo.systemName) {
-                popup.alert({title: '请正确填写系统名称!'}); 
+                this.$message.error('请正确填写系统名称!');
                 return false;
             }
             if(!this.systemInfo.systemDomain || !util.isValidDomain(this.systemInfo.systemDomain)) {
-                popup.alert({title: '请正确填写系统域名!'});
+                this.$message.error('请正确填写系统域名!');
                 return false;
             }
             const {
@@ -86,7 +89,10 @@ new Vue({
                 url: `${config.baseApi}api/system/update`,
                 data: this.systemInfo,
                 success: data => {
-                    popup.miss({title:"操作成功！"});
+                    this.$message({
+                        message: '操作成功!',
+                        type: 'success'
+                      });
                     this.getDetail();
                 }
             })
@@ -148,15 +154,21 @@ new Vue({
                 },
                 success: data => {
                     this.getDetail();
-                    popup.miss({title:'操作成功!'})
+                    this.$message({
+                        message: '操作成功!',
+                        type: 'success'
+                      });
                 }
             }) 
         },
         copy() {
             if (this.systemInfo.script && util.copy(this.systemInfo.script)) {
-                popup.miss({title:'已拷贝至剪贴板!'})
+                this.$message({
+                    message: '已拷贝至剪贴板!',
+                    type: 'success'
+                  });
             } else {
-                popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
+                this.$message.error('拷贝失败! 请重试');
             }
         }
     }

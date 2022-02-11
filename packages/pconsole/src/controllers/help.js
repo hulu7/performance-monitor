@@ -5,7 +5,7 @@ import {
     util,
 } from '../tool'
 
-class help {
+class Help {
     //初始化对象
     constructor() {
     };
@@ -29,5 +29,5 @@ class help {
     }
 }
 
-module.exports = new help();
+module.exports = new Help();
 

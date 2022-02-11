@@ -2,7 +2,7 @@ import {
     util
 } from '../tool'
 
-class common {
+class Common {
     constructor() {}
 
     // 验证来源 && 验证签名
@@ -69,5 +69,5 @@ class common {
     }
 }
 
-module.exports = new common();
+module.exports = new Common();
 

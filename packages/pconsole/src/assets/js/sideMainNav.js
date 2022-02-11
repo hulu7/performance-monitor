@@ -3,7 +3,8 @@ new Vue({
     data: function() {
         return{
             systemId: '',
-            systemName: ''
+            systemName: '',
+            isAdmin: false
         }
     },
     mounted(){
@@ -20,6 +21,7 @@ new Vue({
                     $(liobjs[i]).addClass('active')
                 }
             }
+            await this.getUserInfo();
             this.systemId = util.queryParameters('systemId');
             await this.getDetail();
         },
@@ -37,6 +39,17 @@ new Vue({
                 }
             })
         },
+        getUserInfo() {
+            util.ajax({
+                url: `${config.baseApi}api/user/info`,
+                data:{},
+                success: resp => {
+                    if(resp && resp.data) {
+                        this.isAdmin = resp.data.level === 1;
+                    }
+                }
+            })
+        },
         goToPagesList() {
             window.location.href = `/apps?systemId=${this.systemId}`;
         },
@@ -51,6 +64,9 @@ new Vue({
         },
         goToSetting() {
             window.location.href = `/setting?systemId=${this.systemId}`;
+        },
+        goToUserManager() {
+            window.location.href = `/user`;
         }
     }
 })

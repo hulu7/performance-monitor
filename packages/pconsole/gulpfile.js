@@ -160,7 +160,6 @@ gulp.task("concat:js", gulp.series(() => {
     return gulp.src([
             `${buildUrl}/assets/js/PopLayer.js`,
             `${buildUrl}/assets/js/config.js`,
-            `${buildUrl}/assets/js/http.js`,
             `${buildUrl}/assets/js/util.js`,
             `${buildUrl}/assets/js/md5.js`,
             `${buildUrl}/assets/js/common.js`

@@ -47,9 +47,12 @@ new Vue({
         },
         copy() {
             if (this.pagesItemData.basic.url && util.copy(this.pagesItemData.basic.url)) {
-                popup.miss({title:'已拷贝至剪贴板!'})
+                this.$message({
+                    message: '已拷贝至剪贴板!',
+                    type: 'success'
+                  });
             } else {
-                popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
+                this.$message.error('拷贝失败! 请重试');
             }
         },
         gotopage() {

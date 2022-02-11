@@ -36,9 +36,6 @@ render(app, {
     cache: true,
     debug: SYSTEM.DEBUG
 });
- 
-// 生产环境启用https
-let options = null;
 
 app
     .use(cookie())

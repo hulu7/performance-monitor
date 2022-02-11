@@ -1,0 +1,33 @@
+<!-- 样式 -->
+<link rel="stylesheet">
+<div class="login" id="login" v-cloak>
+    <el-card class="login-card" shadow="always">
+        <div class="block">
+            <el-input v-model.trim="username" placeholder="请输入账号"></el-input>
+        </div>
+        <div class="block">
+            <el-input v-model.trim="password" placeholder="请输入密码" show-password></el-input>
+        </div>
+        <div class="block">
+            <el-button type="primary" class="button" @click="login">登录</el-button>
+        </div>
+    </el-card>
+</div>
+<script src="/js/login.js"></script>
+<style scoped>
+.login {
+    width: 100%;
+    height: 100%;
+}
+.login-card {
+    margin: 20vh auto;
+    width: 400px;
+}
+.block {
+    width: 300px;
+    margin: 30px auto;
+}
+.button {
+    width: 300px;
+}
+</style>

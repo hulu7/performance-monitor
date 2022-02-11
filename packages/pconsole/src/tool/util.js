@@ -555,6 +555,25 @@ class util {
     formatSqlstr(sqlstr, safepara) {
         return sqlstr.replace(`'${safepara}'`, safepara)
     }
+
+    /**
+     * 获取指定的cookie
+     * @param {String} key cookie的key
+     * @returns {String}
+     */
+    getCookie(key, cookie) {
+        if (!cookie) {
+            return undefined;
+        }
+        const cookies = cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cur = cookies[i].split('=');
+            if (key === cur[0].replace(/(^\s*)|(\s*$)/g, '')) {
+                return cur[1].replace(/(^\s*)|(\s*$)/g, '');
+            }
+        }
+        return undefined;
+    }
 }
 
 module.exports = new util();

@@ -1,16 +1,12 @@
-import os from 'os'
-import Apisauce from 'apisauce'
 import URL from 'url'
-import crypto from 'crypto'
 import { replace } from 'lodash'
 import {
     SYSTEM
 } from '../config'
-
-function encryptWithMd5 (content) {
-    const MD5 = crypto.createHash('md5');
-    return MD5.update(content).digest('hex');
-}
+import {
+    util
+} from '../tool'
+import UserService from '../services/userService'
 
 /**
  * 判断url是否是合法的JD域名，防止登录劫持
@@ -69,98 +65,46 @@ function transformReturl (url) {
 function getLoginUrl (retUrl) {
     try {
         const return_url = transformReturl(retUrl);
-        return `${SYSTEM.SSODOMAIN}/sso/login?ReturnUrl=${return_url}`;
+        return `${SYSTEM.PROTOCOL}://${SYSTEM.PRODORIGIN}/login?ReturnUrl=${return_url}`;
     } catch (err) {
         throw err;
     }
 }
 
-function getIp() {
-    const ifaces = os.networkInterfaces();
-    let ip = Object.keys(ifaces)
-        .map(interf => ifaces[interf].map(o => !o.internal && o.family === 'IPv4' && o.address))
-        .reduce((a, b) => a.concat(b))
-        .filter(o => o)[0];
+/**
+ * 校验tooken
+ * @function verifyToken
+ */
+ async function verifyToken (user_id, user_token) {
+    const resp = await UserService.getUserById(user_id);
+    if (resp.length) {
+        const {
+            id,
+            login_expire_time: expireTime,
+            is_permit,
+            token
+        } = resp[0].dataValues;
+        console.log('----verify data', resp[0].dataValues);
+        const now = new Date().valueOf();
+        const expire = new Date(expireTime).valueOf();
+        if (user_token !== token) {
+            return false;
+        }
 
-    if (!ip) {
-        ip = '127.0.0.1';
+        if (is_permit === 1) {
+            return false;
+        }
+
+        if(expire < now) {
+            await UserService.updateUser(id, {
+                token: '',
+                login_expire_time: now
+            })
+            return false;
+        }
+        return true;
     }
-    return ip;
-}
-
-/**
- * 结果处理
- * @function handleResult
- * 
- * @param {Boolean} ok 
- * @param {*} data 
- */
-function handleResult (ok, data) {
-    if (!ok && data === null) {
-        throw new Error('请检查网络环境，测试环境请在办公网络下，不支持VPN；');
-    }
-    return data;
-}
-
-/**
- * 国内登录
- * @function getErpTicket
- * 
- * @param {Object} config       配置信息
- * @param {String} sso_cookie   sso.jd.com
- */
-async function getErpTicket (sso_cookie) {
-    const ip = getIp();
-
-    const { ok, data } = await Apisauce.create({
-        baseURL: `${SYSTEM.SSODOMAIN}/sso/ticket/verifyTicket`,
-        timeout: 5000,
-    }).get(`/?ticket=${sso_cookie}&url=${SYSTEM.PROTOCOL}://${SYSTEM.PRODORIGIN}/&ip=${ip}`);
-    return handleResult(ok, data);
-}
-
-/**
- * 非jd.com主域校验service_ticket
- * @function verifyTicket
- */
- async function verifyTicket (sso_cookie, return_url) {
-    const ip = getIp();
-    const requestTimestamp = new Date().valueOf();
-    const sign = encryptWithMd5(SYSTEM.APPTOKEN + requestTimestamp + sso_cookie);
-
-    const { ok, data } = await Apisauce.create({
-        baseURL: `${SYSTEM.SSODOMAIN}/api/verifyTicket `,
-        timeout: 5000,
-    }).get(`/?ticket=${sso_cookie}
-        &url=${return_url}
-        &ip=${ip}
-        &app=${SYSTEM.APPKEY}
-        &time=${requestTimestamp}
-        &sign=${sign}`);
-    return handleResult(ok, data);
-}
-
-
-/**
- * 非jd.com主域获取token
- * @function getTicket
- */
- async function getTicket (sso_service_ticket, return_url) {
-    const ip = getIp();
-    const requestTimestamp = (new Date()).valueOf();
-    const content = `${SYSTEM.APPTOKEN}${requestTimestamp}${sso_service_ticket}`;
-    const sign = encryptWithMd5(content);
-
-    const { ok, data } = await Apisauce.create({
-        baseURL: `${SYSTEM.SSODOMAIN}/api/getTicket`,
-        timeout: 5000,
-    }).get(`/?sso_service_ticket=${sso_service_ticket}
-        &url=${return_url}
-        &ip=${ip}
-        &app=${SYSTEM.APPKEY}
-        &time=${requestTimestamp}
-        &sign=${sign}`);
-    return handleResult(ok, data);
+    return false;
 }
 
 /**
@@ -171,10 +115,6 @@ async function getErpTicket (sso_cookie) {
  */
 function LOGIN () {
     this.config = {
-        credential: {
-            app: SYSTEM.APPKEY,
-            token: SYSTEM.APPTOKEN,
-        },
         domain: `${SYSTEM.PROTOCOL}://${SYSTEM.PRODORIGIN}`
     };
 }
@@ -189,10 +129,6 @@ function LOGIN () {
  * 
  * @example
  * LOGIN.init({
- *   credential: {
- *     app: YOUR_APP,
- *     token: YOUR_SECRET_KEY
- *   },
  *   domain: 'YOUR DOMAIN'
  * })
  */
@@ -205,7 +141,7 @@ function LOGIN () {
  * 
  * @function LOGIN.getLoginUrl
  * 
- * @param  {String}   retUrl       erp登录完了后跳转地址
+ * @param  {String}   retUrl       登录完了后跳转地址
  * @return {String}   url          拿到该url后可在浏览器中跳转
  * 
  * @example
@@ -216,95 +152,65 @@ function LOGIN () {
 }
 
 /**
- * erp登录函数
+ * 登录函数
  *
  * @function LOGIN.erpLogin
  * 
- * @param  {String}   sso_cookie   cookie字段 sso.jd.com
- * @return {Object}   data         根据sso_cookie查询返回当前用户基本信息
+ * @param  {String}   user   cookie字段 performance.monitor.user
+ * @param  {String}   token   cookie字段 performance.monitor.token
+ * @return {Object}   data     根据sso_cookie查询返回当前用户基本信息
  * 
  * @example
- * LOGIN.erpLogin(sso_cookie: 'xxxxxxxxcccccccc')
+ * LOGIN.erpLogin(user_id, token)
  */
-LOGIN.prototype.erpLogin = async function (sso_cookie) {
-    console.log('sso_cookie', sso_cookie);
+LOGIN.prototype.login = async function (user_id, token) {
     try {
-        if (!sso_cookie) {
-            throw new Error('sso_cookie is required, cookies column sso.jd.com');
+        if (!user_id) {
+            throw new Error('cookie is required: user_id');
         }
-        return await getErpTicket(sso_cookie);
+        if (!token) {
+            throw new Error('cookie is required: token');
+        }
+        return await verifyToken(user_id, token);
     } catch (err) {
         throw err;
     }
 }
 
-/**
- * 获取指定的cookie
- * @param {String} key cookie的key
- * @returns {String}
- */
-export function getCookie(key, cookie) {
-    if (!cookie) {
-        return undefined;
-    }
-    const cookies = cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        const cur = cookies[i].split('=');
-        if (key === cur[0].replace(/(^\s*)|(\s*$)/g, '')) {
-            return cur[1].replace(/(^\s*)|(\s*$)/g, '');
-        }
-    }
-    return undefined;
-}
-  
-
-
 module.exports = function () {
     return async function (ctx, next) {
-        console.log('---login check: ',)
+        console.log('---login check');
         const url = ctx.request.url;
-        const cookie = getCookie('sso.jd.com', ctx.request.header.cookie);
-        const ticket = ctx.query.sso_service_ticket;
+        const user_id = util.getCookie('performance.monitor.user', ctx.request.header.cookie);
+        const token = util.getCookie('performance.monitor.token', ctx.request.header.cookie);
+        console.log('---cookie user_id: ', user_id);
+        console.log('---cookie token: ', token);
+
+        if ((url.includes('/login') && !token && !user_id) || url.includes('/js/') || url.includes('reportPerformance')) {
+            return await next();
+        }
+
         const login = LOGIN.init();
         const loginUrl = login.getLoginUrl(`${SYSTEM.PROTOCOL}://${SYSTEM.PRODORIGIN}${url}`);
-        console.log('---cookie: ', cookie);
-        console.log('---ctx.request.header: ', ctx.request.header);
-        console.log('---sso_service_ticket: ', ticket);
         if (url === '/favicon.ico') {
             return
         }
-        if (cookie) {
-            const data = await login.erpLogin(cookie)
-            console.log('-- verify result: ', data)
-            if (data.REQ_CODE === 1 && data.REQ_FLAG) {
+        if (user_id && token) {
+            const result = await login.login(user_id, token);
+            console.log('-- verify result: ', result)
+            if (result) {
                 console.log('-- login successfully, start to render.')
                 return await next();
             } else {
                 console.log('-- check fail, go to login page.')
-                ctx.redirect(loginUrl)
+                ctx.redirect(loginUrl);
             }
             return
         }
-        if (!cookie && ticket) {
-            const resp = await getTicket(ticket, `${SYSTEM.PROTOCOL}://${SYSTEM.PRODORIGIN}${url}`);
-            console.log('-- getTicket', resp)
-            if (resp.REQ_CODE === 1 && resp.REQ_FLAG) {
-                console.log('-- login successfully, start to render.')
-                ctx.cookies.set('sso.jd.com', cookie, {
-                    domain: '.jdcloud.com',
-                    path: '/',
-                    httpOnly: `${SYSTEM.PROTOCOL === 'https'}`,
-                    overwrite: false
-                })
-                ctx.body = 'set cookie success'
-                return await next();
-            } else {
-                console.log('-- check fail, go to login page.')
-                ctx.redirect(loginUrl)
-            }
+        if (url.includes('ReturnUrl')) {
             return
         }
         console.log('-- not login, go to login page.')
-        ctx.redirect(loginUrl)
+        ctx.redirect(loginUrl);
     }
 }

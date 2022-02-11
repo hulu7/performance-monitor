@@ -41,11 +41,17 @@ new Vue({
         addSystem() {
             let _this=this;
             if(!this.systemName){
-                popup.alert({title: '请正确填写系统名称!'});
+                this.$message({
+                    message: '请正确填写系统名称!',
+                    type: 'warning'
+                });
                 return false;
             }
             if(!this.systemDomain || !util.isValidDomain(this.systemDomain)) {
-                popup.alert({title: '请正确填写系统域名!'});
+                this.$message({
+                    message: '请正确填写系统域名!',
+                    type: 'warning'
+                });
                 return false;
             }
             util.ajax({
@@ -59,16 +65,22 @@ new Vue({
                     slowImgTime: this.slowImgTime
                 },
                 success(data) {
-                    _this.scriptstr = data.data.script
-                    popup.miss({title:"系统添加成功！"});
+                    _this.scriptstr = data.data.script;
+                    this.$message({
+                        message: '系统添加成功！',
+                        type: 'success'
+                      });
                 }
             })
         },
         copy() {
             if (this.scriptstr && util.copy(this.scriptstr)) {
-                popup.miss({title:'已拷贝至剪贴板!'})
+                this.$message({
+                    message: '已拷贝至剪贴板!',
+                    type: 'success'
+                  });
             } else {
-                popup.alert({ type: 'msg', title: '拷贝失败! 请重试' })
+                this.$message.error('拷贝失败! 请重试');
             }
         }
     }

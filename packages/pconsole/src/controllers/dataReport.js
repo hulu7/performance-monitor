@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {
     util,
 } from '../tool';
@@ -6,14 +5,14 @@ const imgsrc = 'success';
 import ReportService from '../services/reportService';
 import SystemService from '../services/systemService';
 
-class data {
+class Report {
     //初始化对象
     constructor() {};
 
     async reportPerformance(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
         try {
-            const dataInstance = new data();
+            const dataInstance = new Report();
             const resourceDatas = ctx.request.body || {};
             const { uuid } = resourceDatas;
             if(!uuid) {
@@ -33,7 +32,7 @@ class data {
                 return;
             };
             console.log('---start store performance data--');
-            const createTime = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
+            const createTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString();
 
             //存储页面page性能
             await dataInstance.storePagePerformance(createTime, resourceDatas, systemItem);
@@ -328,4 +327,4 @@ class data {
     }
 }
 
-module.exports = new data();
+module.exports = new Report();

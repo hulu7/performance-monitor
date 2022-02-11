@@ -1,9 +1,6 @@
 //前端路由
 import KoaRouter from 'koa-router'
 import controllers from '../controllers'
-import {
-    SYSTEM
-} from '../config'
 const router = new KoaRouter()
 
 // 上报性能数据
@@ -31,11 +28,23 @@ router.post('/api/apps/history', controllers.app.getAppHistory)
 // 根据ID获得page详情性能信息
 router.post('/api/apps/detail', controllers.app.getAppDetail)
 
-//----------------------------SYSTEM表--------------------------------------
+//----------------------------Environment--------------------------------------
 router.post('/api/environment/detail', controllers.environment.getDataForEnvironment)
 
 //----------------------------search--------------------------------------
 router.post('/api/search', controllers.system.search)
+
+//----------------------------User--------------------------------------
+// 用户注册
+router.post('/api/user/register', controllers.user.register);
+// 用户登录
+router.post('/api/user/login', controllers.user.login);
+// 用户登出
+router.post('/api/user/logout', controllers.user.logout);
+// 用户信息更新
+router.post('/api/user/update', controllers.user.update);
+// 获取用户信息
+router.post('/api/user/info', controllers.user.userInfo);
 
 //----------------------------help--------------------------------------
 router.get('/help-doc', controllers.help.getHelpDoc);

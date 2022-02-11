@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { Client } from 'elasticsearch'
 import {
     SYSTEM
@@ -8,7 +7,7 @@ import {
 } from '../tool'
 import SystemService from '../services/systemService'
 
-class user {
+class System {
     //初始化对象
     constructor() {};
 
@@ -125,7 +124,7 @@ class user {
                 });
                 return
             }
-            const create_time = moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
+            const create_time = new Date(new Date().getTime()).toISOString();
 
             // 判断应用是否存在
             const systemNameResps = await SystemService.getSystemByName(system_name);
@@ -403,5 +402,5 @@ class user {
     }
 }
 
-module.exports = new user();
+module.exports = new System();
 

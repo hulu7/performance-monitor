@@ -213,4 +213,30 @@ CREATE TABLE `web_pages_probe` (
   PRIMARY KEY (`id`,`monitor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------------
+--  Table `web_user`: 用户信息
+-- --------------------------------------------------------------
+CREATE TABLE `web_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id自增',
+  `user_name` char(20) NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` char(32) NOT NULL DEFAULT '' COMMENT '用户密码',
+  `system_ids` varchar(500) NOT NULL DEFAULT '' COMMENT '用户所拥有的系统id列表',
+  `user_img` varchar(300) NOT NULL DEFAULT '' COMMENT '用户头像',
+  `user_phone` char(11) NOT NULL DEFAULT '' COMMENT '用户电话号码',
+  `user_email` varchar(300) NOT NULL DEFAULT '' COMMENT '用户邮箱',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户新增时间',
+  `login_expire_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户登录过期时间',
+  `is_permit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用 0：正常 1：禁用',
+  `level` tinyint(1) NOT NULL DEFAULT '1' COMMENT '用户等级（0：管理员，1：普通用户）',
+  `token` char(32) NOT NULL DEFAULT '' COMMENT '用户秘钥',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+--  Records of `web_user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `web_user` VALUES ('1', 'admin', 'ee61e766467546320854c3446ccde3d4', '', '', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0', '1', '');
+COMMIT;
+
 SET FOREIGN_KEY_CHECKS = 1;
