@@ -34,6 +34,31 @@ class UserService {
         }
       })
     }
+
+  // 获取用户列表
+  async getUserList(param) {
+    const {
+      pageNo, pageSize
+    } = param;
+
+    return WebUser.findAndCountAll({
+      order: [['create_time', 'DESC']],
+      attributes: [
+        'id',
+        'user_name',
+        'system_ids',
+        'user_img',
+        'user_phone',
+        'user_email',
+        'create_time',
+        'is_permit',
+        'level'
+      ],
+      raw: true,
+      limit: Math.floor(pageSize),
+      offset: (pageNo - 1)
+    });
+  }
 }
 
 module.exports = new UserService()

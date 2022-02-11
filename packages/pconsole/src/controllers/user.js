@@ -10,6 +10,35 @@ class User {
     //初始化对象
     constructor() {};
 
+    async permissionCheck(ctx) {
+        try {
+            const {
+                cookie
+            } = ctx.request.header;
+            if (!cookie) {
+                return false;
+            }
+            const userId = util.getCookie('performance.monitor.user', cookie);
+            if (!userId) {
+                return false;
+            }
+            const resp = await UserService.getUserById(userId);
+            if (resp && resp.length) {
+                const {
+                    level
+                } = resp[0].dataValues;
+                if (level !== 1) {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.error(err)
+            return false;
+        }
+    }
+
     // 登录
     async login(ctx) {
         try {
@@ -117,9 +146,18 @@ class User {
                 });
                 return
             }
+            const instance = new User();
+            const check = await instance.permissionCheck(ctx);
 
+            if (!check) {
+                ctx.body = util.result({
+                    code: 1003,
+                    desc: '无权限!'
+                });
+                return
+            }
             // 判断用户名是否存在
-            const resp = await UserService.getUserByName(user_name);
+            const resp = await UserService.getUserByName(userName);
             if(resp.length){
                 ctx.body = util.result({
                     code: 1001,
@@ -129,9 +167,11 @@ class User {
             }
 
             const create_time = new Date(new Date().getTime()).toISOString();
+            const login_expire_time = new Date(new Date().getTime()).toISOString();
             // 插入数据
             const data = {
                 create_time,
+                login_expire_time,
                 user_name: userName,
                 password: userPassword,
                 user_img: userImg,
@@ -139,7 +179,7 @@ class User {
                 user_email: userEmail,
                 is_permit: isPermit || 0,
                 system_ids: systemIds || '',
-                level: level || 1
+                level: level || 0
             }
 
             await UserService.createUser(data);
@@ -209,6 +249,17 @@ class User {
                 return
             }
 
+            const instance = new User();
+            const check = await instance.permissionCheck(ctx);
+
+            if (!check) {
+                ctx.body = util.result({
+                    code: 1003,
+                    desc: '无权限!'
+                });
+                return
+            }
+
             const resp = await UserService.getUserByName(userName);
             const { id } = resp[0].dataValues;
             // 插入数据
@@ -220,11 +271,10 @@ class User {
                 user_email: userEmail,
                 is_permit: isPermit || 0,
                 system_ids: systemIds || '',
-                level: level || 1
+                level: level || 0
             }
 
             await UserService.updateUser(id, data);
-
             ctx.body = util.result({
                 code: 200,
                 desc: '更新成功!'
@@ -238,12 +288,12 @@ class User {
         }
     }
 
-    // 获取用户详情
+    // 获取登录用户详情
     async userInfo(ctx) {
-        const {
-            cookie
-        } = ctx.request.header;
         try {
+            const {
+                cookie
+            } = ctx.request.header;
             const userId = util.getCookie('performance.monitor.user', cookie);
             const resp = await UserService.getUserById(userId);
             if (resp && resp.length) {
@@ -267,6 +317,73 @@ class User {
             ctx.body = util.result({
                 code: 1003,
                 desc: '用户不存在!'
+            });
+        } catch (err) {
+            console.error(err)
+            ctx.body = util.result({
+                code: 1001,
+                desc: '系统错误!'
+            });
+        }
+    }
+
+    // 获取用户列表
+    async getUserList(ctx) {
+        try {
+            const pageNo      = ctx.request.body.pageNo || 1;
+            const pageSize    = ctx.request.body.pageSize || SYSTEM.PAGESIZE;
+            const instance = new User();
+            const check = await instance.permissionCheck(ctx);
+
+            if (!check) {
+                ctx.body = util.result({
+                    code: 1003,
+                    desc: '无权限!'
+                });
+                return
+            }
+
+            // 参数
+            const param = {
+                pageNo,
+                pageSize
+            };
+
+            const resp = await UserService.getUserList(param);
+            const valjson = {
+                total: resp.count,
+                list: []
+            };
+
+            resp.rows.forEach(item => {
+                const {
+                    id,
+                    user_name: userName,
+                    system_ids,
+                    user_img: userImg,
+                    user_phone: userPhone,
+                    user_email: userEmail,
+                    create_time: createTime,
+                    is_permin: isPermit,
+                    level
+                } = item;
+
+                const systemIds = system_ids.split(',').filter(id => !!id)
+
+                valjson.list.push({
+                    userName,
+                    systemIds,
+                    userImg,
+                    userPhone,
+                    userEmail,
+                    createTime,
+                    isPermit,
+                    level,
+                });
+            });
+
+            ctx.body = util.result({
+                data: valjson
             });
         } catch (err) {
             console.error(err)

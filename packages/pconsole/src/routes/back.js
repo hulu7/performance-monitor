@@ -45,6 +45,8 @@ router.post('/api/user/logout', controllers.user.logout);
 router.post('/api/user/update', controllers.user.update);
 // 获取用户信息
 router.post('/api/user/info', controllers.user.userInfo);
+// 获取用户列表
+router.post('/api/user/list', controllers.user.getUserList);
 
 //----------------------------help--------------------------------------
 router.get('/help-doc', controllers.help.getHelpDoc);

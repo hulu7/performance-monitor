@@ -227,7 +227,7 @@ CREATE TABLE `web_user` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户新增时间',
   `login_expire_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户登录过期时间',
   `is_permit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用 0：正常 1：禁用',
-  `level` tinyint(1) NOT NULL DEFAULT '1' COMMENT '用户等级（0：管理员，1：普通用户）',
+  `level` tinyint(1) NOT NULL DEFAULT '1' COMMENT '用户等级（0：普通用户，1：管理员）',
   `token` char(32) NOT NULL DEFAULT '' COMMENT '用户秘钥',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;

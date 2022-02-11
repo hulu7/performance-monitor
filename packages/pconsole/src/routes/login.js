@@ -183,8 +183,6 @@ module.exports = function () {
         const url = ctx.request.url;
         const user_id = util.getCookie('performance.monitor.user', ctx.request.header.cookie);
         const token = util.getCookie('performance.monitor.token', ctx.request.header.cookie);
-        console.log('---cookie user_id: ', user_id);
-        console.log('---cookie token: ', token);
 
         if ((url.includes('/login') && !token && !user_id) || url.includes('/js/') || url.includes('reportPerformance')) {
             return await next();
@@ -197,7 +195,6 @@ module.exports = function () {
         }
         if (user_id && token) {
             const result = await login.login(user_id, token);
-            console.log('-- verify result: ', result)
             if (result) {
                 console.log('-- login successfully, start to render.')
                 return await next();

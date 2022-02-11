@@ -60,6 +60,11 @@ export const RENDER = {
 	login: {
 		title: '登录'
 	},
+
+	user: {
+		title: '用户管理'
+	},
+
 	system: {
 		title: '前端性能监控系统'
 	},
@@ -98,6 +103,9 @@ export const RENDER = {
 	}, {
 		name: 'login',
 		paths: ['/login']  //登录页面
+	},  {
+		name: 'user',
+		paths: ['/user']  //用户管理页面
 	}, {
 		name: 'addSystem',
 		paths: ['/addSystem']  //新增应用
