@@ -97,7 +97,7 @@ class User {
                     domain: '.jdcloud.com',
                     path: '/',
                     httpOnly: true,
-                    secure: SYSTEM.PROTOCOL === 'https',
+                    secure: false,
                     maxAge: 86400000,
                     overwrite: false
                 }
@@ -120,7 +120,7 @@ class User {
             console.error(err);
             ctx.body = util.result({
                 code: 1001,
-                desc: err
+                desc: '系统错误'
             });
             return '';
         }
@@ -215,7 +215,7 @@ class User {
                 domain: '.jdcloud.com',
                 path: '/',
                 httpOnly: true,
-                secure: SYSTEM.PROTOCOL === 'https',
+                secure: false,
                 maxAge: -1,
                 overwrite: false
             }
