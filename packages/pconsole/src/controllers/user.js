@@ -120,7 +120,7 @@ class User {
             console.error(err);
             ctx.body = util.result({
                 code: 1001,
-                desc: '登录失败!'
+                desc: err
             });
             return '';
         }
