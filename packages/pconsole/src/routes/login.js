@@ -199,6 +199,9 @@ module.exports = function () {
                 return await next();
             } else {
                 console.log('-- check fail, go to login page.')
+                if (url.includes('/login')) {
+                    return await next();
+                }
                 ctx.redirect(loginUrl);
             }
             return
