@@ -154,6 +154,17 @@ new Vue({
         },
         add() {
             this.mode = 'add';
+            this.formItems = {
+                userName: '',
+                userPassword: '',
+                systemIds: '',
+                userImg: '',
+                userPhone: '',
+                userEmail: '',
+                isPermit: true,
+                level: 0,
+            };
+
             this.dialogTitle = '新增用户';
             this.showDialog = true;
         },
