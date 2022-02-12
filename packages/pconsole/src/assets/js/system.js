@@ -6,7 +6,7 @@ new Vue({
         }
     },
     beforeMount(){
-        this.getDataList()
+        this.getDataList();
     },
     methods:{
         getDataList() {
@@ -16,13 +16,16 @@ new Vue({
                 success(data){
                     _this.datalist=data.data
                 }
-            })
+            });
         },
         getDetail(item) {
-            location.href=`/apps?systemId=${item.id}`
+            location.href=`/apps?systemId=${item.id}`;
         },
         goToSetting(item) {
-            location.href=`/setting?systemId=${item.id}`
+            location.href=`/setting?systemId=${item.id}`;
+        },
+        goToAddSystem() {
+            location.href='/add';
         }
     }
 })

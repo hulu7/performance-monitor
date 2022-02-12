@@ -107,8 +107,8 @@ export const RENDER = {
 		name: 'user',
 		paths: ['/user']  //用户管理页面
 	}, {
-		name: 'addSystem',
-		paths: ['/addSystem']  //新增应用
+		name: 'add',
+		paths: ['/add']  //新增应用
 	}, {
 		name: 'apps',
 		paths: ['/apps'] //应用性能分析
