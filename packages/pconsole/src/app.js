@@ -57,10 +57,10 @@ app
         credentials: true,
     }))
     .use(login())
-    .use(front.routes())
-    .use(front.allowedMethods())
-    .use(back.routes())
     .use(back.allowedMethods())
+    .use(front.allowedMethods())
+    .use(front.routes())
+    .use(back.routes())
     .use((ctx, next) => {
         const start = new Date()
         return next().then(() => {

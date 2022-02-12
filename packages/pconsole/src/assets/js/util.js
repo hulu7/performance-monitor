@@ -282,7 +282,7 @@ class utilfn {
 			} else {
 				popup.alert({
 					type: 'msg',
-					title: '用户未登陆,请登录!'
+					title: data.desc
 				});
 			}
 		} else {

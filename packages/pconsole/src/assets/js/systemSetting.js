@@ -61,7 +61,8 @@ new Vue({
                     this.getDetail();
                     this.$message({
                         message: '操作成功!',
-                        type: 'success'
+                        type: 'success',
+                        offset: 60
                       });
                 }
             });
@@ -91,7 +92,8 @@ new Vue({
                 success: data => {
                     this.$message({
                         message: '操作成功!',
-                        type: 'success'
+                        type: 'success',
+                        offset: 60
                       });
                     this.getDetail();
                 }
@@ -156,7 +158,8 @@ new Vue({
                     this.getDetail();
                     this.$message({
                         message: '操作成功!',
-                        type: 'success'
+                        type: 'success',
+                        offset: 60
                       });
                 }
             }) 
@@ -165,7 +168,8 @@ new Vue({
             if (this.systemInfo.script && util.copy(this.systemInfo.script)) {
                 this.$message({
                     message: '已拷贝至剪贴板!',
-                    type: 'success'
+                    type: 'success',
+                    offset: 60
                   });
             } else {
                 this.$message.error('拷贝失败! 请重试');

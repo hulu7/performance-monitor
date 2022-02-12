@@ -49,7 +49,8 @@ new Vue({
             if (this.pagesItemData.basic.url && util.copy(this.pagesItemData.basic.url)) {
                 this.$message({
                     message: '已拷贝至剪贴板!',
-                    type: 'success'
+                    type: 'success',
+                    offset: 60
                   });
             } else {
                 this.$message.error('拷贝失败! 请重试');

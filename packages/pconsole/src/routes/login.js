@@ -84,7 +84,6 @@ function getLoginUrl (retUrl) {
             is_permit,
             token
         } = resp[0].dataValues;
-        console.log('----verify data', resp[0].dataValues);
         const now = new Date().valueOf();
         const expire = new Date(expireTime).valueOf();
         if (user_token !== token) {

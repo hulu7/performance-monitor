@@ -4,7 +4,7 @@ import {
     RENDER,
 	RUN
 } from '../config.js'
-const router = new KoaRouter()
+const router = new KoaRouter();
 
 RENDER.routers.forEach(route => {
 	router.get(route.paths, async(ctx, next) => {

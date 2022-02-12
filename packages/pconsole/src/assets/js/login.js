@@ -23,12 +23,13 @@ new Vue({
                     userName: this.username,
                     passWord: hex_md5(this.password)
                 },
-                success: (data) => {
-                    window.location.href = data.data.returnUrl;
+                success: resp => {
                     this.$message({
                         message: '登录成功！',
-                        type: 'success'
+                        type: 'success',
+                        offset: 60
                       });
+                    window.location.href = resp.data.returnUrl;
                 }
             })
         }

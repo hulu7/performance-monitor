@@ -104,7 +104,7 @@ class User {
 
                 ctx.cookies.set('performance.monitor.user', id, cookieOptions);
                 ctx.cookies.set('performance.monitor.token', expire < now ? newToken : token, cookieOptions);
-                const returnUrl = ctx.request.header.referer.split('ReturnUrl=')[1];
+                const returnUrl = ctx.request.header.referer.split('ReturnUrl=')[1] || '/';
                 ctx.body = util.result({
                     data: {
                         returnUrl
@@ -212,10 +212,19 @@ class User {
     async logout(ctx) {
         try {
             const cookieOptions = {
+                domain: '.jdcloud.com',
+                path: '/',
+                httpOnly: true,
+                secure: SYSTEM.PROTOCOL === 'https',
                 maxAge: -1,
+                overwrite: false
             }
+
             ctx.cookies.set('performance.monitor.user', '', cookieOptions);
             ctx.cookies.set('performance.monitor.token', '', cookieOptions);
+            ctx.body = util.result({
+                data: {}
+            });
         } catch (err) {
             console.log(err)
             ctx.body = util.result({
@@ -240,15 +249,13 @@ class User {
                 systemIds,
                 level
             } = ctx.request.body;
-
-            if(!userName || !userPassword) {
+            if(!userPassword) {
                 ctx.body = util.result({
                     code: 1001,
-                    desc: '参数错误!'
+                    desc: '用户密码不能为空!'
                 });
                 return
             }
-
             const instance = new User();
             const check = await instance.permissionCheck(ctx);
 
@@ -264,7 +271,6 @@ class User {
             const { id } = resp[0].dataValues;
             // 插入数据
             const data = {
-                user_name: userName,
                 password: userPassword,
                 user_img: userImg,
                 user_phone: userPhone,
@@ -276,8 +282,7 @@ class User {
 
             await UserService.updateUser(id, data);
             ctx.body = util.result({
-                code: 200,
-                desc: '更新成功!'
+                data: {}
             });
         } catch (err) {
             console.error(err)
@@ -359,16 +364,14 @@ class User {
                 const {
                     id,
                     user_name: userName,
-                    system_ids,
+                    system_ids: systemIds,
                     user_img: userImg,
                     user_phone: userPhone,
                     user_email: userEmail,
                     create_time: createTime,
-                    is_permin: isPermit,
+                    is_permit: isPermit,
                     level
                 } = item;
-
-                const systemIds = system_ids.split(',').filter(id => !!id)
 
                 valjson.list.push({
                     userName,

@@ -43,14 +43,16 @@ new Vue({
             if(!this.systemName){
                 this.$message({
                     message: '请正确填写系统名称!',
-                    type: 'warning'
+                    type: 'warning',
+                    offset: 60
                 });
                 return false;
             }
             if(!this.systemDomain || !util.isValidDomain(this.systemDomain)) {
                 this.$message({
                     message: '请正确填写系统域名!',
-                    type: 'warning'
+                    type: 'warning',
+                    offset: 60
                 });
                 return false;
             }
@@ -68,7 +70,8 @@ new Vue({
                     _this.scriptstr = data.data.script;
                     this.$message({
                         message: '系统添加成功！',
-                        type: 'success'
+                        type: 'success',
+                        offset: 60
                       });
                 }
             })
