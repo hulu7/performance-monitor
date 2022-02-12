@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {
     SYSTEM
 } from '../config'
@@ -216,7 +217,7 @@ class App {
                         id, url, pageId, systemId, createTime, userId,
                         loadTime, whiteTime, requestTime,
                         isMain: is_main === '0',
-                        dateTime: new Date(new Date().getTime()).toISOString()
+                        dateTime: moment(new Date(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
                     }
                 });
             }

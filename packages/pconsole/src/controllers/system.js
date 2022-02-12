@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Client } from 'elasticsearch'
 import {
     SYSTEM
@@ -23,7 +24,7 @@ class System {
                     system_name: systemName,
                     script,
                     is_use: isUse,
-                    create_time: createTime,
+                    create_time,
                     slow_page_time: slowPageTime,
                     slow_js_time: slowJsTime,
                     slow_css_time: slowCssTime,
@@ -35,6 +36,7 @@ class System {
                     is_monitor_resource: isMonitorResource,
                     is_monitor_system: isMonitorSystem
                 } = item.dataValues;
+                const createTime = moment(new Date().getTime(create_time)).format('YYYY-MM-DD HH:mm:ss');
                 valArr.push({
                     id, systemDomain, systemName, script,
                     isUse, createTime, slowPageTime, slowJsTime, slowCssTime, slowImgTime,
