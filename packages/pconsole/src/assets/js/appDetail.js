@@ -57,7 +57,7 @@ new Vue({
             }
         },
         gotopage() {
-            window.open(`${this.pagesItemData.url}`, `_blank`);
+            window.open(`${this.pagesItemData.basic.url}`, `_blank`);
         },
         emptyHint(id) {
             const e = document.getElementById(id);
