@@ -56,7 +56,7 @@ class UserService {
       ],
       raw: true,
       limit: Math.floor(pageSize),
-      offset: (pageNo - 1)
+      offset: (pageNo - 1) * Math.floor(pageSize)
     });
   }
 }

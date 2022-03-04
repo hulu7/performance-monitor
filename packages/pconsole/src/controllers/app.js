@@ -195,7 +195,7 @@ class App {
                 appId, pageNo, pageSize, beginTime, endTime, userId
             };
 
-            const appsHistoryResults = await AppService.getAppHistory(param)
+            const appsHistoryResults = await AppService.getAppHistory(param);
 
             let result = [];
             if(appsHistoryResults.rows && appsHistoryResults.rows.length) {

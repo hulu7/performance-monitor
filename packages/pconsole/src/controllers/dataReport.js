@@ -31,8 +31,9 @@ class Report {
                 ctx.body=imgsrc;
                 return;
             };
+
             console.log('---start store performance data--');
-            const createTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString();
+            const createTime = new Date(new Date().getTime()).toISOString();
 
             //存储页面page性能
             await dataInstance.storePagePerformance(createTime, resourceDatas, systemItem);

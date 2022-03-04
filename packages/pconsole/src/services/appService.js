@@ -25,9 +25,9 @@ class AppService {
       order: [
         [Sequelize.literal('count'), 'DESC']
       ],
-      raw: true,
       limit: Math.floor(pageSize), //Math.floor(pageSize)
-      offset: (pageNo - 1)
+      offset: (pageNo - 1) * Math.floor(pageSize),
+      raw: true
     })
   }
 
@@ -60,14 +60,16 @@ class AppService {
   
       return WebPagesBasic.findAndCountAll({
         where: query,
-        order: [['create_time', 'DESC']],
         include:[{
           model: WebPagesTiming,
           attributes: ['load_time', 'white_time', 'request_time']
         }],
-        raw: true,
+        order: [['create_time', 'DESC']],
         limit: Math.floor(pageSize),
-        offset: (pageNo - 1)
+        offset: (pageNo - 1) * Math.floor(pageSize),
+        raw: true,
+        distinct: true,
+        subQuery: false
       });
     }
 
