@@ -46,7 +46,7 @@ class Report {
     }
 
     async storePagePerformance(createTime, resourceDatas, systemItem) {
-        if(systemItem.is_monitor_pages === 0){
+        if(systemItem.is_monitor_pages === 0) {
             const {
                 mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
                 nocookie,

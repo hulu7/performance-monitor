@@ -361,9 +361,25 @@ class App {
                 timing: {}
             };
 
-            const appDetailResults = await AppService.getAppDetail(param);
+            const [
+                basics,
+                clients,
+                resources,
+                restimings,
+                timings
+            ] = await Promise.all([
+                AppService.getWebPagesBasicById(param),
+                AppService.getWebPagesClientById(param),
+                AppService.getWebPagesResourcesById(param),
+                AppService.getWebPagesRestimingById(param),
+                AppService.getWebPagesTimingById(param),
+            ]);
 
-            if (appDetailResults && appDetailResults.length) {
+            if (basics && basics.length &&
+                clients && clients.length &&
+                resources && resources.length &&
+                restimings && restimings.length &&
+                timings && timings.length) {
                 // 页面基本信息
                 const {
                     id: monitorId,
@@ -372,12 +388,8 @@ class App {
                     url,
                     is_main,
                     create_time: createTime,
-                    additional_info: additionalInfo,
-                    web_pages_client,
-                    web_pages_resource,
-                    web_pages_restiming,
-                    web_pages_timing
-                } = appDetailResults[0];
+                    additional_info: additionalInfo
+                } = basics[0];
 
                 Object.assign(valjson.basic, {
                     monitorId,
@@ -390,95 +402,87 @@ class App {
                 });
 
                 // 客户端基本信息
-                if (web_pages_client) {
-                    const {
-                        appin,
-                        navigation_type: navigationType,
-                        next_hop_protocol: nextHopProtocol,
-                        system,
-                        browser,
-                        cpu_concurrency: cpuConcurrency,
-                        screen_color_depth: screenColorDepth,
-                        screen_orientation: screenOrientation,
-                        screen_size: screenSize,
-                        http_initiator: httpInitiator,
-                        effective_type: effectiveType,
-                        downlink,
-                        round_trip_time: roundTripTime
-                    } = web_pages_client;
-    
-                    Object.assign(valjson.client, { appin, navigationType, nextHopProtocol,
-                        system, browser, cpuConcurrency, screenColorDepth, screenOrientation, screenSize, httpInitiator,
-                        effectiveType, downlink, roundTripTime
-                    });
-                }
+                const {
+                    appin,
+                    navigation_type: navigationType,
+                    next_hop_protocol: nextHopProtocol,
+                    system,
+                    browser,
+                    cpu_concurrency: cpuConcurrency,
+                    screen_color_depth: screenColorDepth,
+                    screen_orientation: screenOrientation,
+                    screen_size: screenSize,
+                    http_initiator: httpInitiator,
+                    effective_type: effectiveType,
+                    downlink,
+                    round_trip_time: roundTripTime
+                } = clients[0];
+
+                Object.assign(valjson.client, { appin, navigationType, nextHopProtocol,
+                    system, browser, cpuConcurrency, screenColorDepth, screenOrientation, screenSize, httpInitiator,
+                    effectiveType, downlink, roundTripTime
+                });
 
                 // 页面资源信息
-                if (web_pages_resource) {
-                    const {
-                        body_size: bodySize,
-                        encoded_body_size: encodedBodySize,
-                        redirect_count: redirectCount,
-                        transfer_size: transferSize,
-                        doms_number: domsNumber,
-                        script_number: scriptNumber,
-                        external_script_number: externalScriptNumber,
-                        resources_fetch_number: resourcesFetchNumber,
-                        html_size: htmlSize,
-                        img_number: imgNumber,
-                        link_number: linkNumber,
-                        css_number: cssNumber,
-                        iframe_number: iframeNumber,
-                        unique_domains_number: uniqueDomainsNumber,
-                        total_js_heap_size: totalJSHeapSize,
-                        js_heap_size_limit: jsHeapSizeLimit,
-                        used_js_heap_size: usedJSHeapSize,
-                        used_local_storage_size: usedLocalStorageSize,
-                        used_local_storage_keys: usedLocalStorageKeys
-                    } = web_pages_resource;
-    
-                    Object.assign(valjson.resources, { bodySize, encodedBodySize, redirectCount,
-                        transferSize, domsNumber, scriptNumber, externalScriptNumber, resourcesFetchNumber,
-                        htmlSize, imgNumber, linkNumber, cssNumber, iframeNumber, uniqueDomainsNumber,
-                        totalJSHeapSize, jsHeapSizeLimit, usedJSHeapSize, usedLocalStorageSize, usedLocalStorageKeys
-                    });
-                }
+                const {
+                    body_size: bodySize,
+                    encoded_body_size: encodedBodySize,
+                    redirect_count: redirectCount,
+                    transfer_size: transferSize,
+                    doms_number: domsNumber,
+                    script_number: scriptNumber,
+                    external_script_number: externalScriptNumber,
+                    resources_fetch_number: resourcesFetchNumber,
+                    html_size: htmlSize,
+                    img_number: imgNumber,
+                    link_number: linkNumber,
+                    css_number: cssNumber,
+                    iframe_number: iframeNumber,
+                    unique_domains_number: uniqueDomainsNumber,
+                    total_js_heap_size: totalJSHeapSize,
+                    js_heap_size_limit: jsHeapSizeLimit,
+                    used_js_heap_size: usedJSHeapSize,
+                    used_local_storage_size: usedLocalStorageSize,
+                    used_local_storage_keys: usedLocalStorageKeys
+                } = resources[0];
+
+                Object.assign(valjson.resources, { bodySize, encodedBodySize, redirectCount,
+                    transferSize, domsNumber, scriptNumber, externalScriptNumber, resourcesFetchNumber,
+                    htmlSize, imgNumber, linkNumber, cssNumber, iframeNumber, uniqueDomainsNumber,
+                    totalJSHeapSize, jsHeapSizeLimit, usedJSHeapSize, usedLocalStorageSize, usedLocalStorageKeys
+                });
 
                 // 瀑布流数据
-                if (web_pages_restiming) {
-                    const {
-                        restiming: restiming
-                    } = web_pages_restiming;
-                    const decodedRestiming = util.decompress(restiming);
-                    const add = appInstance.extractAppData(decodedRestiming);
-                    Object.assign(valjson.restiming, { restiming: decodedRestiming, add });    
-                }
+                const {
+                    restiming: restiming
+                } = restimings[0];
+                const decodedRestiming = util.decompress(restiming);
+                const add = appInstance.extractAppData(decodedRestiming);
+                Object.assign(valjson.restiming, { restiming: decodedRestiming, add });    
 
                 // 页面性能数据
-                if (web_pages_timing) {
-                    const {
-                        load_time: loadTime,
-                        white_time: whiteTime,
-                        first_paint: firstPaint,
-                        first_contentful_paint: firstContentfulPaint,
-                        time_to_interactive: timeToInteractive,
-                        visually_ready_time: visuallyReadyTime,
-                        perceived_load_time: perceivedLoadTime,
-                        dom_time: domTime,
-                        analysis_dom_time: analysisDomTime,
-                        dns_time: dnsTime,
-                        tcp_time: tcpTime,
-                        redirect_time: redirectTime,
-                        unload_time: unloadTime,
-                        request_time: requestTime,
-                        ready_time: readyTime
-                    } = web_pages_timing;
-                    Object.assign(valjson.timing, { loadTime, whiteTime,
-                        firstPaint, firstContentfulPaint, visuallyReadyTime, perceivedLoadTime,
-                        domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, 
-                        requestTime, readyTime, timeToInteractive
-                    });
-                }
+                const {
+                    load_time: loadTime,
+                    white_time: whiteTime,
+                    first_paint: firstPaint,
+                    first_contentful_paint: firstContentfulPaint,
+                    time_to_interactive: timeToInteractive,
+                    visually_ready_time: visuallyReadyTime,
+                    perceived_load_time: perceivedLoadTime,
+                    dom_time: domTime,
+                    analysis_dom_time: analysisDomTime,
+                    dns_time: dnsTime,
+                    tcp_time: tcpTime,
+                    redirect_time: redirectTime,
+                    unload_time: unloadTime,
+                    request_time: requestTime,
+                    ready_time: readyTime
+                } = timings[0];
+                Object.assign(valjson.timing, { loadTime, whiteTime,
+                    firstPaint, firstContentfulPaint, visuallyReadyTime, perceivedLoadTime,
+                    domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, 
+                    requestTime, readyTime, timeToInteractive
+                });
             }
             
             ctx.body = util.result({

@@ -64,12 +64,77 @@ class AppService {
           model: WebPagesTiming,
           attributes: ['load_time', 'white_time', 'request_time']
         }],
-        order: [['create_time', 'DESC']],
         limit: Math.floor(pageSize),
+        order: [['create_time', 'DESC']],
         offset: (pageNo - 1) * Math.floor(pageSize),
         raw: true,
         distinct: true,
         subQuery: false
+      });
+    }
+
+    async getWebPagesBasicById(param) {
+      const {
+        id
+      } = param;
+
+      return WebPagesBasic.findAll({
+        where: {
+          id
+        },
+        raw: true
+      });
+    }
+
+    async getWebPagesClientById(param) {
+      const {
+        id: monitor_id
+      } = param;
+
+      return WebPagesClient.findAll({
+        where: {
+          monitor_id
+        },
+        raw: true
+      });
+    }
+
+    async getWebPagesResourcesById(param) {
+      const {
+        id: monitor_id
+      } = param;
+
+      return WebPagesResources.findAll({
+        where: {
+          monitor_id
+        },
+        raw: true
+      });
+    }
+
+    async getWebPagesRestimingById(param) {
+      const {
+        id: monitor_id
+      } = param;
+
+      return WebPagesRestiming.findAll({
+        where: {
+          monitor_id
+        },
+        raw: true
+      });
+    }
+
+    async getWebPagesTimingById(param) {
+      const {
+        id: monitor_id
+      } = param;
+
+      return WebPagesTiming.findAll({
+        where: {
+          monitor_id
+        },
+        raw: true
       });
     }
 
