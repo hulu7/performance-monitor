@@ -1,7 +1,7 @@
 new Vue({
     el: '#appDetail',
-    data(){
-        return{
+    data() {
+        return {
             id: util.getQueryString('id'),
             type: util.getQueryString('type'),
             pagesItemData: {
@@ -17,11 +17,11 @@ new Vue({
             url: '',
             totalRequestCount: 0,
             totalDuration: 0,
-            isLoadingBasic: true,
-            isLoadingClients: true,
-            isLoadingResources: true,
-            isLoadingRestimings: true,
-            isLoadingTiming: true
+            isLoadingBasic: false,
+            isLoadingClients: false,
+            isLoadingResources: false,
+            isLoadingRestimings: false,
+            isLoadingTiming: false
         }
     },
     filters: {
@@ -36,7 +36,7 @@ new Vue({
         date: window.Filter.date,
         limitTo: window.Filter.limitTo
     },
-    beforeMount(){
+    beforeMount() {
         this.init();
         this.getWebPageBasic();
         this.getWebPageRestimings();
@@ -44,7 +44,7 @@ new Vue({
         this.getWebPageResources();
         this.getWebPageTiming();
     },
-    mounted(){},
+    mounted() { },
     methods: {
         init() {
             this.systemId = util.queryParameters('systemId');
@@ -65,7 +65,7 @@ new Vue({
                     message: '已拷贝至剪贴板!',
                     type: 'success',
                     offset: 60
-                  });
+                });
             } else {
                 this.$message.error('拷贝失败! 请重试');
             }
@@ -109,7 +109,7 @@ new Vue({
                         count[key] += 1;
                     }
                 });
-                
+
                 util.drawWaterfall('all-data', restimings);
 
                 const parent = document.getElementById('network-stream');
