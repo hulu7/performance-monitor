@@ -155,8 +155,9 @@
                 </div>
                 <div>
                     <h1 class="chart-title">重复请求</h1>
-                    <div v-if="app.dups.length">
+                    <div>
                         <el-table
+                            v-loading="isLoadingRestimings"
                             :data="app.dups"
                             style="width: 100%">
                             <el-table-column

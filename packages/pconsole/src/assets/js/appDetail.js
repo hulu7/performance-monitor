@@ -140,11 +140,6 @@ new Vue({
                     this.isLoadingBasic = false;
                     this.pagesItemData.basic = resps.data;
                     this.url = this.pagesItemData.basic.url;
-
-                    setTimeout(() => {
-                        this.drawNetworkStream(this.pagesItemData.restiming.restiming);
-                        this.drawAddInfo(this.pagesItemData.restiming.add);
-                    }, 100);
                 }
             })
         },
