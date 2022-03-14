@@ -27,6 +27,16 @@ router.post('/api/apps/average', controllers.app.getAppAverage)
 router.post('/api/apps/history', controllers.app.getAppHistory)
 // 根据ID获得page详情性能信息
 router.post('/api/apps/detail', controllers.app.getAppDetail)
+// 根据ID获得page基本信息
+router.post('/api/apps/basic', controllers.app.getWebPageBasicInfo)
+// 根据ID获得page基本信息
+router.post('/api/apps/clients', controllers.app.getWebPageClientsInfo)
+// 根据ID获得page基本信息
+router.post('/api/apps/resources', controllers.app.getWebPageResourcesInfo)
+// 根据ID获得page基本信息
+router.post('/api/apps/restimings', controllers.app.getWebPageRestimingsInfo)
+// 根据ID获得page基本信息
+router.post('/api/apps/timing', controllers.app.getWebPageTimingInfo)
 
 //----------------------------Environment--------------------------------------
 router.post('/api/environment/detail', controllers.environment.getDataForEnvironment)

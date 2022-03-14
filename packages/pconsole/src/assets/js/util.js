@@ -51,7 +51,7 @@ class utilfn {
 				noError = false;
 				asyncVal && popup.alert({
 					type: 'msg',
-					title: '您的网络太慢了哦,请刷新重试!'
+					title: '请求超时, 请重试!'
 				});
 			}, json.timeout || config.ajaxtimeout);
 		}

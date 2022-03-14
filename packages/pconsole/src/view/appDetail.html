@@ -28,9 +28,9 @@
         </div>
     </div>
     <!-- 页面平均耗时说明 -->
-    <div class="common-margin" v-if="!isLoading">
+    <div class="common-margin">
         <div class="common-block fl">
-            <el-card class="box-card">
+            <el-card class="box-card" v-loading="isLoadingTiming">
                 <div slot="header" class="clearfix">
                     <h1 class="h1">总体性能</h1>
                 </div>
@@ -121,7 +121,7 @@
             </el-card>
         </div>
         <div class="common-block fr" v-for="(app, index) in pagesItemData.restiming.add.apps" :key="index" >
-            <el-card class="box-card">
+            <el-card class="box-card" v-loading="isLoadingRestimings">
                 <div slot="header" class="clearfix">
                     <h1 class="h1">{{app.isMain ? '主应用' : (app.app === 'unknown' ? '其他资源' : '子应用')}}{{ app.app === 'unknown' ? '' : app.app}}性能</h1>
                 </div>
@@ -177,7 +177,7 @@
             </el-card>
         </div>
         <div class="common-block fr">
-            <el-card class="box-card" >
+            <el-card class="box-card" v-loading="isLoadingBasic">
                 <div slot="header" class="clearfix">
                     <h1 class="h1">附加信息</h1>
                 </div>
@@ -187,7 +187,7 @@
             </el-card>
         </div>
         <div class="common-block fl">
-            <el-card class="box-card" >
+            <el-card class="box-card" v-loading="isLoadingClients">
                 <div slot="header" class="clearfix">
                     <h1 class="h1">访问者信息</h1>
                 </div>
@@ -234,7 +234,7 @@
             </el-card>
         </div>
         <div class="common-block fl">
-            <el-card class="box-card" >
+            <el-card class="box-card" v-loading="isLoadingResources">
                 <div slot="header" class="clearfix">
                     <h1 class="h1">资源信息</h1>
                 </div>
@@ -286,7 +286,7 @@
         </div>
     </div>
     <div class="sources-list">
-        <el-card class="box-card" >
+        <el-card class="box-card" v-loading="isLoadingRestimings">
             <div slot="header" class="clearfix">
                 <h1 class="h1">网络请求瀑布流</h1>
             </div>

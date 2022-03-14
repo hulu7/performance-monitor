@@ -4,14 +4,24 @@ new Vue({
         return{
             id: util.getQueryString('id'),
             type: util.getQueryString('type'),
-            pagesItemData: {},
+            pagesItemData: {
+                basic: {},
+                timing: {},
+                restiming: {},
+                client: {},
+                resources: {}
+            },
             sourceslist: [],
             systemId: '',
             appId: '',
             url: '',
             totalRequestCount: 0,
             totalDuration: 0,
-            isLoading: true
+            isLoadingBasic: true,
+            isLoadingClients: true,
+            isLoadingResources: true,
+            isLoadingRestimings: true,
+            isLoadingTiming: true
         }
     },
     filters: {
@@ -28,7 +38,11 @@ new Vue({
     },
     beforeMount(){
         this.init();
-        this.getAppDetail();
+        this.getWebPageBasic();
+        this.getWebPageRestimings();
+        this.getWebPageClients();
+        this.getWebPageResources();
+        this.getWebPageTiming();
     },
     mounted(){},
     methods: {
@@ -114,23 +128,83 @@ new Vue({
                 }
             }
         },
-        // 获得页面请求性能详情
-        getAppDetail() {
-            this.isLoading = true;
+        getWebPageBasic() {
+            this.isLoadingBasic = true;
             const { id } = this;
             util.ajax({
-                url: `${config.baseApi}api/apps/detail`,
+                url: `${config.baseApi}api/apps/basic`,
                 data: {
                     id
                 },
                 success: resps => {
-                    this.isLoading = false;
-                    this.pagesItemData = resps.data;
+                    this.isLoadingBasic = false;
+                    this.pagesItemData.basic = resps.data;
                     this.url = this.pagesItemData.basic.url;
+
                     setTimeout(() => {
                         this.drawNetworkStream(this.pagesItemData.restiming.restiming);
                         this.drawAddInfo(this.pagesItemData.restiming.add);
                     }, 100);
+                }
+            })
+        },
+        getWebPageRestimings() {
+            this.isLoadingRestimings = true;
+            const { id } = this;
+            util.ajax({
+                url: `${config.baseApi}api/apps/restimings`,
+                data: {
+                    id
+                },
+                success: resps => {
+                    this.isLoadingRestimings = false;
+                    this.pagesItemData.restiming = resps.data;
+                    setTimeout(() => {
+                        this.drawNetworkStream(this.pagesItemData.restiming.restiming);
+                        this.drawAddInfo(this.pagesItemData.restiming.add);
+                    }, 100);
+                }
+            })
+        },
+        getWebPageClients() {
+            this.isLoadingClients = true;
+            const { id } = this;
+            util.ajax({
+                url: `${config.baseApi}api/apps/clients`,
+                data: {
+                    id
+                },
+                success: resps => {
+                    this.isLoadingClients = false;
+                    this.pagesItemData.client = resps.data;
+                }
+            })
+        },
+        getWebPageResources() {
+            this.isLoadingResources = true;
+            const { id } = this;
+            util.ajax({
+                url: `${config.baseApi}api/apps/resources`,
+                data: {
+                    id
+                },
+                success: resps => {
+                    this.isLoadingResources = false;
+                    this.pagesItemData.resources = resps.data;
+                }
+            })
+        },
+        getWebPageTiming() {
+            this.isLoadingTiming = true;
+            const { id } = this;
+            util.ajax({
+                url: `${config.baseApi}api/apps/timing`,
+                data: {
+                    id
+                },
+                success: resps => {
+                    this.isLoadingTiming = false;
+                    this.pagesItemData.timing = resps.data;
                 }
             })
         },

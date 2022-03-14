@@ -338,6 +338,281 @@ class App {
         return result;
     }
 
+    // 根据ID获取app基本信息
+    async getWebPageBasicInfo(ctx) {
+        try {
+            const { id } = ctx.request.body;
+
+            if(!id) {
+                ctx.body = util.result({
+                    code: 1001,
+                    desc: 'id参数有误!'
+                });
+                return
+            }
+
+            const param = { id };
+            const valjson = {};
+
+            const basics = await AppService.getWebPagesBasicById(param);
+
+            if (basics && basics.length) {
+                // 页面基本信息
+                const {
+                    id: monitorId,
+                    app_id: appId,
+                    app_name: appName,
+                    url,
+                    is_main,
+                    create_time: createTime,
+                    additional_info: additionalInfo
+                } = basics[0];
+
+                Object.assign(valjson, {
+                    monitorId,
+                    url,
+                    createTime,
+                    additionalInfo,
+                    appId,
+                    appName,
+                    isMain: is_main === '0'
+                });
+            }
+            
+            ctx.body = util.result({
+                data: valjson
+            });
+
+        } catch (err) {
+            console.log(err)
+            ctx.body = util.result({
+                code: 1001,
+                desc: '系统错误!'
+            });
+            return '';
+        }
+    }
+
+    // 根据ID获取Clients信息
+    async getWebPageClientsInfo(ctx) {
+        try {
+            const { id } = ctx.request.body;
+
+            if(!id) {
+                ctx.body = util.result({
+                    code: 1001,
+                    desc: 'id参数有误!'
+                });
+                return
+            }
+
+            const param = { id };
+            const valjson = {};
+
+            const clients = await AppService.getWebPagesClientById(param);
+
+            if (clients && clients.length) {
+                // 客户端基本信息
+                const {
+                    appin,
+                    navigation_type: navigationType,
+                    next_hop_protocol: nextHopProtocol,
+                    system,
+                    browser,
+                    cpu_concurrency: cpuConcurrency,
+                    screen_color_depth: screenColorDepth,
+                    screen_orientation: screenOrientation,
+                    screen_size: screenSize,
+                    http_initiator: httpInitiator,
+                    effective_type: effectiveType,
+                    downlink,
+                    round_trip_time: roundTripTime
+                } = clients[0];
+
+                Object.assign(valjson, { appin, navigationType, nextHopProtocol,
+                    system, browser, cpuConcurrency, screenColorDepth, screenOrientation, screenSize, httpInitiator,
+                    effectiveType, downlink, roundTripTime
+                });
+            }
+            
+            ctx.body = util.result({
+                data: valjson
+            });
+
+        } catch (err) {
+            console.log(err)
+            ctx.body = util.result({
+                code: 1001,
+                desc: '系统错误!'
+            });
+            return '';
+        }
+    }
+
+    // 根据ID获取Resources信息
+    async getWebPageResourcesInfo(ctx) {
+        try {
+            const { id } = ctx.request.body;
+
+            if(!id) {
+                ctx.body = util.result({
+                    code: 1001,
+                    desc: 'id参数有误!'
+                });
+                return
+            }
+
+            const param = { id };
+            const valjson = {};
+
+            const resources = await AppService.getWebPagesResourcesById(param);
+
+            if (resources && resources.length) {
+                // 页面资源信息
+                const {
+                    body_size: bodySize,
+                    encoded_body_size: encodedBodySize,
+                    redirect_count: redirectCount,
+                    transfer_size: transferSize,
+                    doms_number: domsNumber,
+                    script_number: scriptNumber,
+                    external_script_number: externalScriptNumber,
+                    resources_fetch_number: resourcesFetchNumber,
+                    html_size: htmlSize,
+                    img_number: imgNumber,
+                    link_number: linkNumber,
+                    css_number: cssNumber,
+                    iframe_number: iframeNumber,
+                    unique_domains_number: uniqueDomainsNumber,
+                    total_js_heap_size: totalJSHeapSize,
+                    js_heap_size_limit: jsHeapSizeLimit,
+                    used_js_heap_size: usedJSHeapSize,
+                    used_local_storage_size: usedLocalStorageSize,
+                    used_local_storage_keys: usedLocalStorageKeys
+                } = resources[0];
+
+                Object.assign(valjson, { bodySize, encodedBodySize, redirectCount,
+                    transferSize, domsNumber, scriptNumber, externalScriptNumber, resourcesFetchNumber,
+                    htmlSize, imgNumber, linkNumber, cssNumber, iframeNumber, uniqueDomainsNumber,
+                    totalJSHeapSize, jsHeapSizeLimit, usedJSHeapSize, usedLocalStorageSize, usedLocalStorageKeys
+                });
+            }
+            
+            ctx.body = util.result({
+                data: valjson
+            });
+
+        } catch (err) {
+            console.log(err)
+            ctx.body = util.result({
+                code: 1001,
+                desc: '系统错误!'
+            });
+            return '';
+        }
+    }
+
+    // 根据ID获得Restimings信息
+    async getWebPageRestimingsInfo(ctx) {
+        try {
+            const { id } = ctx.request.body;
+
+            if(!id) {
+                ctx.body = util.result({
+                    code: 1001,
+                    desc: 'id参数有误!'
+                });
+                return
+            }
+
+            const appInstance = new App();
+            const param = { id };
+            const valjson = {};
+
+            const restimings = await AppService.getWebPagesRestimingById(param);
+
+            if (restimings && restimings.length) {
+                // 瀑布流数据
+                const {
+                    restiming: restiming
+                } = restimings[0];
+                const decodedRestiming = util.decompress(restiming);
+                const add = appInstance.extractAppData(decodedRestiming);
+                Object.assign(valjson, { restiming: decodedRestiming, add });    
+            }
+            
+            ctx.body = util.result({
+                data: valjson
+            });
+
+        } catch (err) {
+            console.log(err)
+            ctx.body = util.result({
+                code: 1001,
+                desc: '系统错误!'
+            });
+            return '';
+        }
+    }
+
+    // 根据ID获得Timing信息
+    async getWebPageTimingInfo(ctx) {
+        try {
+            const { id } = ctx.request.body;
+
+            if(!id) {
+                ctx.body = util.result({
+                    code: 1001,
+                    desc: 'id参数有误!'
+                });
+                return
+            }
+
+            const param = { id };
+            const valjson = {};
+
+            const timing = await AppService.getWebPagesTimingById(param);
+
+            if (timing && timing.length) {
+                // 页面性能数据
+                const {
+                    load_time: loadTime,
+                    white_time: whiteTime,
+                    first_paint: firstPaint,
+                    first_contentful_paint: firstContentfulPaint,
+                    time_to_interactive: timeToInteractive,
+                    visually_ready_time: visuallyReadyTime,
+                    perceived_load_time: perceivedLoadTime,
+                    dom_time: domTime,
+                    analysis_dom_time: analysisDomTime,
+                    dns_time: dnsTime,
+                    tcp_time: tcpTime,
+                    redirect_time: redirectTime,
+                    unload_time: unloadTime,
+                    request_time: requestTime,
+                    ready_time: readyTime
+                } = timing[0];
+                Object.assign(valjson, { loadTime, whiteTime,
+                    firstPaint, firstContentfulPaint, visuallyReadyTime, perceivedLoadTime,
+                    domTime, analysisDomTime, dnsTime, tcpTime, redirectTime, unloadTime, 
+                    requestTime, readyTime, timeToInteractive
+                });
+            }
+            
+            ctx.body = util.result({
+                data: valjson
+            });
+
+        } catch (err) {
+            console.log(err)
+            ctx.body = util.result({
+                code: 1001,
+                desc: '系统错误!'
+            });
+            return '';
+        }
+    }
+
     // 根据ID获得app详情性能信息
     async getAppDetail(ctx) {
         try {
