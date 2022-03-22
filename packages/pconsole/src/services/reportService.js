@@ -37,7 +37,6 @@ class ReportService {
       WebPagesProbe.create(probeData),
       WebPagesResources.create(resourcesData),
       WebPagesRestiming.create(restimingData),
-      WebPagesTiming.create(timingData),
       WebPagesTiming.create(timingData)
     ])
   }
