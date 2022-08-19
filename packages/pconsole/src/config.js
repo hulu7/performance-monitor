@@ -4,7 +4,7 @@ export const SYSTEM = {
 	//允许调用接口的域名，用来检测防盗链
 	ORIGIN: 'http://127.0.0.1:18088',
 
-	PRODORIGIN: 'local.dev.jdcloud.com',
+	PRODORIGIN: 'dev.ki3.org.cn',
 
 	// 单点登录入口
 	SSODOMAIN: '',
@@ -135,9 +135,9 @@ export const RENDER = {
 export const RUN = {
 	env: 'dev',
 	dev: {
-		boomerang: '//local.dev.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',
-		history: '//local.dev.jdcloud.com/js/boomerang/history.min.js',
-		reportApi: 'http://local.dev.jdcloud.com/reportPerformance',
+		boomerang: '//dev.ki3.org.cn/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//dev.ki3.org.cn/js/boomerang/history.min.js',
+		reportApi: 'http://dev.ki3.org.cn/reportPerformance',
 		appid: 'ED0B3A18CDABE3E3CF22D5DE868E0CC2'
 	},
 	pre: {

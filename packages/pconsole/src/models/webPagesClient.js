@@ -35,6 +35,18 @@ const WebPagesClient = sequelize.define(
       defaultValue: '',
       comment:'url地址'
     },
+    ip: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: '',
+      comment:'IP地址'
+    },
+    location: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: '',
+      comment:'地理位置'
+    },
     appin: {
       type: DataTypes.CHAR(10),
       allowNull: true,

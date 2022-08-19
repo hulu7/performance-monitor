@@ -178,6 +178,8 @@ CREATE TABLE `web_pages_client` (
   `page_id` char(80) NOT NULL DEFAULT '' COMMENT '页面全局id',
   `app_id` char(70) NOT NULL DEFAULT '' COMMENT '应用唯一标识符',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT 'url地址',
+  `ip` varchar(255) NOT NULL DEFAULT '' COMMENT 'IP地址',
+  `location` varchar(255) NOT NULL DEFAULT '' COMMENT '地理位置',
   `appin` char(10) NOT NULL DEFAULT '' COMMENT 'App进入点',
   `navigation_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '导航方式：0 链接；1 重新加载； 2 前进、后退； 255 其他',
   `next_hop_protocol` char(70) NOT NULL DEFAULT '' COMMENT '网络协议 ',
@@ -233,10 +235,10 @@ CREATE TABLE `web_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
---  Records of `web_user`
+--  Records of `web_user`: 初始账户: admin，初始密码: 123456
 -- ----------------------------
 BEGIN;
-INSERT INTO `web_user` VALUES ('1', 'admin', 'ee61e766467546320854c3446ccde3d4', '', '', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0', '1', '');
+INSERT INTO `web_user` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0', '1', '');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

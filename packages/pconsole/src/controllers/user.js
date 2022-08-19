@@ -94,14 +94,13 @@ class User {
                     })
                 }
                 const cookieOptions = {
-                    domain: '.jdcloud.com',
+                    domain: '.ki3.org.cn',
                     path: '/',
                     httpOnly: true,
                     secure: false,
                     maxAge: 86400000,
                     overwrite: false
                 }
-
                 ctx.cookies.set('performance.monitor.user', id, cookieOptions);
                 ctx.cookies.set('performance.monitor.token', expire < now ? newToken : token, cookieOptions);
                 const returnUrl = ctx.request.header.referer.split('ReturnUrl=')[1] || '/';
@@ -212,7 +211,7 @@ class User {
     async logout(ctx) {
         try {
             const cookieOptions = {
-                domain: '.jdcloud.com',
+                domain: '.ki3.org.cn',
                 path: '/',
                 httpOnly: true,
                 secure: false,

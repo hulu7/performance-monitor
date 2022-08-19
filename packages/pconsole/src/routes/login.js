@@ -20,7 +20,7 @@ import UserService from '../services/userService'
 function isSafeHostname (url) {
     try {
         const { hostname } = URL.parse(url);
-        const isJDDomain = /^[\w-.]+\.jdcloud\.com$/i;
+        const isJDDomain = /^[\w-.]+\.ki3\.org\.cn$/i;
         return hostname && isJDDomain.test(hostname);
     } catch (err) {
         throw err;

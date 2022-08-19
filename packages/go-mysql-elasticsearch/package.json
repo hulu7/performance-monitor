@@ -2,7 +2,7 @@
   "name": "go-mysql-elasticsearch",
   "version": "0.0.0",
   "description": "go-mysql-elasticsearch is a service syncing your MySQL data into Elasticsearch automatically.",
-  "author": "huangchenghui3 <huangchenghui3@jd.com>",
+  "author": "huangchenghui",
   "homepage": "",
   "license": "ISC",
   "main": "lib/go-mysql-elasticsearch.js",
