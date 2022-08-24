@@ -138,7 +138,7 @@ export const RUN = {
 		boomerang: '//dev.ki3.org.cn/js/boomerang/boomerang-1.0.0.min.js',
 		history: '//dev.ki3.org.cn/js/boomerang/history.min.js',
 		reportApi: 'http://dev.ki3.org.cn/reportPerformance',
-		appid: 'ED0B3A18CDABE3E3CF22D5DE868E0CC2'
+		appid: 'CCC840F35CD94965C8C4AD578150FA60'
 	},
 	pre: {
 		boomerang: '//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',

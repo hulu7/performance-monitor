@@ -210,11 +210,13 @@ class App {
                         is_main,
                         'web_pages_timing.load_time': loadTime,
                         'web_pages_timing.white_time': whiteTime,
-                        'web_pages_timing.request_time': requestTime
+                        'web_pages_timing.request_time': requestTime,
+                        'web_pages_client.ip': ip,
+                        'web_pages_client.location': location
                     } = item;
 
                     return {
-                        id, url, pageId, systemId, createTime, userId,
+                        id, url, pageId, systemId, createTime, userId, ip, location,
                         loadTime, whiteTime, requestTime,
                         isMain: is_main === '0',
                         dateTime: moment(new Date(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
@@ -426,12 +428,14 @@ class App {
                     http_initiator: httpInitiator,
                     effective_type: effectiveType,
                     downlink,
-                    round_trip_time: roundTripTime
+                    round_trip_time: roundTripTime,
+                    ip,
+                    location
                 } = clients[0];
 
                 Object.assign(valjson, { appin, navigationType, nextHopProtocol,
                     system, browser, cpuConcurrency, screenColorDepth, screenOrientation, screenSize, httpInitiator,
-                    effectiveType, downlink, roundTripTime
+                    effectiveType, downlink, roundTripTime, ip, location
                 });
             }
             

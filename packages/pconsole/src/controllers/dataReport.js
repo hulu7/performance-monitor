@@ -9,6 +9,18 @@ class Report {
     //初始化对象
     constructor() {};
 
+    getClientIP(ctx) {
+        let ip= ctx.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+            ctx.ip  ||
+            ctx.connection.remoteAddress || // 判断 connection 的远程 IP
+            ctx.socket.remoteAddress || // 判断后端的 socket 的 IP
+            ctx.connection.socket.remoteAddress || ''
+        if(ip) {
+            ip = ip.replace('::ffff:', '') //ipv6处理相关
+        }
+        return ip;
+    }
+
     async reportPerformance(ctx) {
         ctx.set('Access-Control-Allow-Origin','*');
         try {
@@ -35,8 +47,10 @@ class Report {
             console.log('---start store performance data--');
             const createTime = new Date(new Date().getTime()).toISOString();
 
+            const ip = dataInstance.getClientIP(ctx)
+
             //存储页面page性能
-            await dataInstance.storePagePerformance(createTime, resourceDatas, systemItem);
+            await dataInstance.storePagePerformance(ip, createTime, resourceDatas, systemItem);
             ctx.body=imgsrc;
             return;
         } catch(err) {
@@ -45,7 +59,7 @@ class Report {
         }  
     }
 
-    async storePagePerformance(createTime, resourceDatas, systemItem) {
+    async storePagePerformance(ip, createTime, resourceDatas, systemItem) {
         if(systemItem.is_monitor_pages === 0) {
             const {
                 mob, c, rt, vis, ua, dom, mem, scr, cpu, http, pt,
@@ -301,7 +315,9 @@ class Report {
                 http_initiator: initiator || '',
                 effective_type: effective_type || '',
                 downlink: downlink || '0',
-                round_trip_time: round_trip_time || '0'
+                round_trip_time: round_trip_time || '0',
+                ip: ip || '',
+                location: ''
             };
     
             // 探针信息

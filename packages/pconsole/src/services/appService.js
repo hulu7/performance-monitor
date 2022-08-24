@@ -63,6 +63,9 @@ class AppService {
         include:[{
           model: WebPagesTiming,
           attributes: ['load_time', 'white_time', 'request_time']
+        }, {
+          model: WebPagesClient,
+          attributes: ['ip', 'location']
         }],
         limit: Math.floor(pageSize),
         order: [['create_time', 'DESC']],

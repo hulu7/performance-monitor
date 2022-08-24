@@ -260,6 +260,14 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                            prop="ip"
+                            label="访问IP"
+                            width="200">
+                            <template slot-scope="scope">
+                                <span>{{ scope.row.ip }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                             prop="userId"
                             label="用户PIN"
                             width="200">

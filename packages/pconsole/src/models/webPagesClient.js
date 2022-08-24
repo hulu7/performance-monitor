@@ -18,9 +18,9 @@ const WebPagesClient = sequelize.define(
       comment:'单次数据采集的标识符，关联web_pages_basic的id'
     },
     page_id:{
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.CHAR(80),
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: '',
       comment:'页面全局id'
     },
     app_id: {

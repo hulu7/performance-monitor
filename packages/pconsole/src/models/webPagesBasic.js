@@ -10,9 +10,9 @@ const WebPagesBasic = sequelize.define(
       comment:'id自增' // 注解
     },
     page_id:{
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.CHAR(80),
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: '',
       comment:'页面全局id'
     },
     system_id: {
