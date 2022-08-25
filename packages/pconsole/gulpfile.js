@@ -183,7 +183,7 @@ gulp.task('css:minify', gulp.series(() => {
 }));
 
 //replace
-const originurl = 'http://dev.ki3.org.cn'
+const originurl = 'http://166.111.130.99:15566'
 
 gulp.task('replace:config', gulp.series(() => {
     return gulp.src([`${buildUrl}/config.js`])

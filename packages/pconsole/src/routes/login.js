@@ -20,8 +20,8 @@ import UserService from '../services/userService'
 function isSafeHostname (url) {
     try {
         const { hostname } = URL.parse(url);
-        const isJDDomain = /^[\w-.]+\.ki3\.org\.cn$/i;
-        return hostname && isJDDomain.test(hostname);
+        const isValidDomain = /^[\w-.]+\.ki3\.org\.cn$/i;
+        return hostname && isValidDomain.test(hostname);
     } catch (err) {
         throw err;
     }
@@ -43,7 +43,7 @@ function transformReturl (url) {
         }
         // 避免跳转到其他域名
         if (!isSafeHostname(url)) {
-            throw new Error(`${url} path illegal.`);
+        //    throw new Error(`${url} path illegal.`);
         }
         return replace(decodeURIComponent(url), /\*\*\*/g, '&');
     } catch (err) {

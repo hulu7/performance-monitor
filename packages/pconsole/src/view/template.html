@@ -16,38 +16,38 @@
                     const apps = {
                         pages: {
                             is_main: false,
-                            rules: ['https://performance-monitor.jdcloud.com/api/apps/list', 'https://performance-monitor.jdcloud.com/apps']
+                            rules: ['http://166.111.130.99:15566/api/apps/list', 'http://166.111.130.99:15566/apps']
                         },
                         search: {
                             is_main: false,
-                            rules: ['https://performance-monitor.jdcloud.com/search']
+                            rules: ['http://166.111.130.99:15566/search']
                         },
                         setting: {
                             is_main: false,
-                            rules: ['https://performance-monitor.jdcloud.com/setting']
+                            rules: ['http://166.111.130.99:15566/setting']
                         },
                         main: {
                             is_main: true,
-                            rules: ['https://performance-monitor.jdcloud.com/js', 'https://performance-monitor.jdcloud.com/css', 'https://performance-monitor.jdcloud.com/api/system/list', 'https://performance-monitor.jdcloud.com/images', 'https://performance-monitor.jdcloud.com/reportPerformance', 'https://performance-monitor.jdcloud.com/']
+                            rules: ['http://166.111.130.99:15566/js', 'http://166.111.130.99:15566/css', 'http://166.111.130.99:15566/api/system/list', 'http://166.111.130.99:15566/images', 'http://166.111.130.99:15566/reportPerformance', 'http://166.111.130.99:15566/']
                         }
                     };
                 <%} else if (run.env === 'pre') { %>
                     const apps = {
                         pages: {
                             is_main: false,
-                            rules: ['http://performance-monitor-stag.jdcloud.com/api/apps/list', 'http://performance-monitor-stag.jdcloud.com/apps']
+                            rules: ['http://dev.ki3.org.cn/api/apps/list', 'http://dev.ki3.org.cn/apps']
                         },
                         search: {
                             is_main: false,
-                            rules: ['http://performance-monitor-stag.jdcloud.com/search']
+                            rules: ['http://dev.ki3.org.cn/search']
                         },
                         setting: {
                             is_main: false,
-                            rules: ['http://performance-monitor-stag.jdcloud.com/setting']
+                            rules: ['http://dev.ki3.org.cn/setting']
                         },
                         main: {
                             is_main: true,
-                            rules: ['http://performance-monitor-stag.jdcloud.com/js', 'http://performance-monitor-stag.jdcloud.com/css', 'http://performance-monitor-stag.jdcloud.com/api/system/list', 'http://performance-monitor-stag.jdcloud.com/images', 'http://performance-monitor-stag.jdcloud.com/reportPerformance', 'http://performance-monitor-stag.jdcloud.com/']
+                            rules: ['http://dev.ki3.org.cn/js', 'http://dev.ki3.org.cn/css', 'http://dev.ki3.org.cn/api/system/list', 'http://dev.ki3.org.cn/images', 'http://dev.ki3.org.cn/reportPerformance', 'http://dev.ki3.org.cn/']
                         }
                     };
                 <%} else { %>

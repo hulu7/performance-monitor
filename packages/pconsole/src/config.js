@@ -4,7 +4,7 @@ export const SYSTEM = {
 	//允许调用接口的域名，用来检测防盗链
 	ORIGIN: 'http://127.0.0.1:18088',
 
-	PRODORIGIN: 'dev.ki3.org.cn',
+	PRODORIGIN: '166.111.130.99:15566',
 
 	// 单点登录入口
 	SSODOMAIN: '',
@@ -141,16 +141,16 @@ export const RUN = {
 		appid: 'CCC840F35CD94965C8C4AD578150FA60'
 	},
 	pre: {
-		boomerang: '//performance-monitor-stag.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',
-		history: '//performance-monitor-stag.jdcloud.com/js/boomerang/history.min.js',
-		reportApi: 'http://performance-monitor-stag.jdcloud.com/reportPerformance',
+		boomerang: '//dev.ki3.org.cn/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//dev.ki3.org.cn/js/boomerang/history.min.js',
+		reportApi: 'http://dev.ki3.org.cn/reportPerformance',
 		appid: '7BDED93854F1A5ABC4EE5344DDA57B84'
 	},
 	prd: {
-		boomerang: '//performance-monitor.jdcloud.com/js/boomerang/boomerang-1.0.0.min.js',
-		history: '//performance-monitor.jdcloud.com/js/boomerang/history.min.js',
-		reportApi: 'https://performance-monitor.jdcloud.com/reportPerformance',
-		appid: '65194598DE4C11ACAB5366B9E2DB0ECF'
+		boomerang: '//166.111.130.99:15566/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//166.111.130.99:15566/js/boomerang/history.min.js',
+		reportApi: 'http://166.111.130.99:15566/reportPerformance',
+		appid: 'B6775BDB4A88ADD7F743B42C55772AF2'
 	},
 	links: [{
 		src: '/images/common/favicon.ico',

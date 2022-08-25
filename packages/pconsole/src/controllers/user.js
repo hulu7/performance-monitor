@@ -94,7 +94,7 @@ class User {
                     })
                 }
                 const cookieOptions = {
-                    domain: '.ki3.org.cn',
+                    // domain: '166.111.130.99:15566',  //为ip地址时不用显示设置domain
                     path: '/',
                     httpOnly: true,
                     secure: false,
@@ -211,7 +211,7 @@ class User {
     async logout(ctx) {
         try {
             const cookieOptions = {
-                domain: '.ki3.org.cn',
+                // domain: '166.111.130.99:15566', //为ip地址时不用显示设置domain
                 path: '/',
                 httpOnly: true,
                 secure: false,
