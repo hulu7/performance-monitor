@@ -38,6 +38,7 @@ new Vue({
                 ],
             },
             dateRange: '1天',
+            visitCount: 0,
         }
     },
     filters: {
@@ -146,9 +147,11 @@ new Vue({
         drawPoints(data) {
             this.context.clearOverlays()
             const pointMap = new Map();
+            this.visitCount = 0
             data.map(point => {
                 const tag = `${point.location.lat}${point.location.lng}${point.ip}`
                 if (!pointMap.get(tag) && point.location.lng && point.location.lat) {
+                    this.visitCount += 1
                     const p = new BMap.Point(point.location.lng, point.location.lat);
                     const marker = new BMap.Marker(p); 
                     this.context.addOverlay(marker)

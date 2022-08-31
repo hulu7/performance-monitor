@@ -226,14 +226,17 @@
                                 <el-date-picker
                                     v-model="mapData.dateRange"
                                     type="datetimerange"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
                                     start-placeholder="开始日期"
                                     end-placeholder="结束日期"
                                     @change="handleMapDateRangeChange">
                                 </el-date-picker>
                             </el-form-item>
                         </el-form>
+                        <div class="search-form-box-count">
+                            <div style="line-height: 40px;">访问次数：{{ visitCount }}</div>
+                        </div>
                     </div>
                     <div id="map" class="map" v-loading="isLoadingGeoHistory"></div>
                 </el-card>
@@ -412,8 +415,16 @@
   height: 800px;
 }
 .search-form-box {
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 16px;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: space-between;
+}
+.search-form-box-count {
+    height: 40px;
+    line-height: 40px;
+    font: 300 24px/24px 'Roboto', sans-serif;
 }
 </style>

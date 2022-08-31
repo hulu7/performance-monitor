@@ -76,7 +76,7 @@ http.createServer(app.callback()).listen(SYSTEM.PROT);
 console.log(`服务启动了：路径为：${SYSTEM.ORIGIN}`);
 
 const scheduleJob = async () => {
-    if (env === 'development') {
+    if (env === 'production') {
         schedule.scheduleJob('0 * * * * *', function() {
             console.log('-------schedule job-------');
             EnvironmentService.queryIPGeo();

@@ -31,7 +31,7 @@ gulp.task('nodemon', gulp.series(() => {
             'gulpfile.js'
         ],
         env: {
-            NODE_ENV: 'development'
+            BABEL_ENV: 'development'
         },
         ext: 'js json html'
     });
@@ -218,7 +218,8 @@ gulp.task('vue:back', gulp.series(() => {
         './src/assets/js/vue.min.js',
         './src/assets/js/jquery.min.js',
         './src/assets/js/polyfill.min.js',
-        './src/assets/js/vue-filters.js'
+        './src/assets/js/vue-filters.js',
+        './src/assets/js/moment.min.js'
     ])
         .pipe(gulp.dest(`${buildUrl}/assets/js/`));
 }));
