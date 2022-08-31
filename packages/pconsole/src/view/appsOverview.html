@@ -201,7 +201,44 @@
                 </el-card>
             </div>
         </div>
-
+        <div class="block-time" v-show="table==1">
+            <div class="item-full div1">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <h1 class="h1">访问者地理位置</h1>
+                    </div>
+                    <div class="search-form-box">
+                        <el-form
+                            style="margin-left: 16px;"
+                            :model="formData"
+                            ref="formRef"
+                            :inline="true"
+                        >
+                            <el-form-item label="范围时间">
+                                <el-radio-group v-model="dateRange" @change="handleDateRangeChange">
+                                    <el-radio-button label="1天"></el-radio-button>
+                                    <el-radio-button label="1周"></el-radio-button>
+                                    <el-radio-button label="1月"></el-radio-button>
+                                    <el-radio-button label="自定义"></el-radio-button>
+                                  </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="自定义时间" v-show="dateRange === '自定义'">
+                                <el-date-picker
+                                    v-model="mapData.dateRange"
+                                    type="datetimerange"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    @change="handleMapDateRangeChange">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div id="map" class="map" v-loading="isLoadingGeoHistory"></div>
+                </el-card>
+            </div>
+        </div>
         <!-- page详情性能列表 -->
         <div class="common-head-title" v-show="table==1">
             <el-card class="box-card">
@@ -223,27 +260,27 @@
                     :model="formData"
                     ref="formRef"
                     :inline="true"
-                >
-                    <el-form-item label="时间">
-                        <el-date-picker
-                            v-model="formData.dateRange"
-                            type="datetimerange"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="用户PIN">
-                        <el-input v-model="formData.userId" placeholder="过滤用户PIN"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSearch">搜索</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="danger" @click="onReset">重置</el-button>
-                    </el-form-item>
-                </el-form>
+                    >
+                        <el-form-item label="时间">
+                            <el-date-picker
+                                v-model="formData.dateRange"
+                                type="datetimerange"
+                                format="yyyy-MM-dd HH:mm:ss"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="用户PIN">
+                            <el-input v-model="formData.userId" placeholder="过滤用户PIN"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSearch">搜索</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="danger" @click="onReset">重置</el-button>
+                        </el-form-item>
+                    </el-form>
                 </div>
                 <div v-show="listdata.length && chartType">
                     <el-table
@@ -265,6 +302,15 @@
                             width="200">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.ip }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            label="地理位置"
+                            width="200">
+                            <template slot-scope="scope">
+                                <span>{{ scope.row.location.continent || '--' }}/</span>
+                                <span>{{ scope.row.location.country || '--' }}/</span>
+                                <span>{{ scope.row.location.city || '--' }}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -360,5 +406,14 @@
     padding: 16px;
     font: 300 14px/14px 'Roboto', sans-serif;
     letter-spacing: 0;
+}
+.map {
+  width: 100%;
+  height: 800px;
+}
+.search-form-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
 }
 </style>

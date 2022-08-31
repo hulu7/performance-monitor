@@ -1,10 +1,13 @@
+// 环境变量
+const env = process.env.BABEL_ENV || 'development';
+
 // 系统配置
 export const SYSTEM = {
 
 	//允许调用接口的域名，用来检测防盗链
 	ORIGIN: 'http://127.0.0.1:18088',
 
-	PRODORIGIN: '166.111.130.99:15566',
+	PRODORIGIN: `${env === 'development' ? 'dev.ki3.org.cn' : '219.243.215.203:15566'}`,
 
 	// 单点登录入口
 	SSODOMAIN: '',
@@ -133,8 +136,8 @@ export const RENDER = {
 
 // 运行时
 export const RUN = {
-	env: 'dev',
-	dev: {
+	env,
+	development: {
 		boomerang: '//dev.ki3.org.cn/js/boomerang/boomerang-1.0.0.min.js',
 		history: '//dev.ki3.org.cn/js/boomerang/history.min.js',
 		reportApi: 'http://dev.ki3.org.cn/reportPerformance',
@@ -146,10 +149,10 @@ export const RUN = {
 		reportApi: 'http://dev.ki3.org.cn/reportPerformance',
 		appid: '7BDED93854F1A5ABC4EE5344DDA57B84'
 	},
-	prd: {
-		boomerang: '//166.111.130.99:15566/js/boomerang/boomerang-1.0.0.min.js',
-		history: '//166.111.130.99:15566/js/boomerang/history.min.js',
-		reportApi: 'http://166.111.130.99:15566/reportPerformance',
+	production: {
+		boomerang: '//219.243.215.203:15566/js/boomerang/boomerang-1.0.0.min.js',
+		history: '//219.243.215.203:15566/js/boomerang/history.min.js',
+		reportApi: 'http://219.243.215.203:15566/reportPerformance',
 		appid: 'B6775BDB4A88ADD7F743B42C55772AF2'
 	},
 	links: [{
@@ -179,6 +182,7 @@ export const RUN = {
 		'/js/PopLayer.js',
 		'/js/config.js',
 		'/js/util.js',
-		'/js/md5.js'
+		'/js/md5.js',
+		'/js/moment.min.js',
 	]
 }

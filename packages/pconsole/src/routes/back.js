@@ -40,6 +40,7 @@ router.post('/api/apps/timing', controllers.app.getWebPageTimingInfo)
 
 //----------------------------Environment--------------------------------------
 router.post('/api/environment/detail', controllers.environment.getDataForEnvironment)
+router.post('/api/environment/history', controllers.environment.queryIPGeoHistory)
 
 //----------------------------search--------------------------------------
 router.post('/api/search', controllers.system.search)

@@ -20,9 +20,11 @@ import {
     back,
     login
 } from './routes'
+import EnvironmentService from './services/environmentService'
 
-const app = new Koa()
-const env = process.env.BABEL_ENV || 'development'
+const schedule = require('node-schedule');
+const app = new Koa();
+const env = process.env.BABEL_ENV || 'development';
 
 // 打印日志
 app.on('error', (err, ctx) => {
@@ -73,4 +75,13 @@ http.createServer(app.callback()).listen(SYSTEM.PROT);
 
 console.log(`服务启动了：路径为：${SYSTEM.ORIGIN}`);
 
+const scheduleJob = async () => {
+    if (env === 'development') {
+        schedule.scheduleJob('0 * * * * *', function() {
+            console.log('-------schedule job-------');
+            EnvironmentService.queryIPGeo();
+        });
+    }
+};
+scheduleJob();
 export default app

@@ -1,5 +1,3 @@
-
-//util 公共对象函数
 class utilfn {
 	//初始化对象
 	constructor() {
@@ -935,6 +933,10 @@ class utilfn {
 		}
 		const rule = /^(([-\u4E00-\u9FA5a-z0-9]{1,63})\.)+([\u4E00-\u9FA5a-z]{2,63})\.?$/;
 		return rule.test(domain);
+	}
+
+	getDaysBefore(days) {
+		return moment(new Date().getTime() - days * 24 * 60 * 60 * 1000).format('YYYY-MM-DD HH:mm:ss');
 	}
 }
 

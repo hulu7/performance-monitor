@@ -12,23 +12,23 @@
                     return '';
                 }
                 const target = url.split('?')[0];
-                <% if (run.env === 'prd'){ %>
+                <% if (run.env === 'production'){ %>
                     const apps = {
                         pages: {
                             is_main: false,
-                            rules: ['http://166.111.130.99:15566/api/apps/list', 'http://166.111.130.99:15566/apps']
+                            rules: ['http://219.243.215.203:15566/api/apps/list', 'http://219.243.215.203:15566/apps']
                         },
                         search: {
                             is_main: false,
-                            rules: ['http://166.111.130.99:15566/search']
+                            rules: ['http://219.243.215.203:15566/search']
                         },
                         setting: {
                             is_main: false,
-                            rules: ['http://166.111.130.99:15566/setting']
+                            rules: ['http://219.243.215.203:15566/setting']
                         },
                         main: {
                             is_main: true,
-                            rules: ['http://166.111.130.99:15566/js', 'http://166.111.130.99:15566/css', 'http://166.111.130.99:15566/api/system/list', 'http://166.111.130.99:15566/images', 'http://166.111.130.99:15566/reportPerformance', 'http://166.111.130.99:15566/']
+                            rules: ['http://219.243.215.203:15566/js', 'http://219.243.215.203:15566/css', 'http://219.243.215.203:15566/api/system/list', 'http://219.243.215.203:15566/images', 'http://219.243.215.203:15566/reportPerformance', 'http://219.243.215.203:15566/']
                         }
                     };
                 <%} else if (run.env === 'pre') { %>
@@ -97,6 +97,7 @@
         <% for(var i=0; i < run.scripts.length; i++) { %>
             <script src=<%= run.scripts[i] %>></script>
         <%}%>
+        <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=G8PGhp7ECDN29pQ5cnwRQFSIyeE4IkUq"></script>
     </head>
     <body id="body">
         <%- body %>

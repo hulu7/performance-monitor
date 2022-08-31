@@ -13,6 +13,8 @@ const clean = require('gulp-clean')
 const browserSync = require("browser-sync").create();
 
 const buildUrl = './dist/build';
+const env = process.env.BABEL_ENV || 'development';
+const originurl = `http://${env === 'development' ? 'dev.ki3.org.cn' : '219.243.215.203:15566'}`
 
 /*---------------------------------------------dev------------------------------------------------------------------*/
 gulp.task('nodemon', gulp.series(() => {
@@ -182,9 +184,7 @@ gulp.task('css:minify', gulp.series(() => {
         .pipe(gulp.dest(`${buildUrl}/assets/css/`));
 }));
 
-//replace
-const originurl = 'http://166.111.130.99:15566'
-
+// URL变量替换
 gulp.task('replace:config', gulp.series(() => {
     return gulp.src([`${buildUrl}/config.js`])
         .pipe(replace(/ORIGIN(.+)?ORIGIN/, `'ORIGIN':'${originurl}'`))

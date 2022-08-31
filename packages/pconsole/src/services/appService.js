@@ -4,7 +4,7 @@ const {
   WebPagesResources,
   WebPagesRestiming,
   WebPagesTiming,
-} = require('../models/index')
+} = require('../models/index');
 const { Sequelize,  Op } = require('sequelize'); // 引入sequelize依赖
 const {gte, lte} = Op;
 
@@ -25,161 +25,161 @@ class AppService {
       order: [
         [Sequelize.literal('count'), 'DESC']
       ],
-      limit: Math.floor(pageSize), //Math.floor(pageSize)
+      limit: Math.floor(pageSize),
       offset: (pageNo - 1) * Math.floor(pageSize),
       raw: true
     })
   }
 
-    // 获取应用历史
-    async getAppHistory(param) {
-      const {
-        appId: app_id,
-        pageNo, pageSize,
-        beginTime, endTime, userId
-      } = param;
+  // 获取应用历史
+  async getAppHistory(param) {
+    const {
+      appId: app_id,
+      pageNo, pageSize,
+      beginTime, endTime, userId
+    } = param;
 
-      const query = {
-        app_id
-      };
+    const query = {
+      app_id
+    };
 
-      if (beginTime && endTime) {
-        Object.assign(query, {
-          create_time: {
-            [gte]: beginTime,
-            [lte]: endTime
-          }
-        });
-      }
-
-      if (userId) {
-        Object.assign(query, {
-          user_id: userId
-        })
-      }
-  
-      return WebPagesBasic.findAndCountAll({
-        where: query,
-        include:[{
-          model: WebPagesTiming,
-          attributes: ['load_time', 'white_time', 'request_time']
-        }, {
-          model: WebPagesClient,
-          attributes: ['ip', 'location']
-        }],
-        limit: Math.floor(pageSize),
-        order: [['create_time', 'DESC']],
-        offset: (pageNo - 1) * Math.floor(pageSize),
-        raw: true,
-        distinct: true,
-        subQuery: false
+    if (beginTime && endTime) {
+      Object.assign(query, {
+        create_time: {
+          [gte]: beginTime,
+          [lte]: endTime
+        }
       });
     }
 
-    async getWebPagesBasicById(param) {
-      const {
-        id
-      } = param;
-
-      return WebPagesBasic.findAll({
-        where: {
-          id
-        },
-        raw: true
-      });
-    }
-
-    async getWebPagesClientById(param) {
-      const {
-        id: monitor_id
-      } = param;
-
-      return WebPagesClient.findAll({
-        where: {
-          monitor_id
-        },
-        raw: true
-      });
-    }
-
-    async getWebPagesResourcesById(param) {
-      const {
-        id: monitor_id
-      } = param;
-
-      return WebPagesResources.findAll({
-        where: {
-          monitor_id
-        },
-        raw: true
-      });
-    }
-
-    async getWebPagesRestimingById(param) {
-      const {
-        id: monitor_id
-      } = param;
-
-      return WebPagesRestiming.findAll({
-        where: {
-          monitor_id
-        },
-        raw: true
-      });
-    }
-
-    async getWebPagesTimingById(param) {
-      const {
-        id: monitor_id
-      } = param;
-
-      return WebPagesTiming.findAll({
-        where: {
-          monitor_id
-        },
-        raw: true
-      });
-    }
-
-    // 获取应用详情
-    async getAppDetail(param) {
-      const {
-        id
-      } = param;
-
-      return WebPagesBasic.findAll({
-        where: {
-          id
-        },
-        include:[{
-          model: WebPagesClient
-        }, {
-          model: WebPagesResources
-        }, {
-          model: WebPagesRestiming
-        }, {
-          model: WebPagesTiming
-        }]
-      });
-    }
-
-    // 获取单个应用
-    async getSingleApp(param) {
-      const {
-        systemId: system_id,
-        appId: app_id
-      } = param;
-  
-      return WebPagesBasic.findAll({
-        where: {
-          system_id,
-          app_id
-        },
-        raw: true,
-        limit: 1,
-        offset: 0
+    if (userId) {
+      Object.assign(query, {
+        user_id: userId
       })
     }
+
+    return WebPagesBasic.findAndCountAll({
+      where: query,
+      include:[{
+        model: WebPagesTiming,
+        attributes: ['load_time', 'white_time', 'request_time']
+      }, {
+        model: WebPagesClient,
+        attributes: ['ip', 'location']
+      }],
+      limit: Math.floor(pageSize),
+      order: [['create_time', 'DESC']],
+      offset: (pageNo - 1) * Math.floor(pageSize),
+      raw: true,
+      distinct: true,
+      subQuery: false
+    });
+  }
+
+  async getWebPagesBasicById(param) {
+    const {
+      id
+    } = param;
+
+    return WebPagesBasic.findAll({
+      where: {
+        id
+      },
+      raw: true
+    });
+  }
+
+  async getWebPagesClientById(param) {
+    const {
+      id: monitor_id
+    } = param;
+
+    return WebPagesClient.findAll({
+      where: {
+        monitor_id
+      },
+      raw: true
+    });
+  }
+
+  async getWebPagesResourcesById(param) {
+    const {
+      id: monitor_id
+    } = param;
+
+    return WebPagesResources.findAll({
+      where: {
+        monitor_id
+      },
+      raw: true
+    });
+  }
+
+  async getWebPagesRestimingById(param) {
+    const {
+      id: monitor_id
+    } = param;
+
+    return WebPagesRestiming.findAll({
+      where: {
+        monitor_id
+      },
+      raw: true
+    });
+  }
+
+  async getWebPagesTimingById(param) {
+    const {
+      id: monitor_id
+    } = param;
+
+    return WebPagesTiming.findAll({
+      where: {
+        monitor_id
+      },
+      raw: true
+    });
+  }
+
+  // 获取应用详情
+  async getAppDetail(param) {
+    const {
+      id
+    } = param;
+
+    return WebPagesBasic.findAll({
+      where: {
+        id
+      },
+      include:[{
+        model: WebPagesClient
+      }, {
+        model: WebPagesResources
+      }, {
+        model: WebPagesRestiming
+      }, {
+        model: WebPagesTiming
+      }]
+    });
+  }
+
+  // 获取单个应用
+  async getSingleApp(param) {
+    const {
+      systemId: system_id,
+      appId: app_id
+    } = param;
+
+    return WebPagesBasic.findAll({
+      where: {
+        system_id,
+        app_id
+      },
+      raw: true,
+      limit: 1,
+      offset: 0
+    })
+  }
 
   async getAveragePageTiming(param) {
     const {

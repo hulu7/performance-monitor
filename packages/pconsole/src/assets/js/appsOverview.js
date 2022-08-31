@@ -28,7 +28,16 @@ new Vue({
                 dateRange: [],
                 userId: ''
             },
+            isLoadingGeoHistory: false,
             chartType: true,
+            context: {},
+            mapData: {
+                dateRange: [
+                    util.getDaysBefore(1),
+                    util.getDaysBefore(0),
+                ],
+            },
+            dateRange: '1天',
         }
     },
     filters: {
@@ -45,19 +54,6 @@ new Vue({
     },
     mounted(){
         this.init();
-        if(this.appId){
-            this.getAverageValues()
-        }
-        this.fetchHistory();
-        const statics = [
-            'browser', //浏览器
-            'system', //操作系统
-            'effective_type', //带宽类型
-            'screen_orientation', //屏幕方向
-            'screen_size', //屏幕分辨率
-            'http_initiator', //页面切换类型
-        ];
-        statics.map((type) => this.getDataForEnvironment(type));
     },
     methods:{
         onSearch() {
@@ -84,8 +80,91 @@ new Vue({
             window.location.href = `/apps?systemId=${this.systemId}`;
         },
         init() {
+            this.initMap();
             this.systemId = util.queryParameters('systemId');
             this.appId = util.getQueryString('appId');
+            if(this.appId){
+                this.getAverageValues()
+            }
+            this.fetchHistory();
+            const statics = [
+                'browser', //浏览器
+                'system', //操作系统
+                'effective_type', //带宽类型
+                'screen_orientation', //屏幕方向
+                'screen_size', //屏幕分辨率
+                'http_initiator', //页面切换类型
+            ];
+            statics.map((type) => this.getDataForEnvironment(type));
+            this.getLocation()
+        },
+        initMap() {
+            this.context = new BMap.Map('map')
+            const point = new BMap.Point(116.407845, 39.914101)
+            setTimeout(() => {
+                this.context.centerAndZoom(point, 1)
+                this.context.enableScrollWheelZoom()
+            }, 500)
+        },
+        getLocation() {
+            this.isLoadingGeoHistory = true;
+            util.ajax({
+                url: `${config.baseApi}api/environment/history`,
+                data: {
+                    appId: this.appId,
+                    beginTime: this.mapData.dateRange.length > 1 ? this.mapData.dateRange[0] : '',
+                    endTime: this.mapData.dateRange.length > 1 ? this.mapData.dateRange[1] : '',
+                },
+                success: resp => {
+                    this.drawPoints(resp.data);
+                    this.isLoadingGeoHistory = false;
+                }
+            })
+        },
+        handleMapDateRangeChange(v) {
+            this.getLocation();
+        },
+        handleDateRangeChange(v) {
+            let start = 0
+            switch(v) {
+                case '1天':
+                    start = 1;
+                    break;
+                case '1周':
+                    start = 7;
+                    break;
+                case '1月':
+                    start = 30;
+                    break;
+                default:
+                    break;
+            }
+            this.mapData.dateRange[0] = util.getDaysBefore(start);
+            this.mapData.dateRange[1] = util.getDaysBefore(0);
+            this.getLocation();
+        },
+        drawPoints(data) {
+            this.context.clearOverlays()
+            const pointMap = new Map();
+            data.map(point => {
+                const tag = `${point.location.lat}${point.location.lng}${point.ip}`
+                if (!pointMap.get(tag) && point.location.lng && point.location.lat) {
+                    const p = new BMap.Point(point.location.lng, point.location.lat);
+                    const marker = new BMap.Marker(p); 
+                    this.context.addOverlay(marker)
+                    const opts = {    
+                        width: 250,
+                        height: 100,
+                        title: '访问者信息',
+                    }
+                    const infoWindow = new BMap.InfoWindow(`${point.ip}：${point.location.continent}/${point.location.country}/${point.location.city}`, opts);
+                    marker.addEventListener('click', () => {    
+                        this.context.openInfoWindow(infoWindow, p);
+                    });  
+                    pointMap.set(tag, point);
+                }  
+            })
+            
         },
         gotoDetail(id) {
             window.open(`/app/detail?systemId=${this.systemId}&id=${id}&appId=${this.appId}`, `_blank`);

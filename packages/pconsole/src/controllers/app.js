@@ -216,11 +216,11 @@ class App {
                     } = item;
 
                     return {
-                        id, url, pageId, systemId, createTime, userId, ip, location,
+                        id, url, pageId, systemId, createTime, userId, ip, location: location && location[0] === '{' ? JSON.parse(location) : {},
                         loadTime, whiteTime, requestTime,
                         isMain: is_main === '0',
                         dateTime: moment(new Date(item.create_time)).format('YYYY-MM-DD HH:mm:ss')
-                    }
+                    };
                 });
             }
 
