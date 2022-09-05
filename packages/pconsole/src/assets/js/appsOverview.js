@@ -150,8 +150,11 @@ new Vue({
             this.visitCount = 0
             data.map(point => {
                 const tag = `${point.location.lat}${point.location.lng}${point.ip}`
-                if (!pointMap.get(tag) && point.location.lng && point.location.lat) {
+                if (point.httpInitiator === '通过url访问') {
                     this.visitCount += 1
+                }
+                if (!pointMap.get(tag) && point.location.lng && point.location.lat) {
+                    
                     const p = new BMap.Point(point.location.lng, point.location.lat);
                     const marker = new BMap.Marker(p); 
                     this.context.addOverlay(marker)
@@ -230,10 +233,10 @@ new Vue({
             let legendData=[];
             let totalcount=0;
             if(!datas.length) return;
-            datas.forEach(item => {
+            datas.map(item => {
                 totalcount += item.count
             })
-            datas.forEach(item => {
+            datas.map(item => {
                 let name = item[type]
                 legendData.push({
                     name: name || '未知',
