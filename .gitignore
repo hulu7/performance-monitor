@@ -2,6 +2,7 @@
 .vscode/
 node_modules/
 .DS_Store
+*.tar.gz
 *.tgz
 my-app*
 template/src/__tests__/__snapshots__/

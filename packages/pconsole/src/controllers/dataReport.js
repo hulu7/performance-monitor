@@ -17,8 +17,10 @@ class Report {
             ctx.connection.socket.remoteAddress || ''
         if(ip) {
             ip = ip.replace('::ffff:', '') //ipv6处理相关
+            const forwardedIps = ip.split(',')
+            return forwardedIps[0].trim();
         }
-        return ip;
+        return '0.0.0.0';
     }
 
     async reportPerformance(ctx) {
